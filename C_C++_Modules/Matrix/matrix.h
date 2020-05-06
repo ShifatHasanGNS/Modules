@@ -11,6 +11,8 @@
 //     N E C E S S A R Y    <----->    H E A D E R -- F I L E S     //
 // ---------------------------------------------------------------- //
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -101,7 +103,7 @@ char **split(char *string, char c)
 {  
     // Initialize...
     int len = strlen(string), count_c = 0, number_of_tokens = 0;
-    char str_c[1], **list_of_tokens = malloc(sizeof(char)*(len-count_c) + sizeof(char *)*(len-count_c-2));
+    char str_c[1], **list_of_tokens = (char **)malloc(sizeof(char)*(len-count_c) + sizeof(char *)*(len-count_c-2));
     sprintf(str_c, "%c", c);
     // Split...
     char *token = strtok(string, str_c);
@@ -205,12 +207,12 @@ bool are_identical(Matrix matrix_1, Matrix matrix_2)
 
 Matrix create_matrix(int rows, int cols)
 {
-    Matrix matrix = malloc(sizeof(Matrix));
+    Matrix matrix = (Matrix)malloc(sizeof(Matrix));
     matrix->rows = rows;
     matrix->cols = cols;
-    double **data = malloc(sizeof(double*) * rows); 
+    double **data = (double **)malloc(sizeof(double*) * rows); 
     for(int x = 0; x < rows; x++)
-        data[x] = calloc(cols, sizeof(double));
+        data[x] = (double *)calloc(cols, sizeof(double));
     matrix->data = data;
     return matrix;
 }
@@ -273,27 +275,15 @@ Matrix input_square_matrix(int n)
 }
 
 
-Matrix reshape(Matrix matrix, int rows, int cols)
-{
-    Matrix new_matrix = create_matrix(rows, cols);
-    for(int r = 0; r < matrix->rows; r++)
-    {
-        for(int c = 0; c < matrix->rows; c++)
-            new_matrix->data[r][c] = matrix->data[r][c];
-    }
-    return new_matrix;
-}
-
-
 bool is_convertable(double *data, int rows, int cols)
 {
     int count = 0;
-    while(!*data)
+    while(*data)
     {
         count++;
         data++;
     }
-    if(count == rows*cols) return true;
+    if(count == (rows*cols)) return true;
     return false;
 }
 
@@ -311,6 +301,43 @@ Matrix make_matrix_from_array(double *data, int rows, int cols)
         return matrix;
     }
     return create_matrix(0, 0);
+}
+
+
+double *make_array_from_matrix(Matrix matrix)
+{
+    if(!is_null(matrix))
+    {
+        double *array = (double *)malloc(matrix->rows * matrix->cols * sizeof(double));
+        int i = 0;
+        for(int r = 0; r < matrix->rows; r++)
+        {
+            for(int c = 0; c < matrix->cols; c++)
+                array[i++] = matrix->data[r][c];
+        }
+        return array;
+    }
+    return NULL;
+}
+
+
+Matrix reform(Matrix matrix, int rows, int cols)
+{
+    if(!is_null(matrix) && (rows*cols) == (matrix->rows*matrix->cols))
+        return make_matrix_from_array(make_array_from_matrix(matrix), rows, cols);
+    return matrix;
+}
+
+
+Matrix reshape(Matrix matrix, int rows, int cols)
+{
+    Matrix new_matrix = create_matrix(rows, cols);
+    for(int r = 0; r < matrix->rows; r++)
+    {
+        for(int c = 0; c < matrix->rows; c++)
+            new_matrix->data[r][c] = matrix->data[r][c];
+    }
+    return new_matrix;
 }
 
 

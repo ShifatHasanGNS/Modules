@@ -7,6 +7,8 @@
 ---
 ## **Necessary `Header Files`**
 ```c
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -140,10 +142,6 @@ Matrix input_square_matrix(int n)
 ---
 ## **`Modify` Matrix**
 
->**It `Re-shapes` the dimensions of the `<matrix>`**
-```c
-Matrix reshape(Matrix matrix, int rows, int cols)
-```
 >**It checks whether an Array `<*data>` can be converted into a `<row>` by `<cols>` `Matrix` or not**
 ```c
 bool is_convertable(double *data, int rows, int cols)
@@ -151,6 +149,18 @@ bool is_convertable(double *data, int rows, int cols)
 >**It `converts` an Array `<*data>` into a `<rows>` by `<cols>` `Matrix`**
 ```c
 Matrix make_matrix_from_array(double *data, int rows, int cols)
+```
+>**It `converts` the `<matrix>` into a `1D-Array`**
+```c
+double *make_array_from_matrix(Matrix matrix)
+```
+>**It `Re-Forms` the `dimensions` and `index`(s) of the `<matrix>` if `possible`**
+```c
+Matrix reform(Matrix matrix, int rows, int cols)
+```
+>**It `Re-Shapes` the dimensions of the `<matrix>`**
+```c
+Matrix reshape(Matrix matrix, int rows, int cols)
 ```
 >**It `Adds` a new `<row_matrix>` after the last row of the `<base_matrix>`**
 ```c
