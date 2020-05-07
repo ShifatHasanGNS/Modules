@@ -84,6 +84,38 @@ struct matrix
 typedef struct matrix* Matrix;
 ```
 ---
+>## **How To Make A `Matrix` Type Variable ?**
+
+```c
+int main()
+{
+    Matrix variable_name;
+
+    return 0;
+}
+```
+---
+>## **How To Work With `Functions` ?**
+
+```c
+int main()
+{
+    // If the 'function()' returns a Matrix
+    Matrix matrix = function_name(...);
+
+    // If the 'function()' returns a *double
+    double *array = function_name(...);
+
+    // If the 'function()' returns a double
+    double number = function_name(...);
+
+    // If the 'function()' returns a boolian value (true/false)
+    bool something = function_name(...);
+
+    return 0;
+}
+```
+---
 >## `Note` : Keep In Your Mind `That`
 >## All the **`index`** starts counting from **`0`**, not from **`1`**...
 ---
@@ -112,9 +144,9 @@ bool are_identical(Matrix matrix_1, Matrix matrix_2)
 ```c
 Matrix create_matrix(int rows, int cols)
 ```
->**It creates a `Empty Matrix`**
+>**It creates a `Null/Empty Matrix`**
 ```c
-Matrix empty()
+Matrix null()
 ```
 >**It creates a `<`n`>` by `<`n`>` `Identity` or `Unit` `Matrix`**
 ```c
