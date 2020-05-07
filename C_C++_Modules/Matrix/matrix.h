@@ -1,5 +1,8 @@
+#ifndef MATRIX_H
+#define MATRIX_H
+
 /*
-	Module / Library / HearFile :: [ matrix.h ]
+	Module :: [ matrix.h ]
 */
 
 /*
@@ -218,7 +221,7 @@ Matrix create_matrix(int rows, int cols)
 }
 
 
-Matrix empty()
+Matrix null()
 {
     return create_matrix(0, 0);
 }
@@ -253,6 +256,8 @@ Matrix input_matrix(int rows, int cols)
         temp_row = parse_number(temp_str, cols);
         for(c=0; c<cols; c++) matrix->data[r][c] = temp_row[c];
     }
+    free(temp_row);
+    free(temp_str);
     return matrix;
 }
 
@@ -411,7 +416,7 @@ Matrix insert_column_matrix(Matrix base_matrix, int index_of_col, Matrix column_
             return new_matrix;
         }
         else if(index_of_col == base_matrix->rows) return append_column_matrix(base_matrix, column_matrix);
-        else return base_matrix;
+        return base_matrix;
     }
     return base_matrix;
 }
@@ -1234,3 +1239,5 @@ char **types(Matrix matrix, int TEXT_STYLE)
 
     return list_of_types;
 }
+
+#endif
