@@ -1,6 +1,3 @@
-#ifndef MATRIX_H
-#define MATRIX_H
-
 /*
 	Module :: [ matrix.h ]
 */
@@ -9,6 +6,7 @@
 	AUTHOR  : MD. Shifat Hasan
 	Email   : shifathasangns@gmail.com
 */
+
 
 // ---------------------------------------------------------------- //
 //     N E C E S S A R Y    <----->    H E A D E R -- F I L E S     //
@@ -23,6 +21,7 @@
 // ---------------------------------------------------------------- //
 //          I M P O R T A N T S    <----->    M A C R O S           //
 // ---------------------------------------------------------------- //
+
 
 /*
     #define OPERATION <int::VALUE>            
@@ -1239,5 +1238,3 @@ char **types(Matrix matrix, int TEXT_STYLE)
 
     return list_of_types;
 }
-
-#endif
