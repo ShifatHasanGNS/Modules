@@ -146,6 +146,20 @@ double *parse_number(char *string, int num)
 
 
 // --------------------------------------------------------------- //
+//           V E C T O R    <----->    S T R U C T U R E           //
+// --------------------------------------------------------------- //
+
+struct vector
+{
+    double X;
+    double Y;
+    double Z;
+};
+
+typedef struct vector* Vector;
+
+
+// --------------------------------------------------------------- //
 //           M A T R I X    <----->    S T R U C T U R E           //
 // --------------------------------------------------------------- //
 
@@ -159,6 +173,19 @@ struct matrix
 typedef struct matrix* Matrix;
 
 
+// --------------------------------------------------------------- //
+//             P A I R    <----->    S T R U C T U R E             //
+// --------------------------------------------------------------- //
+
+struct index
+{
+    int row;
+    int col;
+};
+
+typedef struct index* Index;
+
+
 // ---------------------------------------------------------------- //
 //      I M P O R T A N T S    <----->    F U N C T I O N S ()      //
 // ---------------------------------------------------------------- //
@@ -166,8 +193,7 @@ typedef struct matrix* Matrix;
 
 bool is_null(Matrix matrix)
 {
-    if(matrix->rows == 0 && matrix->cols == 0) return true;
-    return false;
+    return (matrix->rows == 0 && matrix->cols == 0) ? true : false;
 }
 
 
@@ -207,7 +233,26 @@ bool are_identical(Matrix matrix_1, Matrix matrix_2)
 }
 
 
-Matrix create_matrix(int rows, int cols)
+Index new_index(int row, int column)
+{
+    Index i = (Index)malloc(sizeof(Index));
+    i->row = row;
+    i->col = column;
+    return i;
+}
+
+
+Vector new_vector(double X, double Y, double Z)
+{
+    Vector v = (Vector)malloc(sizeof(Vector));
+    v->X = X;
+    v->Y = Y;
+    v->Z = Z;
+    return v;
+}
+
+
+Matrix new_matrix(int rows, int cols)
 {
     Matrix matrix = (Matrix)malloc(sizeof(Matrix));
     matrix->rows = rows;
@@ -222,13 +267,13 @@ Matrix create_matrix(int rows, int cols)
 
 Matrix null()
 {
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
-Matrix create_identity_matrix(int n)
+Matrix new_identity_matrix(int n)
 {
-    Matrix matrix = create_matrix(n, n);
+    Matrix matrix = new_matrix(n, n);
     for(int r = 0; r < n; r++)
     {
         for(int c = 0; c < n; c++)
@@ -245,7 +290,7 @@ Matrix input_matrix(int rows, int cols)
     double *temp_row = (double *)malloc(cols*sizeof(double));
     char *temp_str = (char *)malloc(100 * cols * sizeof(char));
     // Creating the Matrix...
-    Matrix matrix = create_matrix(rows, cols);
+    Matrix matrix = new_matrix(rows, cols);
     // Getting the Matrix_Input...
     for(r=0; r<rows; r++)
     {
@@ -296,7 +341,7 @@ Matrix make_matrix_from_array(double *data, int rows, int cols)
 {
     if(is_convertable(data, rows, cols))
     {
-        Matrix matrix = create_matrix(rows, cols);
+        Matrix matrix = new_matrix(rows, cols);
         for(int r = 0; r < rows; r++)
         {
             for(int c = 0; c < cols; c++)
@@ -304,7 +349,7 @@ Matrix make_matrix_from_array(double *data, int rows, int cols)
         }
         return matrix;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -325,6 +370,24 @@ double *make_array_from_matrix(Matrix matrix)
 }
 
 
+Matrix make_colMatrix_from_vector(Vector vector)
+{
+    Matrix colMatrix = new_matrix(3, 1);
+    colMatrix->data[0][0] = vector->X;
+    colMatrix->data[1][0] = vector->Y;
+    colMatrix->data[2][0] = vector->Z;
+    return colMatrix;
+}
+
+
+Vector make_vector_from_colMatrix(Matrix colMatrix)
+{
+    if(colMatrix->rows == 3 && colMatrix->cols == 1)
+        return new_vector(colMatrix->data[0][0], colMatrix->data[1][0], colMatrix->data[2][0]);
+    return new_vector(0, 0, 0);
+}
+
+
 Matrix reform(Matrix matrix, int rows, int cols)
 {
     if(!is_null(matrix) && (rows*cols) == (matrix->rows*matrix->cols))
@@ -335,13 +398,13 @@ Matrix reform(Matrix matrix, int rows, int cols)
 
 Matrix reshape(Matrix matrix, int rows, int cols)
 {
-    Matrix new_matrix = create_matrix(rows, cols);
+    Matrix m = new_matrix(rows, cols);
     for(int r = 0; r < matrix->rows; r++)
     {
         for(int c = 0; c < matrix->rows; c++)
-            new_matrix->data[r][c] = matrix->data[r][c];
+            m->data[r][c] = matrix->data[r][c];
     }
-    return new_matrix;
+    return m;
 }
 
 
@@ -377,17 +440,17 @@ Matrix insert_row_matrix(Matrix base_matrix, int index_of_row, Matrix row_matrix
     {
         if(index_of_row >= 0 && index_of_row < base_matrix->rows)
         {
-            Matrix new_matrix = create_matrix(base_matrix->rows+1, base_matrix->cols);
+            Matrix m = new_matrix(base_matrix->rows+1, base_matrix->cols);
             for(int r = 0; r < base_matrix->rows+1; r++)
             {
                 for(int c = 0; c < base_matrix->cols; c++)
                 {
-                    if(r < index_of_row) new_matrix->data[r][c] = base_matrix->data[r][c];
-                    else if(r > index_of_row) new_matrix->data[r][c] = base_matrix->data[r-1][c];
-                    else new_matrix->data[r][c] = row_matrix->data[0][c];
+                    if(r < index_of_row) m->data[r][c] = base_matrix->data[r][c];
+                    else if(r > index_of_row) m->data[r][c] = base_matrix->data[r-1][c];
+                    else m->data[r][c] = row_matrix->data[0][c];
                 }
             }
-            return new_matrix;
+            return m;
         }
         else if(index_of_row == base_matrix->rows) return append_row_matrix(base_matrix, row_matrix);
         else return base_matrix;
@@ -402,17 +465,17 @@ Matrix insert_column_matrix(Matrix base_matrix, int index_of_col, Matrix column_
     {
         if(index_of_col >= 0 && index_of_col < base_matrix->cols)
         {
-            Matrix new_matrix = create_matrix(base_matrix->rows, base_matrix->cols+1);
+            Matrix m = new_matrix(base_matrix->rows, base_matrix->cols+1);
             for(int r = 0; r < base_matrix->rows; r++)
             {
                 for(int c = 0; c < base_matrix->cols+1; c++)
                 {
-                    if(c < index_of_col) new_matrix->data[r][c] = base_matrix->data[r][c];
-                    else if(c > index_of_col) new_matrix->data[r][c] = base_matrix->data[r][c-1];
-                    else new_matrix->data[r][c] = column_matrix->data[r][0];
+                    if(c < index_of_col) m->data[r][c] = base_matrix->data[r][c];
+                    else if(c > index_of_col) m->data[r][c] = base_matrix->data[r][c-1];
+                    else m->data[r][c] = column_matrix->data[r][0];
                 }
             }
-            return new_matrix;
+            return m;
         }
         else if(index_of_col == base_matrix->rows) return append_column_matrix(base_matrix, column_matrix);
         return base_matrix;
@@ -425,17 +488,17 @@ Matrix del_row_matrix(Matrix base_matrix, int index_of_row)
 {
     if(index_of_row >= 0 && index_of_row < base_matrix->rows)
     {
-        Matrix new_matrix = create_matrix(base_matrix->rows-1, base_matrix->cols);
+        Matrix m = new_matrix(base_matrix->rows-1, base_matrix->cols);
         for(int r = 0; r < base_matrix->rows; r++)
         {
             if(r == index_of_row) continue;
             for(int c = 0; c < base_matrix->cols; c++)
             {
-                if(r < index_of_row) new_matrix->data[r][c] = base_matrix->data[r][c];
-                else if(r > index_of_row) new_matrix->data[r-1][c] = base_matrix->data[r][c];
+                if(r < index_of_row) m->data[r][c] = base_matrix->data[r][c];
+                else if(r > index_of_row) m->data[r-1][c] = base_matrix->data[r][c];
             }
         }
-        return new_matrix;
+        return m;
     }
     return base_matrix;
 }
@@ -445,17 +508,17 @@ Matrix del_column_matrix(Matrix base_matrix, int index_of_col)
 {
     if(index_of_col >= 0 && index_of_col < base_matrix->cols)
     {
-        Matrix new_matrix = create_matrix(base_matrix->rows, base_matrix->cols-1);
+        Matrix m = new_matrix(base_matrix->rows, base_matrix->cols-1);
         for(int r = 0; r < base_matrix->rows; r++)
         {
             for(int c = 0; c < base_matrix->cols; c++)
             {
-                if(c < index_of_col) new_matrix->data[r][c] = base_matrix->data[r][c];
-                else if(c > index_of_col) new_matrix->data[r][c-1] = base_matrix->data[r][c];
+                if(c < index_of_col) m->data[r][c] = base_matrix->data[r][c];
+                else if(c > index_of_col) m->data[r][c-1] = base_matrix->data[r][c];
                 else continue;
             }
         }
-        return new_matrix;
+        return m;
     }
     return base_matrix;
 }
@@ -465,16 +528,16 @@ Matrix replace_row_matrix(Matrix base_matrix, int index_of_row, Matrix row_matri
 {
     if(row_matrix->rows == 1 && index_of_row >= 0 && index_of_row < base_matrix->rows)
     {
-        Matrix new_matrix = create_matrix(base_matrix->rows, base_matrix->cols);
+        Matrix m = new_matrix(base_matrix->rows, base_matrix->cols);
         for(int r = 0; r < base_matrix->rows; r++)
         {
             for(int c = 0; c < base_matrix->cols; c++)
             {
-                if(r == index_of_row) new_matrix->data[r][c] = row_matrix->data[0][c];
-                else new_matrix->data[r][c] = base_matrix->data[r][c];
+                if(r == index_of_row) m->data[r][c] = row_matrix->data[0][c];
+                else m->data[r][c] = base_matrix->data[r][c];
             }
         }
-        return new_matrix;
+        return m;
     }
     return base_matrix;
 }
@@ -484,16 +547,16 @@ Matrix replace_column_matrix(Matrix base_matrix, int index_of_col, Matrix column
 {
     if(column_matrix->cols == 1 && index_of_col >= 0 && index_of_col < base_matrix->cols)
     {
-        Matrix new_matrix = create_matrix(base_matrix->rows, base_matrix->cols);
+        Matrix m = new_matrix(base_matrix->rows, base_matrix->cols);
         for(int r = 0; r < base_matrix->rows; r++)
         {
             for(int c = 0; c < base_matrix->cols; c++)
             {
-                if(c == index_of_col) new_matrix->data[r][c] = column_matrix->data[r][0];
-                else new_matrix->data[r][c] = base_matrix->data[r][c];
+                if(c == index_of_col) m->data[r][c] = column_matrix->data[r][0];
+                else m->data[r][c] = base_matrix->data[r][c];
             }
         }
-        return new_matrix;
+        return m;
     }
     return base_matrix;
 }
@@ -513,16 +576,57 @@ Matrix pop_column_matrix(Matrix base_matrix)
 }
 
 
+void swap_index(Matrix base_matrix, Index first_index, Index second_index)
+{
+    if(first_index->row < base_matrix->rows && first_index->col < base_matrix->cols && second_index->row < base_matrix->rows && second_index->col < base_matrix->cols && first_index->row != second_index->row && first_index->col != second_index->col)
+    {
+        double temp_index = base_matrix->data[first_index->row][first_index->col];
+        base_matrix->data[first_index->row][first_index->col] = base_matrix->data[second_index->row][second_index->col];
+        base_matrix->data[second_index->row][second_index->col] = temp_index;
+    }
+}
+
+
+void swap_row(Matrix base_matrix, int first_row, int second_row)
+{
+    if(first_row < base_matrix->rows && second_row < base_matrix->rows && first_row != second_row)
+    {
+        double temp;
+        for(int c = 0; c < base_matrix->cols; c++)
+        {
+            temp = base_matrix->data[first_row][c];
+            base_matrix->data[first_row][c] = base_matrix->data[second_row][c];
+            base_matrix->data[second_row][c] = temp;
+        }
+    }
+}
+
+
+void swap_column(Matrix base_matrix, int first_col, int second_col)
+{
+    if(first_col < base_matrix->cols && second_col < base_matrix->cols && first_col != second_col)
+    {
+        double temp;
+        for(int r = 0; r < base_matrix->cols; r++)
+        {
+            temp = base_matrix->data[r][first_col];
+            base_matrix->data[r][first_col] = base_matrix->data[r][second_col];
+            base_matrix->data[r][second_col] = temp;
+        }
+    }
+}
+
+
 Matrix get_row_matrix(Matrix base_matrix, int index_of_row)
 {
     if(index_of_row >= 0 && index_of_row < base_matrix->rows)
     {
-        Matrix new_matrix = create_matrix(1, base_matrix->cols);
+        Matrix m = new_matrix(1, base_matrix->cols);
         for(int c = 0; c < base_matrix->cols; c++)
-            new_matrix->data[0][c] = base_matrix->data[index_of_row][c];
-        return new_matrix;
+            m->data[0][c] = base_matrix->data[index_of_row][c];
+        return m;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -530,12 +634,18 @@ Matrix get_column_matrix(Matrix base_matrix, int index_of_col)
 {
     if(index_of_col >= 0 && index_of_col < base_matrix->rows)
     {
-        Matrix new_matrix = create_matrix(base_matrix->rows, 1);
+        Matrix m = new_matrix(base_matrix->rows, 1);
         for(int r = 0; r < base_matrix->rows; r++)
-            new_matrix->data[r][0] = base_matrix->data[r][index_of_col];
-        return new_matrix;
+            m->data[r][0] = base_matrix->data[r][index_of_col];
+        return m;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
+}
+
+
+void print_vector(Vector vector)
+{
+    printf("(%lf)i + (%lf)j + (%lf)k", vector->X, vector->Y, vector->Z);
 }
 
 
@@ -551,24 +661,24 @@ void print_matrix(Matrix matrix)
 }
 
 
+void print_index(Index index)
+{
+    printf("(%d, %d)", index->row, index->col);
+}
+
+
 void print_types(char **types)
 {
     int count = 0;
     while(types[count]) count++;
-
-    if(count == 0)
-    {
-        printf("  [SORRY] :: This Is Not Actually Any Matrix...\n");
-        return;
-    }
+    if(count == 0) return;
     printf("[");
-    printf(" %s", types[0]);
+    printf("'%s'", types[0]);
     for(int i = 1; i < count; i++)
-    {
-       printf(",  %s", types[i]);
-    }
-    printf(" ]\n");
+        printf(", '%s'", types[i]);
+    printf("]");
 }
+
 
 
 // ---------------------------------------------------------------- //
@@ -580,12 +690,12 @@ Matrix principal_diagonal(Matrix matrix)
 {
     if(matrix->rows == matrix->cols)
     {
-        Matrix diagonal_matrix = create_matrix(1, matrix->cols);
+        Matrix diagonal_matrix = new_matrix(1, matrix->cols);
         for(int r = 0; r < matrix->rows; r++)
             diagonal_matrix->data[0][r] = matrix->data[r][r];
         return diagonal_matrix;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -593,12 +703,12 @@ Matrix principal_diagonal_matrix(Matrix matrix)
 {
     if(matrix->rows == matrix->cols)
     {
-        Matrix diagonal_matrix = create_matrix(matrix->rows, matrix->cols);
+        Matrix diagonal_matrix = new_matrix(matrix->rows, matrix->cols);
         for(int r = 0; r < matrix->rows; r++)
             diagonal_matrix->data[r][r] = matrix->data[r][r];
         return diagonal_matrix;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -619,12 +729,12 @@ Matrix secondary_diagonal(Matrix matrix)
 {
     if(matrix->rows == matrix->cols)
     {
-        Matrix diagonal_matrix = create_matrix(1, matrix->cols);
+        Matrix diagonal_matrix = new_matrix(1, matrix->cols);
         for(int r = 0; r < matrix->rows; r++)
             diagonal_matrix->data[0][r] = matrix->data[r][matrix->cols-r-1];
         return diagonal_matrix;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -632,12 +742,12 @@ Matrix secondary_diagonal_matrix(Matrix matrix)
 {
     if(matrix->rows == matrix->cols)
     {
-        Matrix diagonal_matrix = create_matrix(matrix->rows, matrix->cols);
+        Matrix diagonal_matrix = new_matrix(matrix->rows, matrix->cols);
         for(int r = 0; r < matrix->rows; r++)
             diagonal_matrix->data[r][matrix->cols-r-1] = matrix->data[r][matrix->cols-r-1];
         return diagonal_matrix;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -658,7 +768,7 @@ Matrix add(Matrix matrix_1, Matrix matrix_2)
 {
     if(are_perfect(matrix_1, matrix_2, ADDITION))
     {
-        Matrix result = create_matrix(matrix_1->rows, matrix_1->cols);
+        Matrix result = new_matrix(matrix_1->rows, matrix_1->cols);
         for(int r = 0; r < matrix_1->rows; r++)
         {
             for(int c = 0; c < matrix_1->cols; c++)
@@ -666,7 +776,7 @@ Matrix add(Matrix matrix_1, Matrix matrix_2)
         }
         return result;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -674,7 +784,7 @@ Matrix add_row_matrix(Matrix base_matrix, Matrix row_matrix)
 {
     if(base_matrix->cols == row_matrix->cols)
     {
-        Matrix result = create_matrix(base_matrix->rows, base_matrix->cols);
+        Matrix result = new_matrix(base_matrix->rows, base_matrix->cols);
         for(int r = 0; r < base_matrix->rows; r++)
         {
             for(int c = 0; c < base_matrix->cols; c++)
@@ -682,7 +792,7 @@ Matrix add_row_matrix(Matrix base_matrix, Matrix row_matrix)
         }
         return result;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -690,7 +800,7 @@ Matrix add_column_matrix(Matrix base_matrix, Matrix column_matrix)
 {
     if(base_matrix->rows == column_matrix->rows)
     {
-        Matrix result = create_matrix(base_matrix->rows, base_matrix->cols);
+        Matrix result = new_matrix(base_matrix->rows, base_matrix->cols);
         for(int r = 0; r < base_matrix->rows; r++)
         {
             for(int c = 0; c < base_matrix->cols; c++)
@@ -698,7 +808,7 @@ Matrix add_column_matrix(Matrix base_matrix, Matrix column_matrix)
         }
         return result;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -706,7 +816,7 @@ Matrix subtract(Matrix matrix_1, Matrix matrix_2)
 {
     if(are_perfect(matrix_1, matrix_2, SUBTRACTION))
     {
-        Matrix result = create_matrix(matrix_1->rows, matrix_1->cols);
+        Matrix result = new_matrix(matrix_1->rows, matrix_1->cols);
         for(int r = 0; r < matrix_1->rows; r++)
         {
             for(int c = 0; c < matrix_1->cols; c++)
@@ -714,7 +824,7 @@ Matrix subtract(Matrix matrix_1, Matrix matrix_2)
         }
         return result;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -722,7 +832,7 @@ Matrix subtract_row_matrix(Matrix base_matrix, Matrix row_matrix)
 {
     if(base_matrix->cols == row_matrix->cols)
     {
-        Matrix result = create_matrix(base_matrix->rows, base_matrix->cols);
+        Matrix result = new_matrix(base_matrix->rows, base_matrix->cols);
         for(int r = 0; r < base_matrix->rows; r++)
         {
             for(int c = 0; c < base_matrix->cols; c++)
@@ -730,7 +840,7 @@ Matrix subtract_row_matrix(Matrix base_matrix, Matrix row_matrix)
         }
         return result;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -738,7 +848,7 @@ Matrix subtract_column_matrix(Matrix base_matrix, Matrix column_matrix)
 {
     if(base_matrix->rows == column_matrix->rows)
     {
-        Matrix result = create_matrix(base_matrix->rows, base_matrix->cols);
+        Matrix result = new_matrix(base_matrix->rows, base_matrix->cols);
         for(int r = 0; r < base_matrix->rows; r++)
         {
             for(int c = 0; c < base_matrix->cols; c++)
@@ -746,13 +856,13 @@ Matrix subtract_column_matrix(Matrix base_matrix, Matrix column_matrix)
         }
         return result;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
 Matrix multiply_by_scalar(Matrix matrix, double scalar_number)
 {
-    Matrix scaled_matrix = create_matrix(matrix->rows, matrix->cols);
+    Matrix scaled_matrix = new_matrix(matrix->rows, matrix->cols);
     for(int r = 0; r < matrix->rows; r++)
     {
         for(int c = 0; c < matrix->cols; c++)
@@ -766,7 +876,7 @@ Matrix multiply(Matrix matrix_1, Matrix matrix_2)
 {
     if(are_perfect(matrix_1, matrix_2, MULTIPLICATION))
     {
-        Matrix result = create_matrix(matrix_1->rows, matrix_2->cols);
+        Matrix result = new_matrix(matrix_1->rows, matrix_2->cols);
         for (int i = 0; i < matrix_1->rows; i++)
         {
             for (int j = 0; j < matrix_2->cols; j++)
@@ -778,7 +888,7 @@ Matrix multiply(Matrix matrix_1, Matrix matrix_2)
         }
         return result;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -786,17 +896,17 @@ Matrix power(Matrix matrix, int n)
 {
     if(matrix->rows == matrix->cols)
     {
-        if(n == 0) return create_identity_matrix(matrix->rows);
+        if(n == 0) return new_identity_matrix(matrix->rows);
         else if(n == 1) return matrix;
         else if(n > 1)
         {
-            Matrix new_matrix = create_matrix(matrix->rows, matrix->cols);
-            new_matrix = matrix;
+            Matrix m = new_matrix(matrix->rows, matrix->cols);
+            m = matrix;
             for(int p = 1; p < n; p++)
             {
-                new_matrix = multiply(new_matrix, matrix);
+                m = multiply(m, matrix);
             }
-            return new_matrix;
+            return m;
         }
         else return matrix;
     }
@@ -808,7 +918,7 @@ Matrix minor_matrix(Matrix matrix, int index_row, int index_col)
 { 
     if(is_perfect(matrix, MINOR))
     {
-        Matrix minor = create_matrix(matrix->rows-1, matrix->cols-1);
+        Matrix minor = new_matrix(matrix->rows-1, matrix->cols-1);
         int r = 0, c = 0;
         for(int row = 0; row < matrix->rows; row++) 
         { 
@@ -825,7 +935,7 @@ Matrix minor_matrix(Matrix matrix, int index_row, int index_col)
         }
         return minor;
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 } 
 
 
@@ -834,7 +944,7 @@ double determinant(Matrix matrix)
     if(is_perfect(matrix, DETERMINANT))
     {
         if(matrix->rows == 1 && matrix->cols == 1) return matrix->data[0][0];
-        Matrix temp_minor_matrix = create_matrix(matrix->rows-1, matrix->cols-1);
+        Matrix temp_minor_matrix = new_matrix(matrix->rows-1, matrix->cols-1);
         int sign = 1, det = 0;
         for(int c = 0; c < matrix->rows; c++)
         { 
@@ -869,7 +979,7 @@ double co_factor(Matrix matrix, int index_row, int index_col)
 
 Matrix transpose(Matrix matrix)
 {
-    Matrix transposed_matrix = create_matrix(matrix->cols, matrix->rows);
+    Matrix transposed_matrix = new_matrix(matrix->cols, matrix->rows);
     for(int r=0; r<matrix->cols; r++)
     {
         for(int c=0; c<matrix->rows; c++)
@@ -883,7 +993,7 @@ Matrix adjoint(Matrix matrix)
 {
     if(is_perfect(matrix, ADJOINT))
     {
-        Matrix adjoint_matrix = create_matrix(matrix->rows, matrix->cols);
+        Matrix adjoint_matrix = new_matrix(matrix->rows, matrix->cols);
         for(int r=0; r<matrix->cols; r++)
         {
             for(int c=0; c<matrix->rows; c++)
@@ -891,7 +1001,7 @@ Matrix adjoint(Matrix matrix)
         }
         return transpose(adjoint_matrix);
     }
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
@@ -899,13 +1009,13 @@ Matrix inverse(Matrix matrix)
 {
     if(is_perfect(matrix, INVERSE))
         return multiply_by_scalar(adjoint(matrix), 1/determinant(matrix));
-    return create_matrix(0, 0);
+    return new_matrix(0, 0);
 }
 
 
 Matrix solve(Matrix coefficients_square_matrix, Matrix constants_column_matrix)
 {
-    Matrix result_column_matrix = create_matrix(coefficients_square_matrix->cols, 1);
+    Matrix result_column_matrix = new_matrix(coefficients_square_matrix->cols, 1);
     if(is_perfect(coefficients_square_matrix, DETERMINANT) && constants_column_matrix->rows == coefficients_square_matrix->cols && constants_column_matrix->cols == 1)
     {
         double scaling_factor = 1/determinant(coefficients_square_matrix);
@@ -1095,7 +1205,7 @@ bool is_type_of(Matrix matrix, int TYPE)
         {
             if(is_type_of(matrix, NULL_MATRIX)) return true;
             int trial = 0;
-            Matrix temp_matrix = create_matrix(matrix->rows, matrix->cols);
+            Matrix temp_matrix = new_matrix(matrix->rows, matrix->cols);
             temp_matrix = matrix;
             while(trial != 100)
             {
@@ -1114,7 +1224,7 @@ bool is_type_of(Matrix matrix, int TYPE)
 
 char **types(Matrix matrix, int TEXT_STYLE)
 {
-    char **list_of_types = malloc(375*sizeof(char) + 15*sizeof(char *));
+    char **list_of_types = (char **)malloc(375*sizeof(char) + 15*sizeof(char *));
     int count = 0;
 
     if(is_type_of(matrix, ROW_MATRIX))

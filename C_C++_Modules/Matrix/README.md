@@ -72,6 +72,18 @@ double *parse_number(char *string, int num)
 ```
 ---
 
+## **`Vector` Structure**
+```c
+struct vector
+{
+    double X;
+    double Y;
+    double Z;
+};
+
+typedef struct vector* Vector;
+```
+
 ## **`Matrix` Structure**
 ```c
 struct matrix
@@ -83,33 +95,62 @@ struct matrix
 
 typedef struct matrix* Matrix;
 ```
+
+## **`Index` Structure**
+```c
+struct index
+{
+    int row;
+    int col;
+};
+
+typedef struct index* Index;
+```
 ---
->## **How To Make A `Matrix` Type Variable ?**
+
+>## **How to define a `'Vector'`, `'Matrix'` and `'Index'` Type Variables ?**
 
 ```c
+#include "path/to/the/matrix.h"
+
 int main()
 {
-    Matrix variable_name;
+    // 'vector' is a 'Vector' type variable...
+    Vector vector; // It's a 3-dimensional 'Vector'
+    
+    // 'matrix' is a 'Matrix' type variable...
+    Matrix matrix;
 
+    // 'index' is a 'Index' type variable...
+    Index index;
+    
     return 0;
 }
 ```
----
+
 >## **How To Work With `Functions` ?**
 
 ```c
+#include "path/to/the/matrix.h"
+
 int main()
 {
-    // If the 'function()' returns a Matrix
+    // If the 'function()' returns a 'Vector'
+    Vector vector = funtion_name(...);
+    
+    // If the 'function()' returns a 'Matrix'
     Matrix matrix = function_name(...);
 
-    // If the 'function()' returns a *double
+    // If the 'function()' returns a 'Index'
+    Index index = funtion_name(...);
+
+    // If the 'function()' returns a '*double'
     double *array = function_name(...);
 
-    // If the 'function()' returns a double
+    // If the 'function()' returns a 'double'
     double number = function_name(...);
 
-    // If the 'function()' returns a boolian value (true/false)
+    // If the 'function()' returns a 'bool'(true/false)
     bool something = function_name(...);
 
     return 0;
@@ -140,9 +181,17 @@ bool are_identical(Matrix matrix_1, Matrix matrix_2)
 ---
 ## **`Create-Matrix` Functions()**
 
+>**It creates a `New-Index` type structure**
+```c
+Index new_index(int row, int column)
+```
+>**It creates a `Vector` with Components (`X`,`Y`,`Z`)**
+```c
+Vector new_vector(double X, double Y, double Z)
+```
 >**It creates a `<`rows`>` by `<`cols`>` `Matrix`**
 ```c
-Matrix create_matrix(int rows, int cols)
+Matrix new_matrix(int rows, int cols)
 ```
 >**It creates a `Null/Empty Matrix`**
 ```c
@@ -150,7 +199,7 @@ Matrix null()
 ```
 >**It creates a `<`n`>` by `<`n`>` `Identity` or `Unit` `Matrix`**
 ```c
-Matrix create_identity_matrix(int n)
+Matrix new_identity_matrix(int n)
 ```
 ---
 ## **`Input` Functions()**
@@ -185,6 +234,14 @@ Matrix make_matrix_from_array(double *data, int rows, int cols)
 >**It `converts` the `<matrix>` into a `1D-Array`**
 ```c
 double *make_array_from_matrix(Matrix matrix)
+```
+>**It `converts` the 3D`<vector>` into a `Column-Matrix`**
+```c
+Matrix make_colMatrix_from_vector(Vector vector)
+```
+>**It `converts` the `<colMatrix>` into a 3D`Vector`**
+```c
+Vector make_vector_from_colMatrix(Matrix colMatrix)
 ```
 >**It `Re-Forms` the `dimensions` and `index`(s) of the `<matrix>` if `possible`**
 ```c
@@ -233,6 +290,18 @@ Matrix pop_row_matrix(Matrix base_matrix)
 >**It `Removes` the `last-column` from the `<base_matrix>`**
 ```c
 Matrix pop_column_matrix(Matrix base_matrix)
+```
+>**It `Swaps` `<first_index>` with the `<second_index>` of the `<base_matrix>`**
+```c
+void swap_index(Matrix base_matrix, Index first_index, Index second_index)
+```
+>**It `Swaps` `<first_row>` with the `<second_row>` of the `<base_matrix>`**
+```c
+void swap_row(Matrix base_matrix, int first_row, int second_row)
+```
+>**It `Swaps` `<first_col>` with the `<second_col>` of the `<base_matrix>`**
+```c
+void swap_column(Matrix base_matrix, int first_col, int second_col)
 ```
 ---
 ## **`Get` Matrix**
