@@ -64,6 +64,24 @@
 #define TITLE 26
 
 // --------------------------------------------------------------- //
+//             P A I R    <----->    S T R U C T U R E             //
+// --------------------------------------------------------------- //
+
+struct intPair
+{
+    int first;
+    int second;
+};
+typedef struct intPair* IntPair;
+
+struct nPair
+{
+    int first;
+    int second;
+};
+typedef struct nPair* Pair;
+
+// --------------------------------------------------------------- //
 //           V E C T O R    <----->    S T R U C T U R E           //
 // --------------------------------------------------------------- //
 
@@ -88,26 +106,6 @@ struct matrix
 };
 
 typedef struct matrix* Matrix;
-
-// --------------------------------------------------------------- //
-//             P A I R    <----->    S T R U C T U R E             //
-// --------------------------------------------------------------- //
-
-struct intPair
-{
-    int first;
-    int second;
-};
-
-typedef struct intPair* IntPair;
-
-struct nPair
-{
-    int first;
-    int second;
-};
-
-typedef struct nPair* Pair;
 
 // --------------------------------------------------------------- //
 //                           P A R S E R                           //
