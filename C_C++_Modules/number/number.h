@@ -64,22 +64,15 @@
 #define TITLE 26
 
 // --------------------------------------------------------------- //
-//             P A I R    <----->    S T R U C T U R E             //
+//             I N D E X    <----->    S T R U C T U R E           //
 // --------------------------------------------------------------- //
 
-struct intPair
+struct matIndex
 {
     int first;
     int second;
 };
-typedef struct intPair* IntPair;
-
-struct nPair
-{
-    int first;
-    int second;
-};
-typedef struct nPair* Pair;
+typedef struct matIndex* Index;
 
 // --------------------------------------------------------------- //
 //           V E C T O R    <----->    S T R U C T U R E           //
@@ -91,8 +84,8 @@ struct vector
     double Y;
     double Z;
 };
-
 typedef struct vector* Vector;
+typedef struct vector* Point;
 
 // --------------------------------------------------------------- //
 //           M A T R I X    <----->    S T R U C T U R E           //
@@ -104,11 +97,10 @@ struct matrix
     int cols;
     double **data;
 };
-
 typedef struct matrix* Matrix;
 
 // --------------------------------------------------------------- //
-//                           P A R S E R                           //
+//                        F U N C T I O N S                        //
 // --------------------------------------------------------------- //
 
 bool is_number(char *string)
@@ -143,6 +135,7 @@ bool is_number(char *string)
 char **split(char *string, char c)
 {  
     // Initialize...
+    sprintf(string, "%s ", string);
     int len = strlen(string), count_c = 0, number_of_tokens = 0;
     char str_c[1], **list_of_tokens = malloc(sizeof(char)*(len-count_c) + sizeof(char *)*(len-count_c-2));
     sprintf(str_c, "%c", c);
@@ -163,7 +156,6 @@ double *parse_number(char *string, int num)
     int count = 0, c = 0, i;
     double temp_num;
     // Get the splitted_String as a 2D_Character_Array...
-    sprintf(string, "%s ", string);
     char **splitted_string = split(string, ' ');
     // Initialize the Number_Array...
     while(splitted_string[count]) count++;
@@ -182,23 +174,15 @@ double *parse_number(char *string, int num)
     return list_of_nums;
 }
 
-// ---------------------------------------------------------------- //
-//      I M P O R T A N T S    <----->    F U N C T I O N S ()      //
-// ---------------------------------------------------------------- //
-
 bool is_null(Matrix matrix)
 {
     return (matrix->rows == 0 && matrix->cols == 0) ? true : false;
 }
 
 
-bool is_perfect(Matrix matrix, int OPERATION)
+bool is_square_matrix(Matrix matrix)
 {
-    if(OPERATION == TRANSPOSE)
-        return true;
-    else if(OPERATION == DETERMINANT || OPERATION == MINOR || OPERATION == COFACTOR || OPERATION == ADJOINT || OPERATION == INVERSE)
-        return (matrix->rows == matrix->cols);
-    return false;
+    return (matrix->rows == matrix->cols);
 }
 
 
@@ -228,30 +212,22 @@ bool are_identical(Matrix matrix_1, Matrix matrix_2)
 }
 
 
-IntPair index(int first, int second)
+Index index(int row, int column)
 {
-    IntPair i = (IntPair)malloc(sizeof(IntPair));
-    i->first = first;
-    i->second = second;
+    Index i = (Index)malloc(sizeof(Index));
+    i->row = row;
+    i->col = column;
     return i;
 }
 
 
-IntPair int_pair(int first, int second)
+Point point(double X, double Y, double Z)
 {
-    IntPair i = (IntPair)malloc(sizeof(IntPair));
-    i->first = first;
-    i->second = second;
-    return i;
-}
-
-
-Pair pair(double first, double second)
-{
-    Pair i = (Pair)malloc(sizeof(Pair));
-    i->first = first;
-    i->second = second;
-    return i;
+    Point p = (Point)malloc(sizeof(Point));
+    p->X = X;
+    p->Y = Y;
+    p->Z = Z;
+    return p;
 }
 
 
@@ -337,13 +313,13 @@ Matrix input_square_matrix(int n)
 }
 
 
-bool is_convertable(double *data, int rows, int cols)
+bool is_convertable(double *array, int rows, int cols)
 {
     int count = 0;
-    while(*data)
+    while(*array)
     {
         count++;
-        data++;
+        array++;
     }
     if(count == (rows*cols)) return true;
     return false;
@@ -383,7 +359,17 @@ double *make_array_from_matrix(Matrix matrix)
 }
 
 
-Matrix make_colMatrix_from_vector(Vector vector)
+Matrix row_vector(Vector vector)
+{
+    Matrix colMatrix = new_matrix(1, 3);
+    colMatrix->data[0][0] = vector->X;
+    colMatrix->data[0][1] = vector->Y;
+    colMatrix->data[0][2] = vector->Z;
+    return colMatrix;
+}
+
+
+Matrix column_vector(Vector vector)
 {
     Matrix colMatrix = new_matrix(3, 1);
     colMatrix->data[0][0] = vector->X;
@@ -393,11 +379,41 @@ Matrix make_colMatrix_from_vector(Vector vector)
 }
 
 
+Vector make_vector_from_rowMatrix(Matrix colMatrix)
+{
+    if(colMatrix->rows == 3 && colMatrix->cols == 1)
+        return new_vector(colMatrix->data[0][0], colMatrix->data[0][1], colMatrix->data[0][2]);
+    return new_vector(0, 0, 0);
+}
+
+
 Vector make_vector_from_colMatrix(Matrix colMatrix)
 {
     if(colMatrix->rows == 3 && colMatrix->cols == 1)
         return new_vector(colMatrix->data[0][0], colMatrix->data[1][0], colMatrix->data[2][0]);
     return new_vector(0, 0, 0);
+}
+
+
+Vector vectorize(Matrix matrix)
+{
+    if(colMatrix->rows == 3 && colMatrix->cols == 1)
+        return new_vector(colMatrix->data[0][0], colMatrix->data[0][1], colMatrix->data[0][2]);
+    else if(colMatrix->rows == 3 && colMatrix->cols == 1)
+        return new_vector(colMatrix->data[0][0], colMatrix->data[1][0], colMatrix->data[2][0]);
+    return new_vector(0, 0, 0);
+}
+
+
+Matrix transpose(Matrix matrix)
+{
+    Matrix transposed_matrix = new_matrix(matrix->cols, matrix->rows);
+    for(int r=0; r<matrix->cols; r++)
+    {
+        for(int c=0; c<matrix->rows; c++)
+            transposed_matrix->data[r][c] = matrix->data[c][r];
+    }
+    return transposed_matrix;
 }
 
 
@@ -589,13 +605,13 @@ Matrix pop_column_matrix(Matrix base_matrix)
 }
 
 
-void swap_index(Matrix base_matrix, IntPair first_index, IntPair second_index)
+void swap_index(Matrix base_matrix, Index first_index, Index second_index)
 {
-    if(first_index->first < base_matrix->first && first_index->second < base_matrix->second && second_index->first < base_matrix->first && second_index->second < base_matrix->second && first_index->first != second_index->first && first_index->second != second_index->second)
+    if(first_index->row < base_matrix->row && first_index->col < base_matrix->col && second_index->row < base_matrix->row && second_index->col < base_matrix->col && first_index->row != second_index->row && first_index->col != second_index->col)
     {
-        double temp_index = base_matrix->data[first_index->first][first_index->second];
-        base_matrix->data[first_index->first][first_index->second] = base_matrix->data[second_index->first][second_index->second];
-        base_matrix->data[second_index->first][second_index->second] = temp_index;
+        double temp_index = base_matrix->data[first_index->row][first_index->col];
+        base_matrix->data[first_index->row][first_index->col] = base_matrix->data[second_index->row][second_index->col];
+        base_matrix->data[second_index->row][second_index->col] = temp_index;
     }
 }
 
@@ -656,9 +672,50 @@ Matrix get_column_matrix(Matrix base_matrix, int index_of_col)
 }
 
 
+void print_index(Index index)
+{
+    printf("(%d, %d)", index->row, index->col);
+}
+
+
+void print_point(Point point)
+{
+    printf("(%lf, %lf, %lf)", point->X, point->Y, point->Z);
+}
+
+
 void print_vector(Vector vector)
 {
-    printf("(%lf)i + (%lf)j + (%lf)k", vector->X, vector->Y, vector->Z);
+    if(vector->X == 0 && vector->Y == 0 && vector->Z == 0)
+        printf("(0)");
+    else if(vector->X != 0 && vector->Y == 0 && vector->Z == 0)
+        printf("(%lfi)", vector->X);
+    else if(vector->X == 0 && vector->Y != 0 && vector->Z == 0)
+        printf("(%lfj)", vector->Y);
+    else if(vector->X == 0 && vector->Y == 0 && vector->Z != 0)
+        printf("(%lfk)", vector->Z);
+    else if(vector->X != 0 && vector->Y != 0 && vector->Z == 0)
+    {
+        if(vector->Y < 0) printf("(%lfi - %lfj)", vector->X, abs(vector->Y));
+        else printf("(%lfi + %lfj)", vector->X, vector->Y);
+    }
+    else if(vector->X != 0 && vector->Y == 0 && vector->Z != 0)
+    {
+        if(vector->Z < 0) printf("(%lfi - %lfk)", vector->X, abs(vector->Z));
+        else printf("(%lfi + %lfj)", vector->X, vector->Z);
+    }
+    else if(vector->X == 0 && vector->Y != 0 && vector->Z != 0)
+    {
+        if(vector->Z < 0) printf("(%lfj - %lfk)", vector->Y, abs(vector->Z));
+        else printf("(%lfj + %lfj)", vector->Y, vector->Z);
+    }
+    else
+    {
+        if(vector->Y < 0 && vector->Z < 0) printf("(%lfi - %lfj - %lfk)", vector->X, abs(vector->Y), abs(vector->Z));
+        else if(vector->Y < 0 && vector->Z > 0) printf("(%lfi - %lfj + %lfk)", vector->X, abs(vector->Y), vector->Z);
+        else if(vector->Y > 0 && vector->Z < 0) printf("(%lfi + %lfj - %lfk)", vector->X, vector->Y, abs(vector->Z));
+        else printf("(%lfi + %lfj + %lfj)", vector->X, vector->Y, vector->Z);
+    }
 }
 
 
@@ -674,12 +731,6 @@ void print_matrix(Matrix matrix)
 }
 
 
-void print_index(IntPair index)
-{
-    printf("(%d, %d)", index->first, index->second);
-}
-
-
 void print_types(char **types)
 {
     int count = 0;
@@ -691,12 +742,6 @@ void print_types(char **types)
         printf(", '%s'", types[i]);
     printf("]");
 }
-
-
-
-// ---------------------------------------------------------------- //
-//    M A T H E M A T I C A L    <----->    F U N C T I O N S ()    //
-// ---------------------------------------------------------------- //
 
 
 Matrix principal_diagonal(Matrix matrix)
@@ -873,7 +918,19 @@ Matrix subtract_column_matrix(Matrix base_matrix, Matrix column_matrix)
 }
 
 
-Matrix multiply_by_scalar(Matrix matrix, double scalar_number)
+Matrix translate_row_vector_matrix(Matrix matrix, Point point)
+{
+
+}
+
+
+Matrix translate_column_vector_matrix(Matrix matrix, Point point)
+{
+
+}
+
+
+Matrix scale(Matrix matrix, double scalar_number)
 {
     Matrix scaled_matrix = new_matrix(matrix->rows, matrix->cols);
     for(int r = 0; r < matrix->rows; r++)
@@ -929,7 +986,7 @@ Matrix power(Matrix matrix, int n)
 
 Matrix minor_matrix(Matrix matrix, int index_row, int index_col) 
 { 
-    if(is_perfect(matrix, MINOR))
+    if(is_square_matrix(matrix, MINOR))
     {
         Matrix minor = new_matrix(matrix->rows-1, matrix->cols-1);
         int r = 0, c = 0;
@@ -954,7 +1011,7 @@ Matrix minor_matrix(Matrix matrix, int index_row, int index_col)
 
 double determinant(Matrix matrix)
 {
-    if(is_perfect(matrix, DETERMINANT))
+    if(is_square_matrix(matrix, DETERMINANT))
     {
         if(matrix->rows == 1 && matrix->cols == 1) return matrix->data[0][0];
         Matrix temp_minor_matrix = new_matrix(matrix->rows-1, matrix->cols-1);
@@ -973,7 +1030,7 @@ double determinant(Matrix matrix)
 
 double minor(Matrix matrix, int index_row, int index_col)
 {
-    if(is_perfect(matrix, MINOR))
+    if(is_square_matrix(matrix, MINOR))
         return determinant(minor_matrix(matrix, index_row, index_col));
     return 0;
 }
@@ -981,7 +1038,7 @@ double minor(Matrix matrix, int index_row, int index_col)
 
 double co_factor(Matrix matrix, int index_row, int index_col)
 {
-    if(is_perfect(matrix, MINOR))
+    if(is_square_matrix(matrix, MINOR))
     {
         int sign = (index_row+index_col)%2 == 0 ? 1 : -1;
         return (double)sign*determinant(minor_matrix(matrix, index_row, index_col));
@@ -990,21 +1047,9 @@ double co_factor(Matrix matrix, int index_row, int index_col)
 }
 
 
-Matrix transpose(Matrix matrix)
-{
-    Matrix transposed_matrix = new_matrix(matrix->cols, matrix->rows);
-    for(int r=0; r<matrix->cols; r++)
-    {
-        for(int c=0; c<matrix->rows; c++)
-            transposed_matrix->data[r][c] = matrix->data[c][r];
-    }
-    return transposed_matrix;
-}
-
-
 Matrix adjoint(Matrix matrix)
 {
-    if(is_perfect(matrix, ADJOINT))
+    if(is_square_matrix(matrix, ADJOINT))
     {
         Matrix adjoint_matrix = new_matrix(matrix->rows, matrix->cols);
         for(int r=0; r<matrix->cols; r++)
@@ -1020,8 +1065,8 @@ Matrix adjoint(Matrix matrix)
 
 Matrix inverse(Matrix matrix)
 {
-    if(is_perfect(matrix, INVERSE))
-        return multiply_by_scalar(adjoint(matrix), 1/determinant(matrix));
+    if(is_square_matrix(matrix, INVERSE))
+        return scale(adjoint(matrix), 1/determinant(matrix));
     return new_matrix(0, 0);
 }
 
@@ -1029,7 +1074,7 @@ Matrix inverse(Matrix matrix)
 Matrix solve(Matrix coefficients_square_matrix, Matrix constants_column_matrix)
 {
     Matrix result_column_matrix = new_matrix(coefficients_square_matrix->cols, 1);
-    if(is_perfect(coefficients_square_matrix, DETERMINANT) && constants_column_matrix->rows == coefficients_square_matrix->cols && constants_column_matrix->cols == 1)
+    if(is_square_matrix(coefficients_square_matrix, DETERMINANT) && constants_column_matrix->rows == coefficients_square_matrix->cols && constants_column_matrix->cols == 1)
     {
         double scaling_factor = 1/determinant(coefficients_square_matrix);
         for(int i = 0; i < coefficients_square_matrix->cols; i++)
@@ -1207,7 +1252,7 @@ bool is_type_of(Matrix matrix, int TYPE)
     {
         if(matrix->rows == matrix->cols)
         {
-            return are_identical(multiply_by_scalar(matrix, -1), transpose(matrix));
+            return are_identical(scale(matrix, -1), transpose(matrix));
         }
         return false;
     }
