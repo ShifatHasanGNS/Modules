@@ -32,42 +32,43 @@
     #define TYPE_OF_MATRIX <int::VALUE>
 */
 
-#define ROW_MATRIX 9
-#define COLUMN_MATRIX 10
-#define SQUARE_MATRIX 11
-#define DIAGONAL_MATRIX 12
-#define SCALAR_MATRIX 13
-#define IDENTITY_MATRIX 14
-#define UNIT_MATRIX 14
-#define NULL_MATRIX 15
-#define ZERO_MATRIX 15
-#define UPPER_TRIANGULAR_MATRIX 16
-#define LOWER_TRIANGULAR_MATRIX 17
-#define TRIANGULAR_MATRIX 18
-#define INVOLUTORY_MATRIX 19
-#define IDEMPOTENT_MATRIX 20
-#define SYMMETRIC_MATRIX 21
-#define SKEW_SYMMETRIC_MATRIX 22
-#define NILPOTENT_MATRIX 23
+#define ROW_MATRIX 3
+#define COLUMN_MATRIX 4
+#define SQUARE_MATRIX 5
+#define DIAGONAL_MATRIX 6
+#define SCALAR_MATRIX 7
+#define IDENTITY_MATRIX 8
+#define UNIT_MATRIX 8
+#define NULL_MATRIX 9
+#define ZERO_MATRIX 9
+#define UPPER_TRIANGULAR_MATRIX 10
+#define LOWER_TRIANGULAR_MATRIX 11
+#define TRIANGULAR_MATRIX 12
+#define INVOLUTORY_MATRIX 13
+#define IDEMPOTENT_MATRIX 14
+#define SYMMETRIC_MATRIX 15
+#define SKEW_SYMMETRIC_MATRIX 16
+#define NILPOTENT_MATRIX 17
 
 /*
     #define TEXT_STYLE <int::VALUE>
 */
 
-#define UPPER 24
-#define LOWER 25
-#define TITLE 26
+#define UPPER 18
+#define LOWER 19
+#define TITLE 20
 
 // --------------------------------------------------------------- //
-//             I N D E X    <----->    S T R U C T U R E           //
+//             P A I R    <----->    S T R U C T U R E           //
 // --------------------------------------------------------------- //
 
-struct matIndex
+struct Index
 {
-    int first;
-    int second;
+    int row;
+    int col;
 };
-typedef struct matIndex* Index;
+
+typedef struct Index* Pair;
 
 // --------------------------------------------------------------- //
 //           V E C T O R    <----->    S T R U C T U R E           //
@@ -79,6 +80,7 @@ struct vector
     double Y;
     double Z;
 };
+
 typedef struct vector* Vector;
 typedef struct vector* Point;
 
@@ -92,6 +94,7 @@ struct matrix
     int cols;
     double **data;
 };
+
 typedef struct matrix* Matrix;
 
 // --------------------------------------------------------------- //
@@ -127,6 +130,7 @@ bool is_number(char *string)
     return true;
 }
 
+
 char **split(char *string, char c)
 {  
     // Initialize...
@@ -145,6 +149,7 @@ char **split(char *string, char c)
     // Return the splited 2D-Array of character...
     return list_of_tokens;
 }
+
 
 double *parse_number(char *string, int num)
 {
@@ -168,6 +173,7 @@ double *parse_number(char *string, int num)
     // Return the list as a double type Number_Array...
     return list_of_nums;
 }
+
 
 bool is_null(Matrix matrix)
 {
@@ -207,9 +213,9 @@ bool are_identical(Matrix matrix_1, Matrix matrix_2)
 }
 
 
-Index index(int row, int column)
+Pair pair(int row, int column)
 {
-    Index i = (Index)malloc(sizeof(Index));
+    Pair i = (Pair)malloc(sizeof(Pair));
     i->row = row;
     i->col = column;
     return i;
@@ -398,10 +404,10 @@ Vector make_vector_from_colMatrix(Matrix colMatrix)
 
 Vector vectorize(Matrix matrix)
 {
-    if(colMatrix->rows == 3 && colMatrix->cols == 1)
-        return new_vector(colMatrix->data[0][0], colMatrix->data[0][1], colMatrix->data[0][2]);
-    else if(colMatrix->rows == 3 && colMatrix->cols == 1)
-        return new_vector(colMatrix->data[0][0], colMatrix->data[1][0], colMatrix->data[2][0]);
+    if(matrix->rows == 3 && matrix->cols == 1)
+        return new_vector(matrix->data[0][0], matrix->data[0][1], matrix->data[0][2]);
+    else if(matrix->rows == 3 && matrix->cols == 1)
+        return new_vector(matrix->data[0][0], matrix->data[1][0], matrix->data[2][0]);
     return new_vector(0, 0, 0);
 }
 
@@ -618,9 +624,9 @@ Matrix pop_column_matrix(Matrix base_matrix)
 }
 
 
-void swap_index(Matrix base_matrix, Index first_index, Index second_index)
+void swap_index(Matrix base_matrix, Pair first_index, Pair second_index)
 {
-    if(first_index->row < base_matrix->row && first_index->col < base_matrix->col && second_index->row < base_matrix->row && second_index->col < base_matrix->col && first_index->row != second_index->row && first_index->col != second_index->col)
+    if(first_index->row < base_matrix->rows && first_index->col < base_matrix->cols && second_index->row < base_matrix->rows && second_index->col < base_matrix->cols && first_index->row != second_index->row && first_index->col != second_index->col)
     {
         double temp_index = base_matrix->data[first_index->row][first_index->col];
         base_matrix->data[first_index->row][first_index->col] = base_matrix->data[second_index->row][second_index->col];
@@ -685,7 +691,7 @@ Matrix get_column_matrix(Matrix base_matrix, int index_of_col)
 }
 
 
-void print_index(Index index)
+void print_index(Pair index)
 {
     printf("(%d, %d)", index->row, index->col);
 }
@@ -835,7 +841,7 @@ double secondary_trace(Matrix matrix)
 }
 
 
-Matrix add(Matrix matrix_1, Matrix matrix_2)
+Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if(are_perfect(matrix_1, matrix_2, ADDITION))
     {
@@ -883,7 +889,7 @@ Matrix add_column_matrix(Matrix base_matrix, Matrix column_matrix)
 }
 
 
-Matrix subtract(Matrix matrix_1, Matrix matrix_2)
+Matrix subtract_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if(are_perfect(matrix_1, matrix_2, SUBTRACTION))
     {
@@ -943,7 +949,7 @@ Matrix translate_row_vector_matrix(Matrix matrix, Point changed_point_of_origin)
 
 Matrix translate_column_vector_matrix(Matrix matrix, Point changed_point_of_origin)
 {
-    if(matrix->rows ==3 0 && matrix->cols > 3)
+    if(matrix->rows == 3 && matrix->cols > 3)
     {
         Matrix col_matrix = to_column_matrix(to_vector(changed_point_of_origin));
         return subtract_column_matrix(matrix, col_matrix);
@@ -951,7 +957,7 @@ Matrix translate_column_vector_matrix(Matrix matrix, Point changed_point_of_orig
 }
 
 
-Matrix scale(Matrix matrix, double scalar_number)
+Matrix scale_matrix(Matrix matrix, double scalar_number)
 {
     Matrix scaled_matrix = new_matrix(matrix->rows, matrix->cols);
     for(int r = 0; r < matrix->rows; r++)
@@ -1087,24 +1093,24 @@ Matrix adjoint(Matrix matrix)
 Matrix inverse(Matrix matrix)
 {
     if(is_square_matrix(matrix))
-        return scale(adjoint(matrix), 1/determinant(matrix));
+        return scale_matrix(adjoint(matrix), 1/determinant(matrix));
     return new_matrix(0, 0);
 }
 
 
-Vector add(Vector vector_1, Vector vector_2)
+Vector add_vector(Vector vector_1, Vector vector_2)
 {
     return new_vector(vector_1->X + vector_2->X, vector_1->Y + vector_2->Y, vector_1->Z + vector_2->Z);
 }
 
 
-Vector subtract(Vector vector_1, Vector vector_2)
+Vector subtract_vector(Vector vector_1, Vector vector_2)
 {
     return new_vector(vector_1->X - vector_2->X, vector_1->Y - vector_2->Y, vector_1->Z - vector_2->Z);
 }
 
 
-Vector scale(Vector vector, double scalar_number)
+Vector scale_vector(Vector vector, double scalar_number)
 {
     return new_vector(scalar_number * vector->X, scalar_number * vector->Y, scalar_number * vector->Z);
 }
@@ -1129,7 +1135,7 @@ Vector cross(Vector vector_1, Vector vector_2)
 Vector unit_vector(Vector vector)
 {
     double length = sqrt(vector->X*vector->X + vector->Y*vector->Y + vector->Z*vector->Z);
-    return scale(vector, 1/length);
+    return scale_vector(vector, 1/length);
 }
 
 
@@ -1140,7 +1146,7 @@ Matrix rotation_matrix_in_2D_space(double angle)
     r_matrix->data[1][0] = sin(angle);
     r_matrix->data[0][1] = -sin(angle);
     r_matrix->data[1][1] = cos(angle);
-    return r_matrix
+    return r_matrix;
 }
 
 
@@ -1164,7 +1170,7 @@ Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, double angle)
 
 Point rotate_point_in_2D_space(Point point, double angle)
 {
-    return to_point(make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), to_column_matrix(to_vector(point)))));
+    return to_point(make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), pop_row_matrix(to_column_matrix(to_vector(point))))));
 }
 
 
@@ -1176,7 +1182,7 @@ Point rotate_point_in_3D_space(Point point, double angle, Vector rotation_axis_v
 
 Vector rotate_vector_in_2D_space(Vector vector, double angle)
 {
-    return make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), to_column_matrix(vector)));
+    return make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), pop_row_matrix(to_column_matrix(vector))));
 }
 
 
@@ -1188,16 +1194,16 @@ Vector rotate_vector_in_3D_space(Vector vector, double angle, Vector rotation_ax
 
 Matrix rotate_matrix_in_2D_space(Matrix matrix, double angle)
 {
-    if(matrix->rows == 2 && matrix->cols > 0) return make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), matrix));
-    else if(matrix->rows > 0 && matrix->cols == 2) return make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), transpose(matrix)));
+    if(matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_2D_space(angle), matrix);
+    else if(matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_2D_space(angle), transpose(matrix));
     else return matrix;
 }
 
 
 Matrix rotate_matrix_in_3D_space(Matrix matrix, double angle, Vector rotation_axis_vector)
 {
-    if(matrix->rows == 2 && matrix->cols > 0) return make_vector_from_colMatrix(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), matrix));
-    else if(matrix->rows > 0 && matrix->cols == 2) return make_vector_from_colMatrix(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), transpose(matrix)));
+    if(matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), matrix);
+    else if(matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), transpose(matrix));
     else return matrix;
 }
 
@@ -1383,7 +1389,7 @@ bool is_type_of(Matrix matrix, int TYPE)
     {
         if(matrix->rows == matrix->cols)
         {
-            return are_identical(scale(matrix, -1), transpose(matrix));
+            return are_identical(scale_matrix(matrix, -1), transpose(matrix));
         }
         return false;
     }
