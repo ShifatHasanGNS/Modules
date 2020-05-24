@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 // ---------------------------------------------------------------- //
 //          I M P O R T A N T S    <----->    M A C R O S           //
@@ -26,12 +27,6 @@
 #define ADDITION 0
 #define SUBTRACTION 1
 #define MULTIPLICATION 2
-#define DETERMINANT 3
-#define MINOR 4
-#define COFACTOR 5
-#define TRANSPOSE 6
-#define ADJOINT 7
-#define INVERSE 8
 
 /*
     #define TYPE_OF_MATRIX <int::VALUE>
@@ -260,12 +255,18 @@ Matrix null()
 }
 
 
-Matrix new_identity_matrix(int n)
+Vector zero_vector()
 {
-    Matrix matrix = new_matrix(n, n);
-    for(int r = 0; r < n; r++)
+    return new_vector(0, 0, 0);
+}
+
+
+Matrix new_identity_matrix(int order)
+{
+    Matrix matrix = new_matrix(order, order);
+    for(int r = 0; r < order; r++)
     {
-        for(int c = 0; c < n; c++)
+        for(int c = 0; c < order; c++)
             if(r == c) matrix->data[r][c] = 1;
     }
     return matrix;
@@ -307,9 +308,9 @@ Matrix input_column_matrix(int rows)
 }
 
 
-Matrix input_square_matrix(int n)
+Matrix input_square_matrix(int order)
 {
-    return input_matrix(n, n);
+    return input_matrix(order, order);
 }
 
 
@@ -359,7 +360,7 @@ double *make_array_from_matrix(Matrix matrix)
 }
 
 
-Matrix row_vector(Vector vector)
+Matrix to_row_matrix(Vector vector)
 {
     Matrix colMatrix = new_matrix(1, 3);
     colMatrix->data[0][0] = vector->X;
@@ -369,7 +370,7 @@ Matrix row_vector(Vector vector)
 }
 
 
-Matrix column_vector(Vector vector)
+Matrix to_column_matrix(Vector vector)
 {
     Matrix colMatrix = new_matrix(3, 1);
     colMatrix->data[0][0] = vector->X;
@@ -402,6 +403,18 @@ Vector vectorize(Matrix matrix)
     else if(colMatrix->rows == 3 && colMatrix->cols == 1)
         return new_vector(colMatrix->data[0][0], colMatrix->data[1][0], colMatrix->data[2][0]);
     return new_vector(0, 0, 0);
+}
+
+
+Vector to_point(Vector vector)
+{
+    return point(vector->X, vector->Y, vector->Z);
+}
+
+
+Vector to_vector(Point point)
+{
+    return new_vector(point->X, point->Y, point->Z);
 }
 
 
@@ -918,15 +931,23 @@ Matrix subtract_column_matrix(Matrix base_matrix, Matrix column_matrix)
 }
 
 
-Matrix translate_row_vector_matrix(Matrix matrix, Point point)
+Matrix translate_row_vector_matrix(Matrix matrix, Point changed_point_of_origin)
 {
-
+    if(matrix->rows > 0 && matrix->cols == 3)
+    {
+        Matrix row_matrix = to_row_matrix(to_vector(changed_point_of_origin));
+        return subtract_row_matrix(matrix, row_matrix);
+    }
 }
 
 
-Matrix translate_column_vector_matrix(Matrix matrix, Point point)
+Matrix translate_column_vector_matrix(Matrix matrix, Point changed_point_of_origin)
 {
-
+    if(matrix->rows ==3 0 && matrix->cols > 3)
+    {
+        Matrix col_matrix = to_column_matrix(to_vector(changed_point_of_origin));
+        return subtract_column_matrix(matrix, col_matrix);
+    }
 }
 
 
@@ -986,7 +1007,7 @@ Matrix power(Matrix matrix, int n)
 
 Matrix minor_matrix(Matrix matrix, int index_row, int index_col) 
 { 
-    if(is_square_matrix(matrix, MINOR))
+    if(is_square_matrix(matrix))
     {
         Matrix minor = new_matrix(matrix->rows-1, matrix->cols-1);
         int r = 0, c = 0;
@@ -1011,7 +1032,7 @@ Matrix minor_matrix(Matrix matrix, int index_row, int index_col)
 
 double determinant(Matrix matrix)
 {
-    if(is_square_matrix(matrix, DETERMINANT))
+    if(is_square_matrix(matrix))
     {
         if(matrix->rows == 1 && matrix->cols == 1) return matrix->data[0][0];
         Matrix temp_minor_matrix = new_matrix(matrix->rows-1, matrix->cols-1);
@@ -1030,7 +1051,7 @@ double determinant(Matrix matrix)
 
 double minor(Matrix matrix, int index_row, int index_col)
 {
-    if(is_square_matrix(matrix, MINOR))
+    if(is_square_matrix(matrix))
         return determinant(minor_matrix(matrix, index_row, index_col));
     return 0;
 }
@@ -1038,7 +1059,7 @@ double minor(Matrix matrix, int index_row, int index_col)
 
 double co_factor(Matrix matrix, int index_row, int index_col)
 {
-    if(is_square_matrix(matrix, MINOR))
+    if(is_square_matrix(matrix))
     {
         int sign = (index_row+index_col)%2 == 0 ? 1 : -1;
         return (double)sign*determinant(minor_matrix(matrix, index_row, index_col));
@@ -1049,7 +1070,7 @@ double co_factor(Matrix matrix, int index_row, int index_col)
 
 Matrix adjoint(Matrix matrix)
 {
-    if(is_square_matrix(matrix, ADJOINT))
+    if(is_square_matrix(matrix))
     {
         Matrix adjoint_matrix = new_matrix(matrix->rows, matrix->cols);
         for(int r=0; r<matrix->cols; r++)
@@ -1065,16 +1086,126 @@ Matrix adjoint(Matrix matrix)
 
 Matrix inverse(Matrix matrix)
 {
-    if(is_square_matrix(matrix, INVERSE))
+    if(is_square_matrix(matrix))
         return scale(adjoint(matrix), 1/determinant(matrix));
     return new_matrix(0, 0);
+}
+
+
+Vector add(Vector vector_1, Vector vector_2)
+{
+    return new_vector(vector_1->X + vector_2->X, vector_1->Y + vector_2->Y, vector_1->Z + vector_2->Z);
+}
+
+
+Vector subtract(Vector vector_1, Vector vector_2)
+{
+    return new_vector(vector_1->X - vector_2->X, vector_1->Y - vector_2->Y, vector_1->Z - vector_2->Z);
+}
+
+
+Vector scale(Vector vector, double scalar_number)
+{
+    return new_vector(scalar_number * vector->X, scalar_number * vector->Y, scalar_number * vector->Z);
+}
+
+
+double dot(Vector vector_1, Vector vector_2)
+{
+    return ((vector_1->X * vector_2->X) + (vector_1->Y * vector_2->Y) + (vector_1->Z * vector_2->Z));
+}
+
+
+Vector cross(Vector vector_1, Vector vector_2)
+{
+    Vector vector = new_vector(0, 0, 0);
+    vector->X = (vector_1->Y * vector_2->Z) - (vector_1->Z * vector_2->Y);
+    vector->Y = (vector_1->Z * vector_2->X) - (vector_1->X * vector_2->Z);
+    vector->Z = (vector_1->X * vector_2->Y) - (vector_1->Y * vector_2->X);
+    return vector;
+}
+
+
+Vector unit_vector(Vector vector)
+{
+    double length = sqrt(vector->X*vector->X + vector->Y*vector->Y + vector->Z*vector->Z);
+    return scale(vector, 1/length);
+}
+
+
+Matrix rotation_matrix_in_2D_space(double angle)
+{
+    Matrix r_matrix = new_matrix(2, 2);
+    r_matrix->data[0][0] = cos(angle);
+    r_matrix->data[1][0] = sin(angle);
+    r_matrix->data[0][1] = -sin(angle);
+    r_matrix->data[1][1] = cos(angle);
+    return r_matrix
+}
+
+
+Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, double angle)
+{
+    Vector v = unit_vector(rotation_axis_vector);
+    double vr = cos(angle), vi = (sin(angle)*v->X), vj = (sin(angle)*v->Y), vk = (sin(angle)*v->Z);
+    Matrix r_matrix = new_matrix(3, 3);
+    r_matrix->data[0][0] = 1 - (2 * (vj*vj + vk*vk));
+    r_matrix->data[1][0] = 2 * (vi*vj + vk*vr);
+    r_matrix->data[2][0] = 2 * (vi*vk - vj*vr);
+    r_matrix->data[0][1] = 2 * (vi*vj - vk*vr);
+    r_matrix->data[1][1] = 1 - (2 * (vi*vi + vk*vk));
+    r_matrix->data[2][1] = 2 * (vj*vk + vi*vr);
+    r_matrix->data[0][2] = 2 * (vi*vk + vj*vr);
+    r_matrix->data[1][2] = 2 * (vj*vk - vi*vr);
+    r_matrix->data[2][2] = 1 - (2 * (vi*vi + vj*vj));
+    return r_matrix;
+}
+
+
+Point rotate_point_in_2D_space(Point point, double angle)
+{
+    return to_point(make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), to_column_matrix(to_vector(point)))));
+}
+
+
+Point rotate_point_in_3D_space(Point point, double angle, Vector rotation_axis_vector)
+{
+    return to_point(make_vector_from_colMatrix(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), to_column_matrix(to_vector(point)))));
+}
+
+
+Vector rotate_vector_in_2D_space(Vector vector, double angle)
+{
+    return make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), to_column_matrix(vector)));
+}
+
+
+Vector rotate_vector_in_3D_space(Vector vector, double angle, Vector rotation_axis_vector)
+{
+    return make_vector_from_colMatrix(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), to_column_matrix(vector)));
+}
+
+
+Matrix rotate_matrix_in_2D_space(Matrix matrix, double angle)
+{
+    if(matrix->rows == 2 && matrix->cols > 0) return make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), matrix));
+    else if(matrix->rows > 0 && matrix->cols == 2) return make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), transpose(matrix)));
+    else return matrix;
+}
+
+
+Matrix rotate_matrix_in_3D_space(Matrix matrix, double angle, Vector rotation_axis_vector)
+{
+    if(matrix->rows == 2 && matrix->cols > 0) return make_vector_from_colMatrix(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), matrix));
+    else if(matrix->rows > 0 && matrix->cols == 2) return make_vector_from_colMatrix(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), transpose(matrix)));
+    else return matrix;
 }
 
 
 Matrix solve(Matrix coefficients_square_matrix, Matrix constants_column_matrix)
 {
     Matrix result_column_matrix = new_matrix(coefficients_square_matrix->cols, 1);
-    if(is_square_matrix(coefficients_square_matrix, DETERMINANT) && constants_column_matrix->rows == coefficients_square_matrix->cols && constants_column_matrix->cols == 1)
+    if(is_square_matrix(coefficients_square_matrix) && constants_column_matrix->rows == coefficients_square_matrix->cols && constants_column_matrix->cols == 1)
     {
         double scaling_factor = 1/determinant(coefficients_square_matrix);
         for(int i = 0; i < coefficients_square_matrix->cols; i++)
