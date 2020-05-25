@@ -21,6 +21,12 @@
 // ---------------------------------------------------------------- //
 
 /*
+    PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679...
+*/
+
+#define PI 3.14159265358979323846264338327950288419716939937510
+
+/*
     #define OPERATION <int::VALUE>            
 */
 
@@ -57,6 +63,13 @@
 #define UPPER 18
 #define LOWER 19
 #define TITLE 20
+
+/*
+    #define ANGLE <int::VALUE>
+*/
+
+#define DEG 21
+#define RAD 22
 
 // --------------------------------------------------------------- //
 //             P A I R    <----->    S T R U C T U R E           //
@@ -172,6 +185,18 @@ double *parse_number(char *string, int num)
     }
     // Return the list as a double type Number_Array...
     return list_of_nums;
+}
+
+
+double radian(double angle_in_degree)
+{
+    return ((angle_in_degree * PI) / 180);
+}
+
+
+double degree(double angle_in_radian)
+{
+    return ((angle_in_radian * 180) / PI);
 }
 
 
@@ -296,8 +321,6 @@ Matrix input_matrix(int rows, int cols)
         temp_row = parse_number(temp_str, cols);
         for(c=0; c<cols; c++) matrix->data[r][c] = temp_row[c];
     }
-    free(temp_row);
-    free(temp_str);
     return matrix;
 }
 
@@ -386,29 +409,27 @@ Matrix to_column_matrix(Vector vector)
 }
 
 
-Vector make_vector_from_rowMatrix(Matrix colMatrix)
-{
-    if(colMatrix->rows == 3 && colMatrix->cols == 1)
-        return new_vector(colMatrix->data[0][0], colMatrix->data[0][1], colMatrix->data[0][2]);
-    return new_vector(0, 0, 0);
-}
-
-
-Vector make_vector_from_colMatrix(Matrix colMatrix)
-{
-    if(colMatrix->rows == 3 && colMatrix->cols == 1)
-        return new_vector(colMatrix->data[0][0], colMatrix->data[1][0], colMatrix->data[2][0]);
-    return new_vector(0, 0, 0);
-}
-
-
 Vector vectorize(Matrix matrix)
 {
-    if(matrix->rows == 3 && matrix->cols == 1)
-        return new_vector(matrix->data[0][0], matrix->data[0][1], matrix->data[0][2]);
-    else if(matrix->rows == 3 && matrix->cols == 1)
-        return new_vector(matrix->data[0][0], matrix->data[1][0], matrix->data[2][0]);
-    return new_vector(0, 0, 0);
+    if(matrix->cols == 1)
+    {
+        if(matrix->rows == 1) return new_vector(matrix->data[0][0], 0, 0);
+        else if(matrix->rows == 2) return new_vector(matrix->data[0][0], matrix->data[1][0], 0);
+        else if(matrix->rows == 3) return new_vector(matrix->data[0][0], matrix->data[1][0], matrix->data[2][0]);
+    }
+    else if(matrix->rows== 1)
+    {
+        if(matrix->cols == 1) return new_vector(matrix->data[0][0], 0, 0);
+        else if(matrix->cols == 2) return new_vector(matrix->data[0][0], matrix->data[0][1], 0);
+        else if(matrix->cols == 3) return new_vector(matrix->data[0][0], matrix->data[0][1], matrix->data[0][2]);
+    }
+    else return new_vector(0, 0, 0);
+}
+
+
+Vector input_vector()
+{
+    return vectorize(input_row_matrix(3));
 }
 
 
@@ -699,7 +720,21 @@ void print_index(Pair index)
 
 void print_point(Point point)
 {
-    printf("(%lf, %lf, %lf)", point->X, point->Y, point->Z);
+    if(point->X == 0 && point->Y == 0 && point->Z == 0)
+        printf("(0, 0, 0)");
+    else if(point->X != 0 && point->Y == 0 && point->Z == 0)
+        printf("(%lf)", point->X);
+    else if(point->X == 0 && point->Y != 0 && point->Z == 0)
+        printf("(0, %lf)", point->Y);
+    else if(point->X == 0 && point->Y == 0 && point->Z != 0)
+        printf("(0, 0, %lf)", point->Z);
+    else if(point->X != 0 && point->Y != 0 && point->Z == 0)
+        printf("(%lf, %lf)", point->X, point->Y);
+    else if(point->X != 0 && point->Y == 0 && point->Z != 0)
+        printf("(%lf, 0, %lf)", point->X, point->Z);
+    else if(point->X == 0 && point->Y != 0 && point->Z != 0)
+        printf("(0, %lf, %lf)", point->Y, point->Z);
+    else printf("(%lf, %lf, %lf)", point->X, point->Y, point->Z);
 }
 
 
@@ -715,24 +750,24 @@ void print_vector(Vector vector)
         printf("(%lfk)", vector->Z);
     else if(vector->X != 0 && vector->Y != 0 && vector->Z == 0)
     {
-        if(vector->Y < 0) printf("(%lfi - %lfj)", vector->X, abs(vector->Y));
+        if(vector->Y < 0) printf("(%lfi - %lfj)", vector->X, sqrt(vector->Y * vector->Y));
         else printf("(%lfi + %lfj)", vector->X, vector->Y);
     }
     else if(vector->X != 0 && vector->Y == 0 && vector->Z != 0)
     {
-        if(vector->Z < 0) printf("(%lfi - %lfk)", vector->X, abs(vector->Z));
+        if(vector->Z < 0) printf("(%lfi - %lfk)", vector->X, sqrt(vector->Z * vector->Z));
         else printf("(%lfi + %lfj)", vector->X, vector->Z);
     }
     else if(vector->X == 0 && vector->Y != 0 && vector->Z != 0)
     {
-        if(vector->Z < 0) printf("(%lfj - %lfk)", vector->Y, abs(vector->Z));
+        if(vector->Z < 0) printf("(%lfj - %lfk)", vector->Y, sqrt(vector->Z * vector->Z));
         else printf("(%lfj + %lfj)", vector->Y, vector->Z);
     }
     else
     {
-        if(vector->Y < 0 && vector->Z < 0) printf("(%lfi - %lfj - %lfk)", vector->X, abs(vector->Y), abs(vector->Z));
-        else if(vector->Y < 0 && vector->Z > 0) printf("(%lfi - %lfj + %lfk)", vector->X, abs(vector->Y), vector->Z);
-        else if(vector->Y > 0 && vector->Z < 0) printf("(%lfi + %lfj - %lfk)", vector->X, vector->Y, abs(vector->Z));
+        if(vector->Y < 0 && vector->Z < 0) printf("(%lfi - %lfj - %lfk)", vector->X, sqrt(vector->Y * vector->Y), sqrt(vector->Z * vector->Z));
+        else if(vector->Y < 0 && vector->Z > 0) printf("(%lfi - %lfj + %lfk)", vector->X, sqrt(vector->Y * vector->Y), vector->Z);
+        else if(vector->Y > 0 && vector->Z < 0) printf("(%lfi + %lfj - %lfk)", vector->X, vector->Y, sqrt(vector->Z * vector->Z));
         else printf("(%lfi + %lfj + %lfj)", vector->X, vector->Y, vector->Z);
     }
 }
@@ -1100,19 +1135,19 @@ Matrix inverse(Matrix matrix)
 
 Vector add_vector(Vector vector_1, Vector vector_2)
 {
-    return new_vector(vector_1->X + vector_2->X, vector_1->Y + vector_2->Y, vector_1->Z + vector_2->Z);
+    return new_vector((vector_1->X + vector_2->X), (vector_1->Y + vector_2->Y), (vector_1->Z + vector_2->Z));
 }
 
 
 Vector subtract_vector(Vector vector_1, Vector vector_2)
 {
-    return new_vector(vector_1->X - vector_2->X, vector_1->Y - vector_2->Y, vector_1->Z - vector_2->Z);
+    return new_vector((vector_1->X - vector_2->X), (vector_1->Y - vector_2->Y), (vector_1->Z - vector_2->Z));
 }
 
 
 Vector scale_vector(Vector vector, double scalar_number)
 {
-    return new_vector(scalar_number * vector->X, scalar_number * vector->Y, scalar_number * vector->Z);
+    return new_vector((scalar_number * vector->X), (scalar_number * vector->Y), (scalar_number * vector->Z));
 }
 
 
@@ -1139,8 +1174,9 @@ Vector unit_vector(Vector vector)
 }
 
 
-Matrix rotation_matrix_in_2D_space(double angle)
+Matrix rotation_matrix_in_2D_space(double angle, int ANGLE)
 {
+    if(ANGLE == DEG) angle = radian(angle);
     Matrix r_matrix = new_matrix(2, 2);
     r_matrix->data[0][0] = cos(angle);
     r_matrix->data[1][0] = sin(angle);
@@ -1150,8 +1186,10 @@ Matrix rotation_matrix_in_2D_space(double angle)
 }
 
 
-Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, double angle)
+Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, float angle, int ANGLE)
 {
+    if(ANGLE == DEG) angle = radian(angle);
+    angle = angle / 2;
     Vector v = unit_vector(rotation_axis_vector);
     double vr = cos(angle), vi = (sin(angle)*v->X), vj = (sin(angle)*v->Y), vk = (sin(angle)*v->Z);
     Matrix r_matrix = new_matrix(3, 3);
@@ -1168,42 +1206,42 @@ Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, double angle)
 }
 
 
-Point rotate_point_in_2D_space(Point point, double angle)
+Point rotate_point_in_2D_space(Point point, double angle, int ANGLE)
 {
-    return to_point(make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), pop_row_matrix(to_column_matrix(to_vector(point))))));
+    return to_point(vectorize(multiply(rotation_matrix_in_2D_space(angle, ANGLE), pop_row_matrix(to_column_matrix(to_vector(point))))));
 }
 
 
-Point rotate_point_in_3D_space(Point point, double angle, Vector rotation_axis_vector)
+Point rotate_point_in_3D_space(Point point, Vector rotation_axis_vector, double angle, int ANGLE)
 {
-    return to_point(make_vector_from_colMatrix(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), to_column_matrix(to_vector(point)))));
+    return to_point(vectorize(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE), to_column_matrix(to_vector(point)))));
 }
 
 
-Vector rotate_vector_in_2D_space(Vector vector, double angle)
+Vector rotate_vector_in_2D_space(Vector vector, double angle, int ANGLE)
 {
-    return make_vector_from_colMatrix(multiply(rotation_matrix_in_2D_space(angle), pop_row_matrix(to_column_matrix(vector))));
+    return vectorize(multiply(rotation_matrix_in_2D_space(angle, ANGLE), pop_row_matrix(to_column_matrix(vector))));
 }
 
 
-Vector rotate_vector_in_3D_space(Vector vector, double angle, Vector rotation_axis_vector)
+Vector rotate_vector_in_3D_space(Vector vector, Vector rotation_axis_vector, double angle, int ANGLE)
 {
-    return make_vector_from_colMatrix(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), to_column_matrix(vector)));
+    return vectorize(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE), to_column_matrix(vector)));
 }
 
 
-Matrix rotate_matrix_in_2D_space(Matrix matrix, double angle)
+Matrix rotate_matrix_in_2D_space(Matrix matrix, double angle, int ANGLE)
 {
-    if(matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_2D_space(angle), matrix);
-    else if(matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_2D_space(angle), transpose(matrix));
+    if(matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_2D_space(angle, ANGLE), matrix);
+    else if(matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_2D_space(angle, ANGLE), transpose(matrix));
     else return matrix;
 }
 
 
-Matrix rotate_matrix_in_3D_space(Matrix matrix, double angle, Vector rotation_axis_vector)
+Matrix rotate_matrix_in_3D_space(Matrix matrix, Vector rotation_axis_vector, double angle, int ANGLE)
 {
-    if(matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), matrix);
-    else if(matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle), transpose(matrix));
+    if(matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE), matrix);
+    else if(matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE), transpose(matrix));
     else return matrix;
 }
 
