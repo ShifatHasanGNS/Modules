@@ -71,6 +71,13 @@
 #define DEG 21
 #define RAD 22
 
+/*
+    #define ROW_COL <int::VALUE>
+*/
+
+#define ROW 23
+#define COL 24
+
 // --------------------------------------------------------------- //
 //             P A I R    <----->    S T R U C T U R E           //
 // --------------------------------------------------------------- //
@@ -113,79 +120,6 @@ typedef struct matrix* Matrix;
 // --------------------------------------------------------------- //
 //                        F U N C T I O N S                        //
 // --------------------------------------------------------------- //
-
-bool is_number(char *string)
-{
-    if(string == NULL || *string == '\0') return false; // Checking if the string is Empty...
-    int count_dot = 0, count_plus = 0, count_minus = 0; // Initializing...
-    // Checking if the string is a number...
-    while(*string)
-    {
-        char c = *string;
-        switch(c)
-        {
-            case '.':
-                if(++count_dot > 1) return false;
-                break;
-            case '+':
-                if(++count_plus > 1) return false;
-                break;
-            case '-':
-                if(++count_minus > 1) return false;
-                break;
-            default:
-                if(c < '0' || c > '9') return false;
-                break;
-        }
-        string++;
-    }
-    // If it's a number then return True...
-    return true;
-}
-
-
-char **split(char *string, char c)
-{  
-    // Initialize...
-    sprintf(string, "%s ", string);
-    int len = strlen(string), count_c = 0, number_of_tokens = 0;
-    char str_c[1], **list_of_tokens = malloc(sizeof(char)*(len-count_c) + sizeof(char *)*(len-count_c-2));
-    sprintf(str_c, "%c", c);
-    // Split...
-    char *token = strtok(string, str_c);
-    while (token != NULL) 
-    { 
-        list_of_tokens[number_of_tokens] = token;
-        number_of_tokens++;
-        token = strtok(NULL, str_c);
-    }
-    // Return the splited 2D-Array of character...
-    return list_of_tokens;
-}
-
-
-double *parse_number(char *string, int num)
-{
-    int count = 0, c = 0, i;
-    double temp_num;
-    // Get the splitted_String as a 2D_Character_Array...
-    char **splitted_string = split(string, ' ');
-    // Initialize the Number_Array...
-    while(splitted_string[count]) count++;
-    double *list_of_nums = (double *)malloc(count * sizeof(double));
-    // Parse the numbers...
-    for(i=0; i<count; i++)
-    {
-        if(is_number(splitted_string[i]))
-        {
-            sscanf(splitted_string[i], "%lf", &temp_num); 
-            list_of_nums[c++] = temp_num;
-            if(num != -1 && c == num) break;
-        }
-    }
-    // Return the list as a double type Number_Array...
-    return list_of_nums;
-}
 
 
 double radian(double angle_in_degree)
@@ -304,9 +238,83 @@ Matrix new_identity_matrix(int order)
 }
 
 
+bool is_number(char *string)
+{
+    if(string == NULL || *string == '\0') return false; // Checking if the string is Empty...
+    int count_dot = 0, count_plus = 0, count_minus = 0; // Initializing...
+    // Checking if the string is a number...
+    while(*string)
+    {
+        char c = *string;
+        switch(c)
+        {
+            case '.':
+                if(++count_dot > 1) return false;
+                break;
+            case '+':
+                if(++count_plus > 1) return false;
+                break;
+            case '-':
+                if(++count_minus > 1) return false;
+                break;
+            default:
+                if(c < '0' || c > '9') return false;
+                break;
+        }
+        string++;
+    }
+    // If it's a number then return True...
+    return true;
+}
+
+
+char **split(char *string, char c)
+{  
+    // Initialize...
+    sprintf(string, "%s ", string);
+    int len = strlen(string), count_c = 0, number_of_tokens = 0;
+    char str_c[1], **list_of_tokens = malloc(sizeof(char)*(len-count_c) + sizeof(char *)*(len-count_c-2));
+    sprintf(str_c, "%c", c);
+    // Split...
+    char *token = strtok(string, str_c);
+    while (token != NULL) 
+    { 
+        list_of_tokens[number_of_tokens] = token;
+        number_of_tokens++;
+        token = strtok(NULL, str_c);
+    }
+    // Return the splited 2D-Array of character...
+    return list_of_tokens;
+}
+
+
+double *parse_number(char *string, int num)
+{
+    int count = 0, c = 0, i;
+    double temp_num;
+    // Get the splitted_String as a 2D_Character_Array...
+    char **splitted_string = split(string, ' ');
+    // Initialize the Number_Array...
+    while(splitted_string[count]) count++;
+    double *list_of_nums = (double *)malloc(count * sizeof(double));
+    // Parse the numbers...
+    for(i=0; i<count; i++)
+    {
+        if(is_number(splitted_string[i]))
+        {
+            sscanf(splitted_string[i], "%lf", &temp_num); 
+            list_of_nums[c++] = temp_num;
+            if(num != -1 && c == num) break;
+        }
+    }
+    // Return the list as a double type Number_Array...
+    return list_of_nums;
+}
+
+
 Matrix input_matrix(int rows, int cols)
 {
-    int r, c;
+    int r, c, count;
     // Temporary Variables...
     double *temp_row = (double *)malloc(cols*sizeof(double));
     char *temp_str = (char *)malloc(100 * cols * sizeof(char));
@@ -319,7 +327,7 @@ Matrix input_matrix(int rows, int cols)
         gets(temp_str);
         for(c=0; c<cols; c++) temp_row[c] = 0;
         temp_row = parse_number(temp_str, cols);
-        for(c=0; c<cols; c++) matrix->data[r][c] = temp_row[c];
+        for(c = 0; c < cols; c++) matrix->data[r][c] = temp_row[c];
     }
     return matrix;
 }
@@ -427,12 +435,6 @@ Vector vectorize(Matrix matrix)
 }
 
 
-Vector input_vector()
-{
-    return vectorize(input_row_matrix(3));
-}
-
-
 Vector to_point(Vector vector)
 {
     return point(vector->X, vector->Y, vector->Z);
@@ -442,6 +444,19 @@ Vector to_point(Vector vector)
 Vector to_vector(Point point)
 {
     return new_vector(point->X, point->Y, point->Z);
+}
+
+
+Vector input_point(int dimention)
+{
+    return to_point(vectorize(input_matrix(1, dimention)));
+}
+
+
+Vector input_vector(int dimention, int IN_ROW_OR_COLUMN)
+{
+    if(IN_ROW_OR_COLUMN == ROW) return vectorize(input_matrix(1, dimention));
+    if(IN_ROW_OR_COLUMN == COL) return vectorize(input_matrix(dimention, 1));
 }
 
 
