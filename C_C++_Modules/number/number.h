@@ -1182,10 +1182,22 @@ Vector cross(Vector vector_1, Vector vector_2)
 }
 
 
+double value_of_vector(Vector vector)
+{
+    return sqrt(vector->X*vector->X + vector->Y*vector->Y + vector->Z*vector->Z);
+}
+
+
 Vector unit_vector(Vector vector)
 {
-    double length = sqrt(vector->X*vector->X + vector->Y*vector->Y + vector->Z*vector->Z);
-    return scale_vector(vector, 1/length);
+    return scale_vector(vector, 1/value_of_vector(vector));
+}
+
+
+double angle_between_vectors(Vector vector_1, Vector vector_2, int OUTPUT_ANGLE)
+{
+    double angle = acos(dot(vector_1, vector_2) / (value_of_vector(vector_1) * value_of_vector(vector_2)));
+    return (OUTPUT_ANGLE == RAD) ? angle : degree(angle);
 }
 
 
