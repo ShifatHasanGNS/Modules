@@ -1,5 +1,5 @@
 /*
-	Module :: [ matrix.h ]
+	Module :: [ number.h ]
 
 	AUTHOR  : MD. Shifat Hasan
 	Email   : shifathasangns@gmail.com
