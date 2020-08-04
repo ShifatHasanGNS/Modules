@@ -727,6 +727,19 @@ Complex divide_complex(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1
 }
 
 
+Complex power(Complex base, Complex n)
+{
+    double r = value_of_complex(base);
+    double t = argument(base, RAD);
+    double x = n->real, y = n->imaginary;
+    double p = (x*log(r))-(y*t);
+    double R = power(E, p);
+    double T = (y*log(r))+(x*t);
+    double real = R*cos(T), img = R*sin(T);
+    return new_complex(real, img);
+}
+
+
 Matrix new_identity_matrix(int order)
 {
     Matrix matrix = new_matrix(order, order);
