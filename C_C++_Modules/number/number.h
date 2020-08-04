@@ -12,9 +12,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <complex.h>
 
 // ---------------------------------------------------------------- //
 //          I M P O R T A N T S    <----->    M A C R O S           //
@@ -82,17 +82,27 @@
 #define ROW 23
 #define COL 24
 
+/*
+    M A C R O S
+*/
+
+#define size(x) sizeof(x)
+#define I(x, y) new_complex(x, y)
+#define I(y) new_complex(0, y)
+#define angle_mode(polar) polar->ANGLE_MODE
+
+
 // --------------------------------------------------------------- //
 //             P A I R    <----->    S T R U C T U R E           //
 // --------------------------------------------------------------- //
 
-struct Index
+struct pair
 {
-    int row;
-    int col;
+    int first;
+    int second;
 };
 
-typedef struct Index* Pair;
+typedef struct pair* Pair;
 
 // --------------------------------------------------------------- //
 //    POLAR --- CO-ORDINATE     <----->    S T R U C T U R E   //
@@ -102,6 +112,7 @@ struct polar
 {
     double r;
     double theta;
+    int ANGLE_MODE;
 };
 
 typedef struct polar* Polar;
@@ -153,7 +164,7 @@ struct matrix
 {
     int rows;
     int cols;
-    double **data;
+    double** data;
 };
 
 typedef struct matrix* Matrix;
@@ -183,25 +194,144 @@ bool is_positive(double number)
 
 bool is_odd(int number)
 {
-    return (number%2 == 1);
+    return (number & 1);
 }
 
 
 bool is_even(int number)
 {
-    return (number%2 == 0);
+    return (!(number & 1));
 }
 
 
-double radian(double angle_in_degree)
+double to_radian(double angle_in_degree)
 {
     return ((angle_in_degree * PI) / 180);
 }
 
 
-double degree(double angle_in_radian)
+double to_degree(double angle_in_radian)
 {
     return ((angle_in_radian * 180) / PI);
+}
+
+
+double absolute(double number)
+{
+    return (sign(number)*number);
+}
+
+
+double trim(double num)
+{
+    int number = (int)(num * pow(10, 9));
+    int last_digit = number - (int)(number / 10);
+    number = (int)(number / 10);
+    if (last_digit > 4) number++;
+    return (number / pow(10, 8));
+}
+
+
+int mod(int a, int m)
+{
+    if (absolute(a) < absolute(m)) return a;
+    else if (absolute(a) == absolute(m)) return 1;
+    else return a%m;
+}
+
+
+int bigmod(int a, int b, int m)
+{
+    if (b == 0) return mod(1, m);
+    int result = bigmod(a, b/2, m);
+    result = mod(result*result, m);
+    if (b & 1) result = mod(result*a, m);
+    return result;
+}
+
+
+int bigmod_str(char *num, int a) 
+{ 
+    int result = 0, len = strlen(num);
+    for (int i = 0; i < len; i++)
+        result = (result*10 + (int)num[i] - '0') %a;
+    return result;
+}
+
+
+int gcd(int a, int b)
+{
+    int min = (a < b) ? a : b;
+    int max = (a > b) ? a : b;
+    int r = mod(max, min);
+    if (r == 0) return min;
+    return gcd(min, r);
+}
+
+
+int lcm(int a, int b)
+{
+    return ((a*b)/gcd(a, b));
+}
+
+
+int power(int base, int n)
+{
+    if (n == 0) return 1;
+    else if (n == 1) return base;
+    int result = 1;
+    while (n > 0)
+    {
+        if (n & 1) result *= base;
+        base *= base;
+        n /= 2;
+    }
+    return result;
+}
+
+
+double power(double base, double n)
+{
+    if (n == 0) return 1;
+    else if (n == 1) return base;
+    else
+    {
+        int r = 1, sign_of_base = sign(base), sign_of_n = sign(n);
+        base = absolute(base);
+        n = absolute(n);
+        double remaining_power = n - floor(n), result = 1;
+        int p = floor(n);
+        if (sign_of_n == -1) base = 1/base;
+        double b = base;
+        if (sign_of_base == -1)
+        {
+            remaining_power = trim(remaining_power);
+            if (remaining_power == 0)
+                if (p & 1) r = -1;
+            else
+            {
+                int lower_part = pow(10, 8);
+                int upper_part = remaining_power*lower_part;
+                int h = gcd(upper_part, lower_part);
+                upper_part /= h;
+                lower_part /= h;
+                if (!(lower_part & 1)) return 0;
+                else
+                {
+                    if (!(upper_part & 1)) r = 1;
+                    else r = -1;
+                }
+            }
+        }
+        while (p > 0)
+        {
+            if (p & 1) result *= base;
+            base *= base;
+            p /= 2;
+        }
+        if (remaining_power != 0) result *= pow(b, remaining_power);
+        return (r * result);
+    }
 }
 
 
@@ -243,20 +373,21 @@ bool are_identical(Matrix matrix_1, Matrix matrix_2)
 }
 
 
-Pair pair(int row, int column)
+Pair new_pair(int first, int second)
 {
-    Pair i = (Pair)malloc(sizeof(Pair));
-    i->row = row;
-    i->col = column;
-    return i;
+    Pair p = (Pair)malloc(sizeof(Pair));
+    p->first = first;
+    p->first = second;
+    return p;
 }
 
 
-Polar polar_coordinate(double r, double theta)
+Polar polar_coordinate(double r, double theta, int ANGLE_MODE)
 {
     Polar p = (Polar)malloc(sizeof(Polar));
     p->r = r;
     p->theta = theta;
+    p->ANGLE_MODE = ANGLE_MODE;
     return p;
 }
 
@@ -321,6 +452,48 @@ Complex new_complex(double real_part, double imaginary_part)
 }
 
 
+Pair copy_pair(Pair pair)
+{
+    return new_pair(pair->first, pair->second);
+}
+
+
+Polar copy_polar(Polar polar)
+{
+    return polar_coordinate(polar->r, polar->theta, polar->ANGLE_MODE);
+}
+
+
+Complex copy_complex(Complex complex)
+{
+    return new_complex(complex->real, complex->imaginary);
+}
+
+
+Point2D copy_point2D(Point2D point)
+{
+    return point2D(point->X, point->Y);
+}
+
+
+Vector2D copy_vector2D(Vector2D vector)
+{
+    return new_vector2D(vector->X, vector->Y);
+}
+
+
+Point copy_point(Point p)
+{
+    return point(p->X, p->Y, p->Z);
+}
+
+
+Vector copy_vector(Vector vector)
+{
+    return new_vector(vector->X, vector->Y, vector->Z);
+}
+
+
 Matrix null()
 {
     return new_matrix(0, 0);
@@ -363,15 +536,6 @@ Complex imaginary_number_to_complex(double imaginary_number)
 }
 
 
-Complex conjugate(Complex complex_number)
-{
-    Complex c_number = (Complex)malloc(sizeof(Complex));
-    c_number->real = complex_number->real;
-    c_number->imaginary = -complex_number->imaginary;
-    return c_number;
-}
-
-
 double real_part(Complex complex_number)
 {
     return complex_number->real;
@@ -384,9 +548,24 @@ double imaginary_part(Complex complex_number)
 }
 
 
-double value_of_complex_number(Complex complex_number)
+Complex conjugate(Complex complex_number)
+{
+    Complex c_number = (Complex)malloc(sizeof(Complex));
+    c_number->real = complex_number->real;
+    c_number->imaginary = -complex_number->imaginary;
+    return c_number;
+}
+
+
+double value_of_complex(Complex complex_number)
 {
     return sqrt((complex_number->real * complex_number->real) + (complex_number->imaginary * complex_number->imaginary));
+}
+
+
+Complex scale_complex(Complex z, double scalar)
+{
+    return new_complex(scalar*z->real, scalar*z->imaginary);
 }
 
 
@@ -409,7 +588,7 @@ double argument(Complex complex_number, int ANGLE_MODE)
     if (real == 0)
     {
         double arg = 90*sign(imaginary);
-        if (ANGLE_MODE == RAD) return radian(arg);
+        if (ANGLE_MODE == RAD) return to_radian(arg);
         else if (ANGLE_MODE == DEG) return arg;
     }
     else if (imaginary == 0)
@@ -423,26 +602,26 @@ double argument(Complex complex_number, int ANGLE_MODE)
     }
     else
     {
-        double arg = atan(abs(imaginary/real));
+        double arg = atan(absolute(imaginary/real));
         if (real > 0 && imaginary > 0)
         {
             if (ANGLE_MODE == RAD) return arg;
-            else if (ANGLE_MODE == DEG) return degree(arg);
+            else if (ANGLE_MODE == DEG) return to_degree(arg);
         }
         if (real < 0 && imaginary > 0)
         {
             if (ANGLE_MODE == RAD) return (PI - arg);
-            else if (ANGLE_MODE == DEG) return (180 - degree(arg));
+            else if (ANGLE_MODE == DEG) return (180 - to_degree(arg));
         }
         if (real < 0 && imaginary < 0)
         {
             if (ANGLE_MODE == RAD) return (arg - PI);
-            else if (ANGLE_MODE == DEG) return (degree(arg) - 180);
+            else if (ANGLE_MODE == DEG) return (to_degree(arg) - 180);
         }
         if (real > 0 && imaginary < 0)
         {
             if (ANGLE_MODE == RAD) return (-arg);
-            else if (ANGLE_MODE == DEG) return (-degree(arg));
+            else if (ANGLE_MODE == DEG) return (-to_degree(arg));
         }
     }
 }
@@ -456,7 +635,7 @@ double angle_for_complex(Complex complex_number, int ANGLE_MODE)
     if (real == 0)
     {
         double arg = 90*sign(imaginary);
-        if (ANGLE_MODE == RAD) return radian(arg);
+        if (ANGLE_MODE == RAD) return to_radian(arg);
         else if (ANGLE_MODE == DEG) return arg;
     }
     else if (imaginary == 0)
@@ -470,26 +649,26 @@ double angle_for_complex(Complex complex_number, int ANGLE_MODE)
     }
     else
     {
-        double arg = atan(abs(imaginary/real));
+        double arg = atan(absolute(imaginary/real));
         if (real > 0 && imaginary > 0)
         {
             if (ANGLE_MODE == RAD) return arg;
-            else if (ANGLE_MODE == DEG) return degree(arg);
+            else if (ANGLE_MODE == DEG) return to_degree(arg);
         }
         if (real < 0 && imaginary > 0)
         {
             if (ANGLE_MODE == RAD) return (PI - arg);
-            else if (ANGLE_MODE == DEG) return (180 - degree(arg));
+            else if (ANGLE_MODE == DEG) return (180 - to_degree(arg));
         }
         if (real < 0 && imaginary < 0)
         {
             if (ANGLE_MODE == RAD) return (PI + arg);
-            else if (ANGLE_MODE == DEG) return (180 + degree(arg));
+            else if (ANGLE_MODE == DEG) return (180 + to_degree(arg));
         }
         if (real > 0 && imaginary < 0)
         {
             if (ANGLE_MODE == RAD) return (TAU - arg);
-            else if (ANGLE_MODE == DEG) return (360 - degree(arg));
+            else if (ANGLE_MODE == DEG) return (360 - to_degree(arg));
         }
     }
 }
@@ -497,7 +676,7 @@ double angle_for_complex(Complex complex_number, int ANGLE_MODE)
 
 int quadrent_for_angle(double angle, int ANGLE_MODE)
 {
-    double theta = abs(angle)%TAU, pi_1 = PI/2, pi_2 = (3*PI)/2;
+    double theta = absolute(angle)%TAU, pi_1 = PI/2, pi_2 = (3*PI)/2;
     int quadrent = -1;
     if (ANGLE_MODE == RAD)
     {
@@ -521,6 +700,30 @@ int quadrent_for_angle(double angle, int ANGLE_MODE)
         if (quadrent == 4) quadrent = 1;
     }
     return quadrent;
+}
+
+
+Complex add_complex(Complex z1, Complex z2)
+{
+    return new_complex((z1->real + z2->real), (z1->imaginary + z2->imaginary));
+}
+
+
+Complex subtract_complex(Complex z1, Complex z2)
+{
+    return new_complex((z1->real - z2->real), (z1->imaginary - z2->imaginary));
+}
+
+
+Complex multiply_complex(Complex z1, Complex z2) // (x1 + iy1) * (x2 + iy2) = (x1*x2 - y1*y2) + i(x1*y2 + x2*y1)
+{
+    return new_complex(((z1->real*z2->real) - (z1->imaginary*z2->imaginary)), ((z1->real*z2->imaginary) + (z2->real*z1->imaginary)));
+}
+
+
+Complex divide_complex(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1 + iy1) * (x2 - iy2)) / (x2*x2 + y2*y2)
+{
+    return new_complex(scale_complex(multiply_complex(z1, conjugate(z2)), (1/value_of_complex(z2))));
 }
 
 
@@ -662,7 +865,7 @@ bool is_convertable(double *array, int rows, int cols)
 }
 
 
-Matrix make_matrix_from_array(double *data, int rows, int cols)
+Matrix array_to_matrix(double *data, int rows, int cols)
 {
     if (is_convertable(data, rows, cols))
     {
@@ -678,7 +881,7 @@ Matrix make_matrix_from_array(double *data, int rows, int cols)
 }
 
 
-double *make_array_from_matrix(Matrix matrix)
+double *matrix_to_array(Matrix matrix)
 {
     if (!is_null(matrix))
     {
@@ -692,6 +895,13 @@ double *make_array_from_matrix(Matrix matrix)
         return array;
     }
     return NULL;
+}
+
+
+Matrix copy_matrix(Matrix matrix)
+{
+    double *data = matrix_to_array(matrix);
+    return array_to_matrix(data, matrix->rows, matrix->cols);
 }
 
 
@@ -766,6 +976,61 @@ Vector vectorize(Matrix matrix)
     else return new_vector(0, 0, 0);
 }
 
+
+Polar complex_to_polar(Complex z, int ANGLE_MODE) // z = (x + iy) ---> r * e^(i * theta)
+{
+    return polar_coordinate(value_of_complex(z), argument(z, ANGLE_MODE), ANGLE_MODE);
+}
+
+
+Complex polar_to_complex(Polar number) // r * e^(i * theta) ---> (x + iy) = z
+{
+    if (number->ANGLE_MODE == RAD)
+    {
+        return new_complex(scale_complex(new_complex(cos(number->theta), sin(number->theta)), number->r));
+    }
+    else if (number->ANGLE_MODE == DEG)
+    {
+        double angle = to_radian(number->theta);
+        return new_complex(scale_complex(new_complex(cos(angle), sin(angle)), number->r));
+    }
+}
+
+
+Polar point2D_to_polar(Point2D point, int ANGLE_MODE)
+{
+    return polar_coordinate(val, argument(z, ANGLE_MODE), ANGLE_MODE);
+}
+
+
+Complex point2D_to_complex(Point2D point)
+{
+    return new_complex(point->X, point->Y);
+}
+
+
+Polar point2D_to_polar(Point2D point, int ANGLE_MODE)
+{
+    return complex_to_polar(point2D_to_complex(point), ANGLE_MODE);
+}
+
+
+Point2D complex_to_point2D(Complex z)
+{
+    return point2D(z->real, z->imaginary);
+}
+
+
+Complex vector2D_to_complex(Vector2D vector)
+{
+    return new_complex(vector->X, vector->Y);
+}
+
+
+Vector2D complex_to_vector2D(Complex z)
+{
+    return new_vector2D(z->real, z->imaginary);
+}
 
 
 Vector vector2D_to_vector(Vector2D vector)
@@ -879,7 +1144,7 @@ Matrix transpose(Matrix matrix)
 Matrix reform(Matrix matrix, int rows, int cols)
 {
     if (!is_null(matrix) && (rows*cols) == (matrix->rows*matrix->cols))
-        return make_matrix_from_array(make_array_from_matrix(matrix), rows, cols);
+        return array_to_matrix(matrix_to_array(matrix), rows, cols);
     return matrix;
 }
 
@@ -1066,11 +1331,11 @@ Matrix pop_column_matrix(Matrix base_matrix)
 
 void swap_index(Matrix base_matrix, Pair first_index, Pair second_index)
 {
-    if (first_index->row < base_matrix->rows && first_index->col < base_matrix->cols && second_index->row < base_matrix->rows && second_index->col < base_matrix->cols && first_index->row != second_index->row && first_index->col != second_index->col)
+    if (first_index->first < base_matrix->rows && first_index->second < base_matrix->cols && second_index->first < base_matrix->rows && second_index->second < base_matrix->cols && first_index->first != second_index->first && first_index->second != second_index->second)
     {
-        double temp_index = base_matrix->data[first_index->row][first_index->col];
-        base_matrix->data[first_index->row][first_index->col] = base_matrix->data[second_index->row][second_index->col];
-        base_matrix->data[second_index->row][second_index->col] = temp_index;
+        double temp_index = base_matrix->data[first_index->first][first_index->second];
+        base_matrix->data[first_index->first][first_index->second] = base_matrix->data[second_index->first][second_index->second];
+        base_matrix->data[second_index->first][second_index->second] = temp_index;
     }
 }
 
@@ -1131,21 +1396,35 @@ Matrix get_column_matrix(Matrix base_matrix, int index_of_col)
 }
 
 
-void print_index(Pair index)
+void print_pair(Pair pair)
 {
-    printf("(%d, %d)", index->row, index->col);
+    printf("(%d, %d)", pair->first, pair->second);
 }
 
 
-void print_polar_coordinate(Polar point)
+void print_polar(Polar point)
 {
-    if (point->r == 0 && point->theta == 0)
-        printf("(0, 0)");
-    else if (point->r != 0 && point->theta == 0)
-        printf("(%lf, 0)", point->r);
-    else if (point->r == 0 && point->theta != 0)
-        printf("(0, %lf)", point->theta);
-    else printf("(%lf, %lf)", point->r, point->theta);
+    if (point->ANGLE_MODE == RAD)
+    {
+        if (point->r == 0 && point->theta == 0)
+            printf("(0, 0)");
+        else if (point->r != 0 && point->theta == 0)
+            printf("(%lf, 0)", point->r);
+        else if (point->r == 0 && point->theta != 0)
+            printf("(0, %lf)", point->theta);
+        else printf("(%lf, %lf)", point->r, point->theta);
+    }
+    if (point->ANGLE_MODE == DEG)
+    {
+        double angle = to_degree(point->theta);
+        if (point->r == 0 && angle == 0)
+            printf("(0, 0)");
+        else if (point->r != 0 && angle == 0)
+            printf("(%lf, 0)", point->r);
+        else if (point->r == 0 && angle != 0)
+            printf("(0, %lf)", angle);
+        else printf("(%lf, %lf)", point->r, angle);
+    }
 }
 
 
@@ -1191,7 +1470,7 @@ void print_complex(Complex number)
         printf("(%lfi)", number->imaginary);
     else
     {
-        if (number->Y < 0) printf("(%lf - %lfi)", number->real, abs(number->imaginary));
+        if (number->Y < 0) printf("(%lf - %lfi)", number->real, absolute(number->imaginary));
         else printf("(%lf + %lfi)", number->real, number->imaginary);
     }
 }
@@ -1207,7 +1486,7 @@ void print_vector2D(Vector2D vector)
         printf("<%lfj>", vector->Y);
     else
     {
-        if (vector->Y < 0) printf("<%lfi - %lfj>", vector->X, abs(vector->Y));
+        if (vector->Y < 0) printf("<%lfi - %lfj>", vector->X, absolute(vector->Y));
         else printf("<%lfi + %lfj>", vector->X, vector->Y);
     }
 }
@@ -1225,17 +1504,17 @@ void print_vector(Vector vector)
         printf("<%lfk>", vector->Z);
     else if (vector->X != 0 && vector->Y != 0 && vector->Z == 0)
     {
-        if (vector->Y < 0) printf("<%lfi - %lfj>", vector->X, abs(vector->Y));
+        if (vector->Y < 0) printf("<%lfi - %lfj>", vector->X, absolute(vector->Y));
         else printf("<%lfi + %lfj>", vector->X, vector->Y);
     }
     else if (vector->X != 0 && vector->Y == 0 && vector->Z != 0)
     {
-        if (vector->Z < 0) printf("<%lfi - %lfk>", vector->X, abs(vector->Z));
+        if (vector->Z < 0) printf("<%lfi - %lfk>", vector->X, absolute(vector->Z));
         else printf("<%lfi + %lfk>", vector->X, vector->Z);
     }
     else if (vector->X == 0 && vector->Y != 0 && vector->Z != 0)
     {
-        if (vector->Z < 0) printf("<%lfj - %lfk>", vector->Y, abs(vector->Z));
+        if (vector->Z < 0) printf("<%lfj - %lfk>", vector->Y, absolute(vector->Z));
         else printf("<%lfj + %lfk>", vector->Y, vector->Z);
     }
     else
@@ -1499,7 +1778,7 @@ Matrix scale_matrix(Matrix matrix, double scalar_number)
 }
 
 
-Matrix multiply(Matrix matrix_1, Matrix matrix_2)
+Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, MULTIPLICATION))
     {
@@ -1527,13 +1806,15 @@ Matrix power(Matrix matrix, int n)
         else if (n == 1) return matrix;
         else if (n > 1)
         {
-            Matrix m = new_matrix(matrix->rows, matrix->cols);
-            m = matrix;
-            for (int p = 1; p < n; p++)
+            Matrix result = new_identity_matrix(matrix->rows);
+            Matrix m = copy_matrix(matrix);
+            while (n > 0)
             {
-                m = multiply(m, matrix);
+                if (n & 1) result = multiply_matrix(result, m);
+                m = multiply_matrix(m, m);
+                n /= 2;
             }
-            return m;
+            return result;
         }
         else return matrix;
     }
@@ -1723,20 +2004,20 @@ Vector unit_vector(Vector vector)
 double angle_between_vectors2D(Vector2D vector_1, Vector2D vector_2, int ANGLE_MODE)
 {
     double angle = acos(dot2D(vector_1, vector_2) / (value_of_vector2D(vector_1) * value_of_vector2D(vector_2)));
-    return ((ANGLE_MODE == RAD) ? angle : degree(angle));
+    return ((ANGLE_MODE == RAD) ? angle : to_degree(angle));
 }
 
 
 double angle_between_vectors(Vector vector_1, Vector vector_2, int ANGLE_MODE)
 {
     double angle = acos(dot(vector_1, vector_2) / (value_of_vector(vector_1) * value_of_vector(vector_2)));
-    return ((ANGLE_MODE == RAD) ? angle : degree(angle));
+    return ((ANGLE_MODE == RAD) ? angle : to_degree(angle));
 }
 
 
 Matrix rotation_matrix_in_2D_space(double angle, int ANGLE_MODE)
 {
-    if (ANGLE_MODE == DEG) angle = radian(angle);
+    if (ANGLE_MODE == DEG) angle = to_radian(angle);
     Matrix r_matrix = new_matrix(2, 2);
     r_matrix->data[0][0] = cos(angle);
     r_matrix->data[1][0] = sin(angle);
@@ -1748,7 +2029,7 @@ Matrix rotation_matrix_in_2D_space(double angle, int ANGLE_MODE)
 
 Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, float angle, int ANGLE_MODE)
 {
-    if (ANGLE_MODE == DEG) angle = radian(angle);
+    if (ANGLE_MODE == DEG) angle = to_radian(angle);
     angle = angle / 2;
     Vector v = unit_vector(rotation_axis_vector);
     double vr = cos(angle), vi = (sin(angle)*v->X), vj = (sin(angle)*v->Y), vk = (sin(angle)*v->Z);
@@ -1768,40 +2049,40 @@ Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, float angle, int
 
 Point2D rotate_point_in_2D_space(Point2D point, double angle, int ANGLE_MODE)
 {
-    return vector2D_to_point2D(vectorize2D(multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(point2D_to_vector2D(point)))));
+    return vector2D_to_point2D(vectorize2D(multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(point2D_to_vector2D(point)))));
 }
 
 
 Point rotate_point_in_3D_space(Point point, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    return vector_to_point(vectorize(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(point_to_vector(point)))));
+    return vector_to_point(vectorize(multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(point_to_vector(point)))));
 }
 
 
 Vector2D rotate_vector_in_2D_space(Vector2D vector, double angle, int ANGLE_MODE)
 {
-    return vectorize2D(multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(vector)));
+    return vectorize2D(multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(vector)));
 }
 
 
 Vector rotate_vector_in_3D_space(Vector vector, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    return vectorize(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(vector)));
+    return vectorize(multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(vector)));
 }
 
 
 Matrix rotate_matrix_in_2D_space(Matrix matrix, double angle, int ANGLE_MODE)
 {
-    if (matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), matrix);
-    else if (matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), transpose(matrix));
+    if (matrix->rows == 2 && matrix->cols > 0) return multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), matrix);
+    else if (matrix->rows > 0 && matrix->cols == 2) return multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), transpose(matrix));
     else return matrix;
 }
 
 
 Matrix rotate_matrix_in_3D_space(Matrix matrix, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    if (matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), matrix);
-    else if (matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), transpose(matrix));
+    if (matrix->rows == 2 && matrix->cols > 0) return multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), matrix);
+    else if (matrix->rows > 0 && matrix->cols == 2) return multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), transpose(matrix));
     else return matrix;
 }
 
@@ -1960,7 +2241,7 @@ bool is_type_of(Matrix matrix, int TYPE)
     {
         if (matrix->rows == matrix->cols)
         {
-            return is_type_of(multiply(matrix, matrix), IDENTITY_MATRIX);
+            return is_type_of(multiply_matrix(matrix, matrix), IDENTITY_MATRIX);
         }
         return false;
     }
@@ -1969,7 +2250,7 @@ bool is_type_of(Matrix matrix, int TYPE)
     {
         if (matrix->rows == matrix->cols)
         {
-            return are_identical(matrix, multiply(matrix, matrix));
+            return are_identical(matrix, multiply_matrix(matrix, matrix));
         }
         return false;
     }
@@ -2002,7 +2283,7 @@ bool is_type_of(Matrix matrix, int TYPE)
             temp_matrix = matrix;
             while (trial != 100)
             {
-                temp_matrix = multiply(temp_matrix, matrix);
+                temp_matrix = multiply_matrix(temp_matrix, matrix);
                 if (is_type_of(temp_matrix, NULL_MATRIX)) return true;
                 trial++;
             }
