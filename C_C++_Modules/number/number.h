@@ -87,9 +87,9 @@
 */
 
 #define size(x) sizeof(x)
-#define I(x, y) new_complex(x, y)
-#define I(y) new_complex(0, y)
-#define angle_mode(polar) polar->ANGLE_MODE
+#define I new_complex(0, 1)
+#define angle_mode(p) p->ANGLE_MODE
+#define till(i, start, end, step) for(i=start, i<end; i += step)
 
 
 // --------------------------------------------------------------- //
@@ -335,6 +335,12 @@ double power(double base, double n)
 }
 
 
+double ln(double x)
+{
+    if (x > 0) return log(x);
+}
+
+
 bool is_null(Matrix matrix)
 {
     return (matrix->rows == 0 && matrix->cols == 0) ? true : false;
@@ -452,43 +458,43 @@ Complex new_complex(double real_part, double imaginary_part)
 }
 
 
-Pair copy_pair(Pair pair)
+Pair copy(Pair pair)
 {
     return new_pair(pair->first, pair->second);
 }
 
 
-Polar copy_polar(Polar polar)
+Polar copy(Polar polar)
 {
     return polar_coordinate(polar->r, polar->theta, polar->ANGLE_MODE);
 }
 
 
-Complex copy_complex(Complex complex)
+Complex copy(Complex complex)
 {
     return new_complex(complex->real, complex->imaginary);
 }
 
 
-Point2D copy_point2D(Point2D point)
+Point2D copy(Point2D point)
 {
     return point2D(point->X, point->Y);
 }
 
 
-Vector2D copy_vector2D(Vector2D vector)
+Vector2D copy(Vector2D vector)
 {
     return new_vector2D(vector->X, vector->Y);
 }
 
 
-Point copy_point(Point p)
+Point copy(Point p)
 {
     return point(p->X, p->Y, p->Z);
 }
 
 
-Vector copy_vector(Vector vector)
+Vector copy(Vector vector)
 {
     return new_vector(vector->X, vector->Y, vector->Z);
 }
@@ -703,27 +709,27 @@ int quadrent_for_angle(double angle, int ANGLE_MODE)
 }
 
 
-Complex add_complex(Complex z1, Complex z2)
+Complex add(Complex z1, Complex z2)
 {
     return new_complex((z1->real + z2->real), (z1->imaginary + z2->imaginary));
 }
 
 
-Complex subtract_complex(Complex z1, Complex z2)
+Complex subtract(Complex z1, Complex z2)
 {
     return new_complex((z1->real - z2->real), (z1->imaginary - z2->imaginary));
 }
 
 
-Complex multiply_complex(Complex z1, Complex z2) // (x1 + iy1) * (x2 + iy2) = (x1*x2 - y1*y2) + i(x1*y2 + x2*y1)
+Complex multiply(Complex z1, Complex z2) // (x1 + iy1) * (x2 + iy2) = (x1*x2 - y1*y2) + i(x1*y2 + x2*y1)
 {
     return new_complex(((z1->real*z2->real) - (z1->imaginary*z2->imaginary)), ((z1->real*z2->imaginary) + (z2->real*z1->imaginary)));
 }
 
 
-Complex divide_complex(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1 + iy1) * (x2 - iy2)) / (x2*x2 + y2*y2)
+Complex divide(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1 + iy1) * (x2 - iy2)) / (x2*x2 + y2*y2)
 {
-    return new_complex(scale_complex(multiply_complex(z1, conjugate(z2)), (1/value_of_complex(z2))));
+    return new_complex(scale_complex(multiply(z1, conjugate(z2)), (1/value_of_complex(z2))));
 }
 
 
@@ -738,6 +744,9 @@ Complex power(Complex base, Complex n)
     double real = R*cos(T), img = R*sin(T);
     return new_complex(real, img);
 }
+
+
+
 
 
 Matrix new_identity_matrix(int order)
@@ -911,7 +920,7 @@ double *matrix_to_array(Matrix matrix)
 }
 
 
-Matrix copy_matrix(Matrix matrix)
+Matrix copy(Matrix matrix)
 {
     double *data = matrix_to_array(matrix);
     return array_to_matrix(data, matrix->rows, matrix->cols);
@@ -1643,7 +1652,7 @@ double secondary_trace(Matrix matrix)
 }
 
 
-Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
+Matrix add(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, ADDITION))
     {
@@ -1691,7 +1700,7 @@ Matrix add_column_matrix(Matrix base_matrix, Matrix column_matrix)
 }
 
 
-Matrix subtract_matrix(Matrix matrix_1, Matrix matrix_2)
+Matrix subtract(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, SUBTRACTION))
     {
@@ -1791,7 +1800,7 @@ Matrix scale_matrix(Matrix matrix, double scalar_number)
 }
 
 
-Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
+Matrix multiply(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, MULTIPLICATION))
     {
@@ -1820,11 +1829,11 @@ Matrix power(Matrix matrix, int n)
         else if (n > 1)
         {
             Matrix result = new_identity_matrix(matrix->rows);
-            Matrix m = copy_matrix(matrix);
+            Matrix m = copy(matrix);
             while (n > 0)
             {
-                if (n & 1) result = multiply_matrix(result, m);
-                m = multiply_matrix(m, m);
+                if (n & 1) result = multiply(result, m);
+                m = multiply(m, m);
                 n /= 2;
             }
             return result;
@@ -1922,25 +1931,25 @@ Matrix inverse(Matrix matrix)
 }
 
 
-Vector2D add_vector2D(Vector2D vector_1, Vector2D vector_2)
+Vector2D add(Vector2D vector_1, Vector2D vector_2)
 {
     return new_vector2D((vector_1->X + vector_2->X), (vector_1->Y + vector_2->Y));
 }
 
 
-Vector add_vector(Vector vector_1, Vector vector_2)
+Vector add(Vector vector_1, Vector vector_2)
 {
     return new_vector((vector_1->X + vector_2->X), (vector_1->Y + vector_2->Y), (vector_1->Z + vector_2->Z));
 }
 
 
-Vector2D subtract_vector2D(Vector2D vector_1, Vector2D vector_2)
+Vector2D subtract(Vector2D vector_1, Vector2D vector_2)
 {
     return new_vector2D((vector_1->X - vector_2->X), (vector_1->Y - vector_2->Y));
 }
 
 
-Vector subtract_vector(Vector vector_1, Vector vector_2)
+Vector subtract(Vector vector_1, Vector vector_2)
 {
     return new_vector((vector_1->X - vector_2->X), (vector_1->Y - vector_2->Y), (vector_1->Z - vector_2->Z));
 }
@@ -2062,40 +2071,40 @@ Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, float angle, int
 
 Point2D rotate_point_in_2D_space(Point2D point, double angle, int ANGLE_MODE)
 {
-    return vector2D_to_point2D(vectorize2D(multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(point2D_to_vector2D(point)))));
+    return vector2D_to_point2D(vectorize2D(multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(point2D_to_vector2D(point)))));
 }
 
 
 Point rotate_point_in_3D_space(Point point, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    return vector_to_point(vectorize(multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(point_to_vector(point)))));
+    return vector_to_point(vectorize(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(point_to_vector(point)))));
 }
 
 
 Vector2D rotate_vector_in_2D_space(Vector2D vector, double angle, int ANGLE_MODE)
 {
-    return vectorize2D(multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(vector)));
+    return vectorize2D(multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(vector)));
 }
 
 
 Vector rotate_vector_in_3D_space(Vector vector, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    return vectorize(multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(vector)));
+    return vectorize(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(vector)));
 }
 
 
 Matrix rotate_matrix_in_2D_space(Matrix matrix, double angle, int ANGLE_MODE)
 {
-    if (matrix->rows == 2 && matrix->cols > 0) return multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), matrix);
-    else if (matrix->rows > 0 && matrix->cols == 2) return multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), transpose(matrix));
+    if (matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), matrix);
+    else if (matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), transpose(matrix));
     else return matrix;
 }
 
 
 Matrix rotate_matrix_in_3D_space(Matrix matrix, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    if (matrix->rows == 2 && matrix->cols > 0) return multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), matrix);
-    else if (matrix->rows > 0 && matrix->cols == 2) return multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), transpose(matrix));
+    if (matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), matrix);
+    else if (matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), transpose(matrix));
     else return matrix;
 }
 
@@ -2254,7 +2263,7 @@ bool is_type_of(Matrix matrix, int TYPE)
     {
         if (matrix->rows == matrix->cols)
         {
-            return is_type_of(multiply_matrix(matrix, matrix), IDENTITY_MATRIX);
+            return is_type_of(multiply(matrix, matrix), IDENTITY_MATRIX);
         }
         return false;
     }
@@ -2263,7 +2272,7 @@ bool is_type_of(Matrix matrix, int TYPE)
     {
         if (matrix->rows == matrix->cols)
         {
-            return are_identical(matrix, multiply_matrix(matrix, matrix));
+            return are_identical(matrix, multiply(matrix, matrix));
         }
         return false;
     }
@@ -2296,7 +2305,7 @@ bool is_type_of(Matrix matrix, int TYPE)
             temp_matrix = matrix;
             while (trial != 100)
             {
-                temp_matrix = multiply_matrix(temp_matrix, matrix);
+                temp_matrix = multiply(temp_matrix, matrix);
                 if (is_type_of(temp_matrix, NULL_MATRIX)) return true;
                 trial++;
             }
