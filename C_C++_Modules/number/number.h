@@ -341,6 +341,12 @@ double ln(double x)
 }
 
 
+double log(double base, double x)
+{
+    if (x > 0) return (log(x)/log(base));
+}
+
+
 bool is_null(Matrix matrix)
 {
     return (matrix->rows == 0 && matrix->cols == 0) ? true : false;
@@ -746,7 +752,37 @@ Complex power(Complex base, Complex n)
 }
 
 
+Complex ln(Complex z)
+{
+    double r = value_of_complex(z);
+    double t = argument(z);
+    if (r < 0) return new_complex(log(absolute(r)), (t+PI));
+    if (r > 0) return new_complex(log(r), t);
+}
 
+
+Complex log10(Complex z)
+{
+    double r = value_of_complex(z);
+    double t = argument(z);
+    if (r < 0) return new_complex(log(absolute(r))/log(10), (t+PI)/log(10));
+    if (r > 0) return new_complex(log(r)/log(10), t/log(10));
+}
+
+
+Complex log(double base, Complex z)
+{
+    double r = value_of_complex(z);
+    double t = argument(z);
+    if (r < 0) return new_complex(log(absolute(r))/log(base), (t+PI)/log(base));
+    if (r > 0) return new_complex(log(r)/log(base), t/log(base));
+}
+
+
+Complex log(Complex base, Complex z)
+{
+    return divide(ln(z), ln(base));
+}
 
 
 Matrix new_identity_matrix(int order)
