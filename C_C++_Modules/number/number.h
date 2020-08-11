@@ -101,7 +101,13 @@
 #define size(x) sizeof(x)
 #define I new_complex(0, 1)
 #define angle_mode(p) p->ANGLE_MODE
-#define till(i, start, end, step) for(i=start, i<end; i += step)
+#define or ||
+#define and &&
+#define OR |
+#define AND &
+#define NOT ~
+#define XOR ^
+#define For(i, start, end, step) for(int i=(start), i<(end); i += (step))
 
 
 // --------------------------------------------------------------- //
@@ -262,11 +268,11 @@ int bigmod(int a, int b, int m)
 }
 
 
-int bigmod_str(char *num, int a) 
+int bigmod_str(char *num, int m) 
 { 
     int result = 0, len = strlen(num);
     for (int i = 0; i < len; i++)
-        result = (result*10 + (int)num[i] - '0') %a;
+        result = (result*10 + (int)num[i] - '0') % m;
     return result;
 }
 
@@ -343,6 +349,36 @@ double power(double base, double n)
         }
         if (remaining_power != 0) result *= pow(b, remaining_power);
         return (r * result);
+    }
+}
+
+
+int last_digit(int number, int power)
+{
+    if (power == 0) return 1;
+    if (number == 0) return 0;
+    number = absolute(number);
+    power = absolute(power);
+    int n = number - floor(number/10)*10;
+    if (power == 1) return n;
+    if (n == 0 || n == 1 || n == 5 || n == 6) return n;
+    int m = 0;
+    char *str = (char *)malloc(floor(log10(number)+1) * sizeof(char));
+    sprintf(str, "%d", number);
+    else if (n == 4 || n == 9)
+    {
+        m = bigmod_str(str, 2);
+        free(str);
+        return (m == 1) ? n : (10-n);
+    }
+    else
+    {
+        m = bigmod_str(str, 4);
+        free(str);
+        if (m == 1) return n;
+        else if (m == 2) return (n == 2 || n == 8) ? 4 : 9;
+        else if (m == 3) return (10-n);
+        else if (m == 0) return (n == 2 || n == 8) ? 6 : 1;
     }
 }
 
