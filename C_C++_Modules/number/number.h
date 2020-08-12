@@ -109,6 +109,12 @@
 #define XOR ^
 #define For(i, start, end, step) for(int i=(start), i<(end); i += (step))
 
+/*
+    T Y P E D E F S
+*/
+
+typedef char* String;
+
 
 // --------------------------------------------------------------- //
 //             P A I R    <----->    S T R U C T U R E           //
@@ -258,7 +264,7 @@ int mod(int a, int m)
 }
 
 
-int bigmod(int a, int b, int m)
+int bigmod(int a, unsigned int b, int m)
 {
     if (b == 0) return mod(1, m);
     int result = bigmod(a, b/2, m);
@@ -353,7 +359,7 @@ double power(double base, double n)
 }
 
 
-int last_digit(int number, int power)
+int last_digit(int number, unsigned int power)    // number, power >= 0
 {
     if (power == 0) return 1;
     if (number == 0) return 0;
@@ -362,18 +368,39 @@ int last_digit(int number, int power)
     int n = number - floor(number/10)*10;
     if (power == 1) return n;
     if (n == 0 || n == 1 || n == 5 || n == 6) return n;
-    int m = 0;
-    char *str = (char *)malloc(floor(log10(number)+1) * sizeof(char));
-    sprintf(str, "%d", number);
     else if (n == 4 || n == 9)
     {
-        m = bigmod_str(str, 2);
-        free(str);
-        return (m == 1) ? n : (10-n);
+        return (power & 1) ? n : (10-n);
     }
     else
     {
-        m = bigmod_str(str, 4);
+        int m = mod(power, 4);
+        if (m == 1) return n;
+        else if (m == 2) return (n == 2 || n == 8) ? 4 : 9;
+        else if (m == 3) return (10-n);
+        else if (m == 0) return (n == 2 || n == 8) ? 6 : 1;
+    }
+}
+
+
+int last_digit_of_big_number(long long number, unsigned long long power)    // number, power >= 0
+{
+    if (power == 0) return 1;
+    if (number == 0) return 0;
+    number = absolute(number);
+    power = absolute(power);
+    int n = number - floor(number/10)*10;
+    if (power == 1) return n;
+    if (n == 0 || n == 1 || n == 5 || n == 6) return n;
+    else if (n == 4 || n == 9)
+    {
+        return (power & 1) ? n : (10-n);
+    }
+    else
+    {
+        char *str = (char *)malloc(floor(log10(power)+1) * sizeof(char));
+        sprintf(str, "%llu", power);
+        int m = bigmod_str(str, 4);
         free(str);
         if (m == 1) return n;
         else if (m == 2) return (n == 2 || n == 8) ? 4 : 9;
