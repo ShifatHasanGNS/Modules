@@ -24,23 +24,23 @@
     Important Constants In Mathematics
 */
 
-#define PHI_0           1.61803398874989484820458683436563811772030917980576    // [1 + sqrt(5)] / 2
-#define PHI_1          -0.61803398874989484820458683436563811772030917980576    // [1 - sqrt(5)] / 2
+#define PHI_0           (double)1.61803398874989484820458683436563811772030917980576    // [1 + sqrt(5)] / 2
+#define PHI_1           (double)(-0.61803398874989484820458683436563811772030917980576) // [1 - sqrt(5)] / 2
 
-#define E               2.71828182845904523536028747135266249775724709369995    // e ---> Euler's Constant
+#define E               (double)2.71828182845904523536028747135266249775724709369995    // e ---> Euler's Constant
 
-#define PI              3.14159265358979323846264338327950288419716939937510
-#define TAU             6.28318530717958647692528676655900576839433879875021    // TAU = 2 * PI
+#define PI              (double)3.14159265358979323846264338327950288419716939937510
+#define TAU             (double)6.28318530717958647692528676655900576839433879875021    // TAU = 2 * PI
 
-#define EulerGamma      0.57721566490153286060651209008240243104215933593992
+#define EulerGamma      (double)0.57721566490153286060651209008240243104215933593992
 
-#define SQRT_2          1.41421356237309504880168872420969807856967187537695    // sqrt(2)
-#define SQRT_3          1.73205080756887729352744634150587236694280525381038    // sqrt(3)
-#define SQRT_5          2.23606797749978969640917366873127623544061835961153    // sqrt(5)
+#define SQRT_2          (double)1.41421356237309504880168872420969807856967187537695    // sqrt(2)
+#define SQRT_3          (double)1.73205080756887729352744634150587236694280525381038    // sqrt(3)
+#define SQRT_5          (double)2.23606797749978969640917366873127623544061835961153    // sqrt(5)
 
-#define ONE_OVER_SQRT_2 0.70710678118654752440084436210484903928483593768847    // 1 / sqrt(2)
-#define ONE_OVER_SQRT_3 0.57735026918962576450914878050195745564760175127013    // 1 / sqrt(3)
-#define ONE_OVER_SQRT_5 0.44721359549995793928183473374625524708812367192231    // 1 / sqrt(5)
+#define ONE_OVER_SQRT_2 (double)0.70710678118654752440084436210484903928483593768847    // 1 / sqrt(2)
+#define ONE_OVER_SQRT_3 (double)0.57735026918962576450914878050195745564760175127013    // 1 / sqrt(3)
+#define ONE_OVER_SQRT_5 (double)0.44721359549995793928183473374625524708812367192231    // 1 / sqrt(5)
 
 /*
     #define OPERATION <int::VALUE>
@@ -99,7 +99,6 @@
 */
 
 #define size(x) sizeof(x)
-#define I new_complex(0, 1)
 #define angle_mode(p) p->ANGLE_MODE
 #define or ||
 #define and &&
@@ -145,13 +144,13 @@ typedef struct polar* Polar;
 //  C O M P L E X --- N U M B E R    <----->    S T R U C T U R E  //
 // --------------------------------------------------------------- //
 
-struct complex
+struct cmplx
 {
     double real;
     double imaginary;
 };
 
-typedef struct complex* Complex;
+typedef struct cmplx* Complex;
 
 // --------------------------------------------------------------- //
 //           V E C T O R    <----->    S T R U C T U R E           //
@@ -299,7 +298,7 @@ int lcm(int a, int b)
 }
 
 
-int power(int base, int n)
+int int_power(int base, int n)
 {
     if (n == 0) return 1;
     else if (n == 1) return base;
@@ -314,7 +313,7 @@ int power(int base, int n)
 }
 
 
-double power(double base, double n)
+double double_power(double base, double n)
 {
     if (n == 0) return 1;
     else if (n == 1) return base;
@@ -416,15 +415,15 @@ double ln(double x)
 }
 
 
-double log(double base, double x)
+double logarithm(double base, double x)
 {
-    if (x > 0) return (log(x)/log(base));
+    if (x > 0) return (ln(x)/ln(base));
 }
 
 
 int fibonacci(int n_th)
 {
-    return (ONE_OVER_SQRT_5 * (power(PHI_0, n_th) - power(PHI_1, n_th)));
+    return (ONE_OVER_SQRT_5 * (double_power(PHI_0, n_th) - double_power(PHI_1, n_th)));
 }
 
 
@@ -545,45 +544,45 @@ Complex new_complex(double real_part, double imaginary_part)
 }
 
 
-Pair copy(Pair pair)
+Pair copy_pair(Pair p)
 {
-    return new_pair(pair->first, pair->second);
+    return new_pair(p->first, p->second);
 }
 
 
-Polar copy(Polar polar)
+Polar copy_polar(Polar p)
 {
-    return polar_coordinate(polar->r, polar->theta, polar->ANGLE_MODE);
+    return polar_coordinate(p->r, p->theta, p->ANGLE_MODE);
 }
 
 
-Complex copy(Complex complex)
+Complex copy_complex(Complex z)
 {
-    return new_complex(complex->real, complex->imaginary);
+    return new_complex(z->real, z->imaginary);
 }
 
 
-Point2D copy(Point2D point)
+Point2D copy_point2D(Point2D p)
 {
-    return point2D(point->X, point->Y);
+    return point2D(p->X, p->Y);
 }
 
 
-Vector2D copy(Vector2D vector)
+Vector2D copy_vector2D(Vector2D v)
 {
-    return new_vector2D(vector->X, vector->Y);
+    return new_vector2D(v->X, v->Y);
 }
 
 
-Point copy(Point p)
+Point copy_point(Point p)
 {
     return point(p->X, p->Y, p->Z);
 }
 
 
-Vector copy(Vector vector)
+Vector copy_vector(Vector v)
 {
-    return new_vector(vector->X, vector->Y, vector->Z);
+    return new_vector(v->X, v->Y, v->Z);
 }
 
 
@@ -607,7 +606,7 @@ Point origin_point()
 
 Vector2D zero_vector2D()
 {
-    return new_vector(0, 0);
+    return new_vector2D(0, 0);
 }
 
 
@@ -629,30 +628,30 @@ Complex imaginary_number_to_complex(double imaginary_number)
 }
 
 
-double real_part(Complex complex_number)
+double real_part(Complex z)
 {
-    return complex_number->real;
+    return z->real;
 }
 
 
-double imaginary_part(Complex complex_number)
+double imaginary_part(Complex z)
 {
-    return complex_number->imaginary;
+    return z->imaginary;
 }
 
 
-Complex conjugate(Complex complex_number)
+Complex conjugate(Complex z)
 {
     Complex c_number = (Complex)malloc(sizeof(Complex));
-    c_number->real = complex_number->real;
-    c_number->imaginary = -complex_number->imaginary;
+    c_number->real = z->real;
+    c_number->imaginary = -z->imaginary;
     return c_number;
 }
 
 
-double value_of_complex(Complex complex_number)
+double value_of_complex(Complex z)
 {
-    return sqrt((complex_number->real * complex_number->real) + (complex_number->imaginary * complex_number->imaginary));
+    return sqrt((z->real * z->real) + (z->imaginary * z->imaginary));
 }
 
 
@@ -662,10 +661,10 @@ Complex scale_complex(Complex z, double scalar)
 }
 
 
-int quadrent_for_complex(Complex complex_number)
+int quadrent_for_complex(Complex z)
 {
-    double real = complex_number->real;
-    double imaginary = complex_number->imaginary;
+    double real = z->real;
+    double imaginary = z->imaginary;
     if (real >= 0 && imaginary >= 0) return 1;
     if (real < 0 && imaginary >= 0) return 2;
     if (real < 0 && imaginary < 0) return 3;
@@ -673,10 +672,10 @@ int quadrent_for_complex(Complex complex_number)
 }
 
 
-double argument(Complex complex_number, int ANGLE_MODE)
+double argument(Complex z, int ANGLE_MODE)
 {
-    double real = complex_number->real;
-    double imaginary = complex_number->imaginary;
+    double real = z->real;
+    double imaginary = z->imaginary;
 
     if (real == 0)
     {
@@ -720,10 +719,10 @@ double argument(Complex complex_number, int ANGLE_MODE)
 }
 
 
-double angle_for_complex(Complex complex_number, int ANGLE_MODE)
+double angle_for_complex(Complex z, int ANGLE_MODE)
 {
-    double real = complex_number->real;
-    double imaginary = complex_number->imaginary;
+    double real = z->real;
+    double imaginary = z->imaginary;
 
     if (real == 0)
     {
@@ -769,7 +768,7 @@ double angle_for_complex(Complex complex_number, int ANGLE_MODE)
 
 int quadrent_for_angle(double angle, int ANGLE_MODE)
 {
-    double theta = absolute(angle)%TAU, pi_1 = PI/2, pi_2 = (3*PI)/2;
+    double theta = remainder(absolute(angle), TAU), pi_1 = PI/2, pi_2 = (3*PI)/2;
     int quadrent = -1;
     if (ANGLE_MODE == RAD)
     {
@@ -796,73 +795,64 @@ int quadrent_for_angle(double angle, int ANGLE_MODE)
 }
 
 
-Complex add(Complex z1, Complex z2)
+Complex add_complex(Complex z1, Complex z2)
 {
     return new_complex((z1->real + z2->real), (z1->imaginary + z2->imaginary));
 }
 
 
-Complex subtract(Complex z1, Complex z2)
+Complex subtract_complex(Complex z1, Complex z2)
 {
     return new_complex((z1->real - z2->real), (z1->imaginary - z2->imaginary));
 }
 
 
-Complex multiply(Complex z1, Complex z2) // (x1 + iy1) * (x2 + iy2) = (x1*x2 - y1*y2) + i(x1*y2 + x2*y1)
+Complex multiply_complex(Complex z1, Complex z2) // (x1 + iy1) * (x2 + iy2) = (x1*x2 - y1*y2) + i(x1*y2 + x2*y1)
 {
     return new_complex(((z1->real*z2->real) - (z1->imaginary*z2->imaginary)), ((z1->real*z2->imaginary) + (z2->real*z1->imaginary)));
 }
 
 
-Complex divide(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1 + iy1) * (x2 - iy2)) / (x2*x2 + y2*y2)
+Complex divide_complex(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1 + iy1) * (x2 - iy2)) / (x2*x2 + y2*y2)
 {
-    return new_complex(scale_complex(multiply(z1, conjugate(z2)), (1/value_of_complex(z2))));
+    return scale_complex(multiply_complex(z1, conjugate(z2)), (1/value_of_complex(z2)));
 }
 
 
-Complex power(Complex base, Complex n)
+Complex complex_power(Complex base, Complex n)
 {
     double r = value_of_complex(base);
     double t = argument(base, RAD);
     double x = n->real, y = n->imaginary;
     double p = (x*log(r))-(y*t);
-    double R = power(E, p);
+    double R = double_power(E, p);
     double T = (y*log(r))+(x*t);
     double real = R*cos(T), img = R*sin(T);
     return new_complex(real, img);
 }
 
 
-Complex ln(Complex z)
+Complex complex_ln(Complex z)
 {
     double r = value_of_complex(z);
-    double t = argument(z);
+    double t = argument(z, RAD);
     if (r < 0) return new_complex(log(absolute(r)), (t+PI));
     if (r > 0) return new_complex(log(r), t);
 }
 
 
-Complex log10(Complex z)
+Complex complex_log10(Complex z)
 {
     double r = value_of_complex(z);
-    double t = argument(z);
+    double t = argument(z, RAD);
     if (r < 0) return new_complex(log(absolute(r))/log(10), (t+PI)/log(10));
     if (r > 0) return new_complex(log(r)/log(10), t/log(10));
 }
 
 
-Complex log(double base, Complex z)
+Complex complex_log(Complex base, Complex z)
 {
-    double r = value_of_complex(z);
-    double t = argument(z);
-    if (r < 0) return new_complex(log(absolute(r))/log(base), (t+PI)/log(base));
-    if (r > 0) return new_complex(log(r)/log(base), t/log(base));
-}
-
-
-Complex log(Complex base, Complex z)
-{
-    return divide(ln(z), ln(base));
+    return divide_complex(complex_ln(z), complex_ln(base));
 }
 
 
@@ -1037,7 +1027,7 @@ double *matrix_to_array(Matrix matrix)
 }
 
 
-Matrix copy(Matrix matrix)
+Matrix copy_matrix(Matrix matrix)
 {
     double *data = matrix_to_array(matrix);
     return array_to_matrix(data, matrix->rows, matrix->cols);
@@ -1126,19 +1116,13 @@ Complex polar_to_complex(Polar number) // r * e^(i * theta) ---> (x + iy) = z
 {
     if (number->ANGLE_MODE == RAD)
     {
-        return new_complex(scale_complex(new_complex(cos(number->theta), sin(number->theta)), number->r));
+        return scale_complex(new_complex(cos(number->theta), sin(number->theta)), number->r);
     }
     else if (number->ANGLE_MODE == DEG)
     {
         double angle = to_radian(number->theta);
-        return new_complex(scale_complex(new_complex(cos(angle), sin(angle)), number->r));
+        return scale_complex(new_complex(cos(angle), sin(angle)), number->r);
     }
-}
-
-
-Polar point2D_to_polar(Point2D point, int ANGLE_MODE)
-{
-    return polar_coordinate(val, argument(z, ANGLE_MODE), ANGLE_MODE);
 }
 
 
@@ -1609,7 +1593,7 @@ void print_complex(Complex number)
         printf("(%lfi)", number->imaginary);
     else
     {
-        if (number->Y < 0) printf("(%lf - %lfi)", number->real, absolute(number->imaginary));
+        if (number->imaginary < 0) printf("(%lf - %lfi)", number->real, absolute(number->imaginary));
         else printf("(%lf + %lfi)", number->real, number->imaginary);
     }
 }
@@ -1769,7 +1753,7 @@ double secondary_trace(Matrix matrix)
 }
 
 
-Matrix add(Matrix matrix_1, Matrix matrix_2)
+Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, ADDITION))
     {
@@ -1817,7 +1801,7 @@ Matrix add_column_matrix(Matrix base_matrix, Matrix column_matrix)
 }
 
 
-Matrix subtract(Matrix matrix_1, Matrix matrix_2)
+Matrix subtract_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, SUBTRACTION))
     {
@@ -1917,7 +1901,7 @@ Matrix scale_matrix(Matrix matrix, double scalar_number)
 }
 
 
-Matrix multiply(Matrix matrix_1, Matrix matrix_2)
+Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, MULTIPLICATION))
     {
@@ -1937,7 +1921,7 @@ Matrix multiply(Matrix matrix_1, Matrix matrix_2)
 }
 
 
-Matrix power(Matrix matrix, int n)
+Matrix matrix_power(Matrix matrix, int n)
 {
     if (matrix->rows == matrix->cols)
     {
@@ -1946,11 +1930,11 @@ Matrix power(Matrix matrix, int n)
         else if (n > 1)
         {
             Matrix result = new_identity_matrix(matrix->rows);
-            Matrix m = copy(matrix);
+            Matrix m = copy_matrix(matrix);
             while (n > 0)
             {
-                if (n & 1) result = multiply(result, m);
-                m = multiply(m, m);
+                if (n & 1) result = multiply_matrix(result, m);
+                m = multiply_matrix(m, m);
                 n /= 2;
             }
             return result;
@@ -2048,25 +2032,25 @@ Matrix inverse(Matrix matrix)
 }
 
 
-Vector2D add(Vector2D vector_1, Vector2D vector_2)
+Vector2D add_vector2D(Vector2D vector_1, Vector2D vector_2)
 {
     return new_vector2D((vector_1->X + vector_2->X), (vector_1->Y + vector_2->Y));
 }
 
 
-Vector add(Vector vector_1, Vector vector_2)
+Vector add_vector(Vector vector_1, Vector vector_2)
 {
     return new_vector((vector_1->X + vector_2->X), (vector_1->Y + vector_2->Y), (vector_1->Z + vector_2->Z));
 }
 
 
-Vector2D subtract(Vector2D vector_1, Vector2D vector_2)
+Vector2D subtract_vector2D(Vector2D vector_1, Vector2D vector_2)
 {
     return new_vector2D((vector_1->X - vector_2->X), (vector_1->Y - vector_2->Y));
 }
 
 
-Vector subtract(Vector vector_1, Vector vector_2)
+Vector subtract_vector(Vector vector_1, Vector vector_2)
 {
     return new_vector((vector_1->X - vector_2->X), (vector_1->Y - vector_2->Y), (vector_1->Z - vector_2->Z));
 }
@@ -2188,40 +2172,40 @@ Matrix rotation_matrix_in_3D_space(Vector rotation_axis_vector, float angle, int
 
 Point2D rotate_point_in_2D_space(Point2D point, double angle, int ANGLE_MODE)
 {
-    return vector2D_to_point2D(vectorize2D(multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(point2D_to_vector2D(point)))));
+    return vector2D_to_point2D(vectorize2D(multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(point2D_to_vector2D(point)))));
 }
 
 
 Point rotate_point_in_3D_space(Point point, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    return vector_to_point(vectorize(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(point_to_vector(point)))));
+    return vector_to_point(vectorize(multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(point_to_vector(point)))));
 }
 
 
 Vector2D rotate_vector_in_2D_space(Vector2D vector, double angle, int ANGLE_MODE)
 {
-    return vectorize2D(multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(vector)));
+    return vectorize2D(multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), to_column_matrix2D(vector)));
 }
 
 
 Vector rotate_vector_in_3D_space(Vector vector, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    return vectorize(multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(vector)));
+    return vectorize(multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), to_column_matrix(vector)));
 }
 
 
 Matrix rotate_matrix_in_2D_space(Matrix matrix, double angle, int ANGLE_MODE)
 {
-    if (matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), matrix);
-    else if (matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_2D_space(angle, ANGLE_MODE), transpose(matrix));
+    if (matrix->rows == 2 && matrix->cols > 0) return multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), matrix);
+    else if (matrix->rows > 0 && matrix->cols == 2) return multiply_matrix(rotation_matrix_in_2D_space(angle, ANGLE_MODE), transpose(matrix));
     else return matrix;
 }
 
 
 Matrix rotate_matrix_in_3D_space(Matrix matrix, Vector rotation_axis_vector, double angle, int ANGLE_MODE)
 {
-    if (matrix->rows == 2 && matrix->cols > 0) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), matrix);
-    else if (matrix->rows > 0 && matrix->cols == 2) return multiply(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), transpose(matrix));
+    if (matrix->rows == 2 && matrix->cols > 0) return multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), matrix);
+    else if (matrix->rows > 0 && matrix->cols == 2) return multiply_matrix(rotation_matrix_in_3D_space(rotation_axis_vector, angle, ANGLE_MODE), transpose(matrix));
     else return matrix;
 }
 
@@ -2380,7 +2364,7 @@ bool is_type_of(Matrix matrix, int TYPE)
     {
         if (matrix->rows == matrix->cols)
         {
-            return is_type_of(multiply(matrix, matrix), IDENTITY_MATRIX);
+            return is_type_of(multiply_matrix(matrix, matrix), IDENTITY_MATRIX);
         }
         return false;
     }
@@ -2389,7 +2373,7 @@ bool is_type_of(Matrix matrix, int TYPE)
     {
         if (matrix->rows == matrix->cols)
         {
-            return are_identical(matrix, multiply(matrix, matrix));
+            return are_identical(matrix, multiply_matrix(matrix, matrix));
         }
         return false;
     }
@@ -2422,7 +2406,7 @@ bool is_type_of(Matrix matrix, int TYPE)
             temp_matrix = matrix;
             while (trial != 100)
             {
-                temp_matrix = multiply(temp_matrix, matrix);
+                temp_matrix = multiply_matrix(temp_matrix, matrix);
                 if (is_type_of(temp_matrix, NULL_MATRIX)) return true;
                 trial++;
             }
