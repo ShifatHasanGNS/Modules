@@ -863,7 +863,7 @@ char **split(char *string, char c)
     // Initialize...
     sprintf(string, "%s ", string);
     int len = strlen(string), count_c = 0, number_of_tokens = 0;
-    char str_c[1], **list_of_tokens = malloc(sizeof(char)*(len-count_c) + sizeof(char *)*(len-count_c-2));
+    char str_c[1], **list_of_tokens = malloc(sizeof(char *)*(len-count_c-2) + sizeof(char)*(len-count_c));
     sprintf(str_c, "%c", c);
     // Split...
     char *token = strtok(string, str_c);
