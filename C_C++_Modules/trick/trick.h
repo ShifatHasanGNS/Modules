@@ -19,6 +19,12 @@ typedef char* String;
 #define size(x) sizeof(x)
 #define swap(type, x, y) type temp=x; x=y, y=temp;
 
+#define False 0
+#define No 0
+#define Off 0
+#define True 1
+#define Yes 1
+#define On 1
 #define or ||
 #define and &&
 #define not !
