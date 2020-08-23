@@ -81,20 +81,20 @@ typedef char* String;
     l  ---> long
     ll ---> long long
 */
-// ... char ---> %c
-typedef unsigned char uchar;
-// ... short ---> %hd
-typedef unsigned short ushort;
-// ... int ---> 
-typedef unsigned int uint;
+// ... char
+typedef unsigned char uchar;           // %c
+// ... short
+typedef unsigned short ushort;         // %hu
+// ... int
+typedef unsigned int uint;             // %u
 // ... short int
-typedef signed short int sint;
-typedef unsigned short int usint;
+typedef signed short int sint;         // %hd
+typedef unsigned short int usint;      // %hu
 // ... long int
-typedef signed long int lint;
-typedef unsigned long int ulint;
+typedef signed long int lint;          // ld
+typedef unsigned long int ulint;       // lu
 // ... long long int
-typedef signed long long int llint;
-typedef unsigned long long int ullint;
+typedef signed long long int llint;    // lld
+typedef unsigned long long int ullint; // llu
 // ... double
-typedef long double ldouble;
+typedef long double ldouble;           // Lf
