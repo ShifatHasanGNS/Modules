@@ -9,12 +9,24 @@
 #define stop return 0
 
 // input
-#define input(prompt_text, format_spesifier_string, var) printf(prompt_text); scanf(format_spesifier_string, &var)
-#define input_char(prompt_text, char_var) printf(prompt_text); scanf("%c", &char_var)
-#define input_str(prompt_text, string_var) printf(prompt_text); scanf("%s", &string_var)
-#define input_int(prompt_text, int_var) printf(prompt_text); scanf("%d", &int_var)
-#define input_float(prompt_text, float_var) printf(prompt_text); scanf("%f", &float_var)
-#define input_double(prompt_text, double_var) printf(prompt_text); scanf("%lf", &double_var)
+#define input(prompt_text, format_spesifier_string, var) \
+    printf(prompt_text);                                 \
+    scanf(format_spesifier_string, &var)
+#define input_char(prompt_text, char_var) \
+    printf(prompt_text);                  \
+    scanf("%c", &char_var)
+#define input_str(prompt_text, string_var) \
+    printf(prompt_text);                   \
+    scanf("%s", &string_var)
+#define input_int(prompt_text, int_var) \
+    printf(prompt_text);                \
+    scanf("%d", &int_var)
+#define input_float(prompt_text, float_var) \
+    printf(prompt_text);                    \
+    scanf("%f", &float_var)
+#define input_double(prompt_text, double_var) \
+    printf(prompt_text);                      \
+    scanf("%lf", &double_var)
 //scan
 #define scan scanf
 #define scan_char(char_var) scanf("%c", &char_var)
@@ -31,7 +43,9 @@
 #define print_double(double_var) printf("%lf", double_var)
 // new_line
 #define newline printf("\n")
-#define new_line(number_of_new_lines) for(int temp_i=0;temp_i<number_of_new_lines;temp_i++) printf("\n")
+#define new_line(number_of_new_lines)                            \
+    for (int temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
+    printf("\n")
 
 // #define new(type, m) (type *)malloc(m*sizeof(type))
 #define new1(type, m) malloc(sizeof(type[m]))
@@ -41,19 +55,21 @@
 #define new3(type, m, n, p) malloc(sizeof(type[m][n][p]))
 
 // for loop
-#define For(i, start, end, step) for(int i=(start); i<(end); i += (step))
-#define For_(type, i, start, end, step) for(type i=(start); i<(end); i += (step))
+#define For(i, start, end, step) for (int i = (start); i < (end); i += (step))
+#define For_(type, i, start, end, step) for (type i = (start); i < (end); i += (step))
 
 // memory size of a variable
 #define size(var) sizeof(var)
 // swap values of two variables
-#define swap(type, x, y) type temp=x; x=y, y=temp;
+#define swap(type, x, y) \
+    type temp = x;       \
+    x = y, y = temp;
 // show ---> variable = value
-#define show(format_spesifier_string, variable)\
-char *temp=(char *)malloc(100);\
-sprintf(temp, #variable" = %s\n", format_spesifier_string);\
-printf(temp, variable);\
-free(temp)
+#define show(format_spesifier_string, variable)                  \
+    char *temp = (char *)malloc(100);                            \
+    sprintf(temp, #variable " = %s\n", format_spesifier_string); \
+    printf(temp, variable);                                      \
+    free(temp)
 
 // boolian values
 #define False 0
@@ -74,7 +90,7 @@ free(temp)
 
 // define types
 
-typedef char* String;
+typedef char *String;
 /*
     u  ---> unsigned
     s ---> short
@@ -82,19 +98,19 @@ typedef char* String;
     ll ---> long long
 */
 // ... char
-typedef unsigned char uchar;           // %c
+typedef unsigned char uchar; // %c
 // ... short
-typedef unsigned short ushort;         // %hu
+typedef unsigned short ushort; // %hu
 // ... int
-typedef unsigned int uint;             // %u
+typedef unsigned int uint; // %u
 // ... short int
-typedef signed short int sint;         // %hd
-typedef unsigned short int usint;      // %hu
+typedef signed short int sint;    // %hd
+typedef unsigned short int usint; // %hu
 // ... long int
-typedef signed long int lint;          // ld
-typedef unsigned long int ulint;       // lu
+typedef signed long int lint;    // %ld
+typedef unsigned long int ulint; // %lu
 // ... long long int
-typedef signed long long int llint;    // lld
-typedef unsigned long long int ullint; // llu
+typedef signed long long int llint;    // %lld
+typedef unsigned long long int ullint; // %llu
 // ... double
-typedef long double ldouble;           // Lf
+typedef long double ldouble; // %Lf
