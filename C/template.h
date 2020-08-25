@@ -112,5 +112,5 @@ typedef unsigned long int ulint; // %lu
 // ... long long int
 typedef signed long long int llint;    // %lld
 typedef unsigned long long int ullint; // %llu
-// ... double
+// ... double...
 typedef long double ldouble; // %Lf
