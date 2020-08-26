@@ -6,7 +6,14 @@
 
 // start = main(),  stop = return 0
 #define start int main(int argc, char const *argv[])
+#define exit return
+#define exit_success return 0
+#define exit_failed return 1
+#define exit0 return 0
+#define exit1 return 1
+#define exit(x) return x
 #define stop return 0
+#define skip continue
 
 // input
 #define input(prompt_text, format_spesifier_string, var) \
@@ -17,7 +24,7 @@
     scanf("%c", &char_var)
 #define input_str(prompt_text, string_var) \
     printf(prompt_text);                   \
-    scanf("%s", &string_var)
+    gets(string_var)
 #define input_int(prompt_text, int_var) \
     printf(prompt_text);                \
     scanf("%d", &int_var)
@@ -30,12 +37,13 @@
 //scan
 #define scan scanf
 #define scan_char(char_var) scanf("%c", &char_var)
-#define scan_str(string_var) scanf("%s", &string_var)
+#define scan_str(string_var) gets(string_var)
 #define scan_int(int_var) scanf("%d", &int_var)
 #define scan_float(float_var) scanf("%f", &float_var)
 #define scan_double(double_var) scanf("%lf", &double_var)
 // print
 #define print printf
+#define println(text) printf(text"\n")
 #define print_char(char_var) printf("%c", char_var)
 #define print_str(string_var) printf("%s", string_var)
 #define print_int(int_var) printf("%d", int_var)
