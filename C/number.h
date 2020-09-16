@@ -1395,14 +1395,14 @@ Polar2D point2D_to_polar2D(Point2D point, angle_mode angle_mode)
     return complex_to_polar2D(point2D_to_complex(point), angle_mode);
 }
 
-Point2D polar2D_to_point2D(Polar2D point)
-{
-    return complex_to_point2D(polar2D_to_complex(point));
-}
-
 Point2D complex_to_point2D(Complex z)
 {
     return new_point2D(z->real, z->imaginary);
+}
+
+Point2D polar2D_to_point2D(Polar2D point)
+{
+    return complex_to_point2D(polar2D_to_complex(point));
 }
 
 Point polar_to_point(Polar point)
