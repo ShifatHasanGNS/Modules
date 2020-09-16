@@ -28,7 +28,7 @@
 #define PI (double)3.14159265358979323846264338327950288419716939937510
 #define TAU (double)6.28318530717958647692528676655900576839433879875021 // TAU = 2 * PI
 
-#define EulerGamma (double)0.57721566490153286060651209008240243104215933593992
+#define EulerGamma (double)0.57721566490153286060651209008240243104215933593992 // gamma
 
 #define SQRT_2 (double)1.41421356237309504880168872420969807856967187537695 // sqrt(2)
 #define SQRT_3 (double)1.73205080756887729352744634150587236694280525381038 // sqrt(3)
@@ -38,34 +38,34 @@
 #define ONE_OVER_SQRT_3 (double)0.57735026918962576450914878050195745564760175127013 // 1 / sqrt(3)
 #define ONE_OVER_SQRT_5 (double)0.44721359549995793928183473374625524708812367192231 // 1 / sqrt(5)
 
-#define angle_mode(polar) polar->angle_mode // angle-mode of polar, where variable 'polar' is of 'Polar' type
+#define angle_mode(polar) polar->angle_mode // angle-mode of polar, where variable 'polar' is of 'Polar2D/Polar' type
 
 // ---------------------------------------------------------------- //
 //                       E N U M E R A T O R s                      //
 // ---------------------------------------------------------------- //
 
-typedef enum
+typedef enum // text_style
 {
     title, //  Title
     upper, //  UPPER
     lower  //  lower
 } text_style;
 
-typedef enum
+typedef enum // angle_mode
 {
     radian,
     degree
 } angle_mode;
 
-typedef enum
+typedef enum // operation
 {
     addition,       //  +
     subtraction,    //  -
-    multiplication, //  *
+    multiplication, //  x or, *
     divition        //  /
 } operation;
 
-typedef enum
+typedef enum // matrix_type
 {
     row_matrix,      //  number of rows = 1
     column_matrix,   //  number of columns = 1
@@ -90,39 +90,47 @@ typedef enum
 //                        S T R U C T U R E s                       //
 // ---------------------------------------------------------------- //
 
-struct pxxr //  pair
+struct pair_struct //  pair
 {
     int first;
     int second;
 };
 
-struct pxlxr //  polar
+struct polar2D_struct //  polar
 {
     double r;
     double theta;
     angle_mode angle_mode;
 };
 
-struct cxmplxx //  complex
+struct polar_struct //  polar
+{
+    double r;
+    double theta_x;
+    double theta_z;
+    angle_mode angle_mode;
+};
+
+struct complex_struct //  complex
 {
     double real;
     double imaginary;
 };
 
-struct vxctxr2D //  vector2D
+struct vector2D_struct //  vector2D
 {
     double X;
     double Y;
 };
 
-struct vxctxr //  vector
+struct vector_struct //  vector
 {
     double X;
     double Y;
     double Z;
 };
 
-struct mxtrxx //  matrix
+struct matrix_struct //  matrix
 {
     int rows;
     int cols;
@@ -134,20 +142,31 @@ struct mxtrxx //  matrix
 // ---------------------------------------------------------------- //
 
 typedef char *String;
-typedef struct pxxr *Pair;
-typedef struct pxlxr *Polar;
-typedef struct cxmplxx *Complex;
-typedef struct vxctxr2D *Point2D;
-typedef struct vxctxr2D *Vector2D;
-typedef struct vxctxr *Point;
-typedef struct vxctxr *Vector;
-typedef struct mxtrxx *Matrix;
+typedef struct pair_struct *Pair;
+typedef struct polar2D_struct *Polar2D;
+typedef struct polar_struct *Polar;
+typedef struct complex_struct *Complex;
+typedef struct vector2D_struct *Point2D;
+typedef struct vector2D_struct *Vector2D;
+typedef struct vector_struct *Point;
+typedef struct vector_struct *Vector;
+typedef struct matrix_struct *Matrix;
 
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
 // --------------------------------------------------------------- //
 
+int sign_int(int number)
+{
+    return ((number < 0) ? -1 : 1);
+}
+
 int sign(double number)
+{
+    return ((number < 0) ? -1 : 1);
+}
+
+int sign_ldouble(long double number)
 {
     return ((number < 0) ? -1 : 1);
 }
@@ -182,12 +201,32 @@ double to_degree(double angle_in_radian)
     return ((angle_in_radian * 180) / PI);
 }
 
+int absolute_int(int number)
+{
+    return (sign(number) * number);
+}
+
 double absolute(double number)
 {
     return (sign(number) * number);
 }
 
+long double absolute_ldouble(long double number)
+{
+    return (sign_ldouble(number) * number);
+}
+
 double trim(double num)
+{
+    int number = (int)(num * pow(10, 9));
+    int last_digit = number - (int)(number / 10);
+    number = (int)(number / 10);
+    if (last_digit > 4)
+        number++;
+    return (number / pow(10, 8));
+}
+
+double trim_ldouble(long double num)
 {
     int number = (int)(num * pow(10, 9));
     int last_digit = number - (int)(number / 10);
@@ -226,22 +265,71 @@ int bigmod_str(char *num, int m)
     return result;
 }
 
-int gcd(int a, int b)
+int gcd_int(int a, int b)
 {
+    a = absolute_int(a);
+    b = absolute_int(b);
     int min = (a < b) ? a : b;
     int max = (a > b) ? a : b;
     int r = mod(max, min);
     if (r == 0)
         return min;
-    return gcd(min, r);
+    return gcd_int(min, r);
 }
 
-int lcm(int a, int b)
+unsigned int gcd_uint(unsigned int a, unsigned int b)
 {
-    return ((a * b) / gcd(a, b));
+    unsigned int min = (a < b) ? a : b;
+    unsigned int max = (a > b) ? a : b;
+    unsigned int r = mod(max, min);
+    if (r == 0)
+        return min;
+    return gcd_uint(min, r);
 }
 
-int int_power(int base, int n)
+unsigned long int gcd_ulint(unsigned long int a, unsigned long int b)
+{
+    unsigned long int min = (a < b) ? a : b;
+    unsigned long int max = (a > b) ? a : b;
+    unsigned long int r = mod(max, min);
+    if (r == 0)
+        return min;
+    return gcd_ulint(min, r);
+}
+
+unsigned long long int gcd_ullint(unsigned long long int a, unsigned long long int b)
+{
+    unsigned long long int min = (a < b) ? a : b;
+    unsigned long long int max = (a > b) ? a : b;
+    unsigned long long int r = mod(max, min);
+    if (r == 0)
+        return min;
+    return gcd_ullint(min, r);
+}
+
+int lcm_int(int a, int b)
+{
+    a = absolute_int(a);
+    b = absolute_int(b);
+    return ((a * b) / gcd_int(a, b));
+}
+
+unsigned int lcm_uint(unsigned int a, unsigned int b)
+{
+    return ((a * b) / gcd_uint(a, b));
+}
+
+unsigned long int lcm_ulint(unsigned long int a, unsigned long int b)
+{
+    return ((a * b) / gcd_ulint(a, b));
+}
+
+unsigned long long int lcm_ullint(unsigned long long int a, unsigned long long int b)
+{
+    return ((a * b) / gcd_ullint(a, b));
+}
+
+int power_int(int base, int n)
 {
     if (n == 0)
         return 1;
@@ -258,7 +346,58 @@ int int_power(int base, int n)
     return result;
 }
 
-double double_power(double base, double n)
+unsigned int power_uint(unsigned int base, unsigned int n)
+{
+    if (n == 0)
+        return 1;
+    else if (n == 1)
+        return base;
+    unsigned int result = 1;
+    while (n > 0)
+    {
+        if (n & 1)
+            result *= base;
+        base *= base;
+        n /= 2;
+    }
+    return result;
+}
+
+unsigned long int power_ulint(unsigned long int base, unsigned long int n)
+{
+    if (n == 0)
+        return 1;
+    else if (n == 1)
+        return base;
+    unsigned long int result = 1;
+    while (n > 0)
+    {
+        if (n & 1)
+            result *= base;
+        base *= base;
+        n /= 2;
+    }
+    return result;
+}
+
+unsigned long long int power_ullint(unsigned long long int base, unsigned long long int n)
+{
+    if (n == 0)
+        return 1;
+    else if (n == 1)
+        return base;
+    unsigned long long int result = 1;
+    while (n > 0)
+    {
+        if (n & 1)
+            result *= base;
+        base *= base;
+        n /= 2;
+    }
+    return result;
+}
+
+double power_double(double base, double n)
 {
     if (n == 0)
         return 1;
@@ -282,9 +421,9 @@ double double_power(double base, double n)
                     r = -1;
                 else
                 {
-                    int lower_part = pow(10, 8);
-                    int upper_part = remaining_power * lower_part;
-                    int h = gcd(upper_part, lower_part);
+                    unsigned int lower_part = pow(10, 8);
+                    unsigned int upper_part = remaining_power * lower_part;
+                    unsigned int h = gcd_uint(upper_part, lower_part);
                     upper_part /= h;
                     lower_part /= h;
                     if (!(lower_part & 1))
@@ -311,14 +450,67 @@ double double_power(double base, double n)
     }
 }
 
-int last_digit(int number, unsigned int power) // number, power >= 0
+long double power_ldouble(long double base, long double n)
+{
+    if (n == 0)
+        return 1;
+    else if (n == 1)
+        return base;
+    else
+    {
+        int r = 1, sign_of_base = sign(base), sign_of_n = sign(n);
+        base = absolute(base);
+        n = absolute(n);
+        long double remaining_power = n - floor(n), result = 1;
+        int p = floor(n);
+        if (sign_of_n == -1)
+            base = 1 / base;
+        long double b = base;
+        if (sign_of_base == -1)
+        {
+            remaining_power = trim(remaining_power);
+            if (remaining_power == 0)
+                if (p & 1)
+                    r = -1;
+                else
+                {
+                    unsigned int lower_part = pow(10, 8);
+                    unsigned int upper_part = remaining_power * lower_part;
+                    unsigned int h = gcd_uint(upper_part, lower_part);
+                    upper_part /= h;
+                    lower_part /= h;
+                    if (!(lower_part & 1))
+                        return 0;
+                    else
+                    {
+                        if (!(upper_part & 1))
+                            r = 1;
+                        else
+                            r = -1;
+                    }
+                }
+        }
+        while (p > 0)
+        {
+            if (p & 1)
+                result *= base;
+            base *= base;
+            p /= 2;
+        }
+        if (remaining_power != 0)
+            result *= pow(b, remaining_power);
+        return (r * result);
+    }
+}
+
+int last_digit_int(int number, int power) // number, power >= 0
 {
     if (power == 0)
         return 1;
     if (number == 0)
         return 0;
-    number = absolute(number);
-    power = absolute(power);
+    if (number < 1 || power < 1)
+        return -1;
     int n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
@@ -342,7 +534,75 @@ int last_digit(int number, unsigned int power) // number, power >= 0
     }
 }
 
-int last_digit_of_big_number(long long number, unsigned long long power) // number, power >= 0
+int last_digit_uint(unsigned int number, unsigned int power) // number, power >= 0
+{
+    if (power == 0)
+        return 1;
+    if (number == 0)
+        return 0;
+    number = absolute(number);
+    power = absolute(power);
+    int n = number - floor(number / 10) * 10;
+    if (power == 1)
+        return n;
+    if (n == 0 || n == 1 || n == 5 || n == 6)
+        return n;
+    else if (n == 4 || n == 9)
+    {
+        return (power & 1) ? n : (10 - n);
+    }
+    else
+    {
+        char *str = (char *)malloc(floor(log10(power) + 1) * sizeof(char));
+        sprintf(str, "%u", power);
+        int m = bigmod_str(str, 4);
+        free(str);
+        if (m == 1)
+            return n;
+        else if (m == 2)
+            return (n == 2 || n == 8) ? 4 : 9;
+        else if (m == 3)
+            return (10 - n);
+        else if (m == 0)
+            return (n == 2 || n == 8) ? 6 : 1;
+    }
+}
+
+int last_digit_ulint(unsigned long int number, unsigned long int power) // number, power >= 0
+{
+    if (power == 0)
+        return 1;
+    if (number == 0)
+        return 0;
+    number = absolute(number);
+    power = absolute(power);
+    int n = number - floor(number / 10) * 10;
+    if (power == 1)
+        return n;
+    if (n == 0 || n == 1 || n == 5 || n == 6)
+        return n;
+    else if (n == 4 || n == 9)
+    {
+        return (power & 1) ? n : (10 - n);
+    }
+    else
+    {
+        char *str = (char *)malloc(floor(log10(power) + 1) * sizeof(char));
+        sprintf(str, "%lu", power);
+        int m = bigmod_str(str, 4);
+        free(str);
+        if (m == 1)
+            return n;
+        else if (m == 2)
+            return (n == 2 || n == 8) ? 4 : 9;
+        else if (m == 3)
+            return (10 - n);
+        else if (m == 0)
+            return (n == 2 || n == 8) ? 6 : 1;
+    }
+}
+
+int last_digit_ullint(unsigned long long int number, unsigned long long int power) // number, power >= 0
 {
     if (power == 0)
         return 1;
@@ -382,7 +642,13 @@ double ln(double x)
         return log(x);
 }
 
-double logarithm(double base, double x)
+double log_double(double base, double x)
+{
+    if (x > 0)
+        return (ln(x) / ln(base));
+}
+
+long double log_ldouble(long double base, long double x)
 {
     if (x > 0)
         return (ln(x) / ln(base));
@@ -390,7 +656,7 @@ double logarithm(double base, double x)
 
 int fibonacci(int n_th)
 {
-    return (ONE_OVER_SQRT_5 * (double_power(PHI_0, n_th) - double_power(PHI_1, n_th)));
+    return (ONE_OVER_SQRT_5 * (power_double(PHI_0, n_th) - power_double(PHI_1, n_th)));
 }
 
 bool is_null(Matrix matrix)
@@ -437,11 +703,21 @@ Pair new_pair(int first, int second)
     return p;
 }
 
-Polar new_polar(double r, double theta, angle_mode angle_mode)
+Polar2D new_polar2D(double r, double theta, angle_mode angle_mode)
+{
+    Polar2D p = (Polar2D)malloc(sizeof(Polar2D));
+    p->r = r;
+    p->theta = theta;
+    p->angle_mode = angle_mode;
+    return p;
+}
+
+Polar new_polar(double r, double theta_x, double theta_z, angle_mode angle_mode)
 {
     Polar p = (Polar)malloc(sizeof(Polar));
     p->r = r;
-    p->theta = theta;
+    p->theta_x = theta_x;
+    p->theta_z = theta_z;
     p->angle_mode = angle_mode;
     return p;
 }
@@ -505,9 +781,14 @@ Pair copy_pair(Pair p)
     return new_pair(p->first, p->second);
 }
 
+Polar2D copy_polar2D(Polar2D p)
+{
+    return new_polar2D(p->r, p->theta, p->angle_mode);
+}
+
 Polar copy_polar(Polar p)
 {
-    return new_polar(p->r, p->theta, p->angle_mode);
+    return new_polar(p->r, p->theta_x, p->theta_z, p->angle_mode);
 }
 
 Complex copy_complex(Complex z)
@@ -790,13 +1071,13 @@ Complex divide_complex(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1
     return scale_complex(multiply_complex(z1, conjugate(z2)), (1 / value_of_complex(z2)));
 }
 
-Complex complex_power(Complex base, Complex n)
+Complex power_complex(Complex base, Complex n)
 {
     double r = value_of_complex(base);
     double t = argument(base, radian);
     double x = n->real, y = n->imaginary;
     double p = (x * log(r)) - (y * t);
-    double R = double_power(E, p);
+    double R = power_double(E, p);
     double T = (y * log(r)) + (x * t);
     double real = R * cos(T), img = R * sin(T);
     return new_complex(real, img);
@@ -1082,12 +1363,12 @@ Vector vectorize(Matrix matrix)
         return new_vector(0, 0, 0);
 }
 
-Polar complex_to_polar(Complex z, angle_mode angle_mode) // z = (x + iy) ---> r * e^(i * theta)
+Polar2D complex_to_polar2D(Complex z, angle_mode angle_mode) // z = (x + iy) ---> r * e^(i * theta)
 {
-    return new_polar(value_of_complex(z), argument(z, angle_mode), angle_mode);
+    return new_polar2D(value_of_complex(z), argument(z, angle_mode), angle_mode);
 }
 
-Complex polar_to_complex(Polar number) // r * e^(i * theta) ---> (x + iy) = z
+Complex polar2D_to_complex(Polar2D number) // r * e^(i * theta) ---> (x + iy) = z
 {
     if (number->angle_mode == radian)
     {
@@ -1105,14 +1386,47 @@ Complex point2D_to_complex(Point2D point)
     return new_complex(point->X, point->Y);
 }
 
-Polar point2D_to_polar(Point2D point, angle_mode angle_mode)
+Polar2D point2D_to_polar2D(Point2D point, angle_mode angle_mode)
 {
-    return complex_to_polar(point2D_to_complex(point), angle_mode);
+    return complex_to_polar2D(point2D_to_complex(point), angle_mode);
+}
+
+Point2D polar2D_to_point2D(Polar2D point)
+{
+    return complex_to_point2D(polar2D_to_complex(point));
 }
 
 Point2D complex_to_point2D(Complex z)
 {
     return new_point2D(z->real, z->imaginary);
+}
+
+Point polar_to_point(Polar point)
+{
+    double t1 = point->theta_x, t2 = point->theta_z;
+    if (point->angle_mode == degree)
+    {
+        t1 = to_radian(point->theta_x);
+        t2 = to_radian(point->theta_z);
+    }
+    double x = point->r * sin(t2) * cos(t1);
+    double y = point->r * sin(t2) * sin(t1);
+    double z = point->r * cos(t2);
+    return new_point(x, y, z);
+}
+
+Polar point_to_polar(Point point, angle_mode angle_mode)
+{
+    double x = point->X, y = point->Y, z = point->Z;
+    double r = sqrt(x*x + y+y + z*z);
+    double t1 = acos(x / sqrt(x*x + y*y));
+    double t2 = acos(z/r);
+    if (angle_mode = degree)
+    {
+        t1 = to_degree(t1);
+        t2 = to_degree(t2);
+    }
+    return new_polar(r, t1, t2, angle_mode);
 }
 
 Complex vector2D_to_complex(Vector2D vector)
@@ -1480,31 +1794,36 @@ void print_pair(Pair pair)
     printf("(%d, %d)", pair->first, pair->second);
 }
 
+void print_polar2D(Polar2D point)
+{
+    if (point->r == 0 && point->theta == 0)
+        printf("(0, 0)");
+    else if (point->r != 0 && point->theta == 0)
+        printf("(%lf, 0)", point->r);
+    else if (point->r == 0 && point->theta != 0)
+        printf("(0, %lf)", point->theta);
+    else
+        printf("(%lf, %lf)", point->r, point->theta);
+}
+
 void print_polar(Polar point)
 {
-    if (point->angle_mode == radian)
-    {
-        if (point->r == 0 && point->theta == 0)
-            printf("(0, 0)");
-        else if (point->r != 0 && point->theta == 0)
-            printf("(%lf, 0)", point->r);
-        else if (point->r == 0 && point->theta != 0)
-            printf("(0, %lf)", point->theta);
-        else
-            printf("(%lf, %lf)", point->r, point->theta);
-    }
-    if (point->angle_mode == degree)
-    {
-        double angle = to_degree(point->theta);
-        if (point->r == 0 && angle == 0)
-            printf("(0, 0)");
-        else if (point->r != 0 && angle == 0)
-            printf("(%lf, 0)", point->r);
-        else if (point->r == 0 && angle != 0)
-            printf("(0, %lf)", angle);
-        else
-            printf("(%lf, %lf)", point->r, angle);
-    }
+    if (point->r == 0 && point->theta_x == 0 && point->theta_z == 0)
+        printf("(0, 0, 0)");
+    else if (point->r != 0 && point->theta_x == 0 && point->theta_z == 0)
+        printf("(%lf, 0, 0)", point->r);
+    else if (point->r == 0 && point->theta_x != 0 && point->theta_z == 0)
+        printf("(0, %lf, 0)", point->theta_x);
+    else if (point->r != 0 && point->theta_x != 0 && point->theta_z == 0)
+        printf("(%lf, %lf, 0)", point->r, point->theta_x);
+    else if (point->r == 0 && point->theta_x == 0 && point->theta_z != 0)
+        printf("(0, 0, %lf)", point->theta_z);
+    else if (point->r == 0 && point->theta_x != 0 && point->theta_z != 0)
+        printf("(0, %lf, %lf)", point->theta_x, point->theta_z);
+    else if (point->r != 0 && point->theta_x == 0 && point->theta_z != 0)
+        printf("(%lf, 0, %lf)", point->r, point->theta_z);
+    else
+        printf("(%lf, %lf, %lf)", point->r, point->theta_x, point->theta_z);
 }
 
 void print_point2D(Point2D point)
@@ -1870,7 +2189,7 @@ Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
     return new_matrix(0, 0);
 }
 
-Matrix matrix_power(Matrix matrix, int n)
+Matrix power_matrix(Matrix matrix, int n)
 {
     if (matrix->rows == matrix->cols)
     {
