@@ -29,7 +29,7 @@ def week_day(y, m, d):
 	return numberOfDays_upto_date(y, m, d) % 7
 
 
-def week_day_name(y, m, d):	
+def week_day_name(y, m, d):
 	n = week_day(y, m, d)
 	if n == 0: return "Sunday"
 	if n == 1: return "Monday"
@@ -56,3 +56,4 @@ def format_date(y, m, d): # DD MM, YYYY
 	        12: "December"
         }
 	return str(d)+' '+M[m]+', '+str(y)
+	
