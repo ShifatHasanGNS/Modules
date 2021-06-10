@@ -25,8 +25,13 @@
 
 #define E (double)2.71828182845904523536028747135266249775724709369995 // e ---> Euler's Constant
 
-#define PI (double)3.14159265358979323846264338327950288419716939937510
 #define TAU (double)6.28318530717958647692528676655900576839433879875021 // TAU = 2 * PI
+#define PI (double)3.14159265358979323846264338327950288419716939937510 // PI
+#define PI_BY_2 (double)1.57079632679489661923132169163975144209858469968755 // PI / 2
+#define PI_BY_3 (double)1.04719755119659774615421446109316762806572313312503 // PI / 3
+#define PI_BY_4 (double)0.78539816339744830961566084581987572104929234984377 // PI / 4
+#define PI_BY_5 (double)0.62831853071795864769252867665590057683943387987502 // PI / 5
+#define PI_BY_6 (double)0.52359877559829887307710723054658381403286156656251 // PI / 6
 
 #define EulerGamma (double)0.57721566490153286060651209008240243104215933593992 // gamma
 
@@ -38,7 +43,7 @@
 #define ONE_OVER_SQRT_3 (double)0.57735026918962576450914878050195745564760175127013 // 1 / sqrt(3)
 #define ONE_OVER_SQRT_5 (double)0.44721359549995793928183473374625524708812367192231 // 1 / sqrt(5)
 
-#define angle_mode(polar) polar->angle_mode // angle-mode of polar, where variable 'polar' is of 'Polar2D/Polar' type
+#define angle_mode(polar) polar->angle_mode // angle-mode of polar, where variable 'polar' is of type 'Polar2D/Polar'
 
 // ---------------------------------------------------------------- //
 //                       E N U M E R A T O R s                      //
@@ -90,11 +95,14 @@ typedef enum // matrix_type
 //                        S T R U C T U R E s                       //
 // ---------------------------------------------------------------- //
 
+typedef char *String;
+
 struct pair_struct //  pair
 {
     int first;
     int second;
 };
+typedef struct pair_struct *Pair;
 
 struct polar2D_struct //  polar
 {
@@ -102,6 +110,7 @@ struct polar2D_struct //  polar
     double theta;
     angle_mode angle_mode;
 };
+typedef struct polar2D_struct *Polar2D;
 
 struct polar_struct //  polar
 {
@@ -110,18 +119,29 @@ struct polar_struct //  polar
     double theta_z;
     angle_mode angle_mode;
 };
+typedef struct polar_struct *Polar;
 
 struct complex_struct //  complex
 {
     double real;
     double imaginary;
 };
+typedef struct complex_struct *Complex;
+
+struct complex_array_struct //  complex_Array
+{
+    int length;
+    Complex *complex_numbers;
+};
+typedef struct complex_array_struct *Complex_Array;
 
 struct vector2D_struct //  vector2D
 {
     double X;
     double Y;
 };
+typedef struct vector2D_struct *Point2D;
+typedef struct vector2D_struct *Vector2D;
 
 struct vector_struct //  vector
 {
@@ -129,6 +149,8 @@ struct vector_struct //  vector
     double Y;
     double Z;
 };
+typedef struct vector_struct *Point;
+typedef struct vector_struct *Vector;
 
 struct matrix_struct //  matrix
 {
@@ -136,21 +158,8 @@ struct matrix_struct //  matrix
     int cols;
     double **data;
 };
-
-// ---------------------------------------------------------------- //
-//                          T Y P E D E F s                         //
-// ---------------------------------------------------------------- //
-
-typedef char *String;
-typedef struct pair_struct *Pair;
-typedef struct polar2D_struct *Polar2D;
-typedef struct polar_struct *Polar;
-typedef struct complex_struct *Complex;
-typedef struct vector2D_struct *Point2D;
-typedef struct vector2D_struct *Vector2D;
-typedef struct vector_struct *Point;
-typedef struct vector_struct *Vector;
 typedef struct matrix_struct *Matrix;
+
 
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
@@ -663,6 +672,95 @@ int fibonacci(int n_th)
     return (ONE_OVER_SQRT_5 * (power_double(PHI_0, n_th) - power_double(PHI_1, n_th)));
 }
 
+double differentiate(char *function, double x)
+{
+    double answer = 0;
+    char *format = "%0.15lf";
+
+    FILE *fp;
+    fp = fopen("temp_derivative.c", "w");
+
+    fprintf(fp, "#include <stdio.h>\n#include <math.h>\n\n");
+    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", function);
+    fprintf(fp, "void main()\n{\n");
+    fprintf(fp, "\tdouble dx = 0.00000005, a = 0, b = 0, x = %lf, result = 0;\n\n", x);
+    fprintf(fp, "\ta = f(x+dx);\n\tb = f(x-dx);\n");
+    fprintf(fp, "\tresult = (a - b)/(2 * dx);\n\n");
+    fprintf(fp, "\tFILE *fp;\n");
+    fprintf(fp, "\tfp = fopen(\"temp_answer.txt\", \"w\");\n");
+    fprintf(fp, "\tfprintf(fp, \"%s\", result);\n", format);
+    fprintf(fp, "\tfclose(fp);\n");
+    fprintf(fp, "}");
+
+    fclose(fp);
+
+    char *command = "gcc temp_derivative.c -o temp_derivative.exe";
+    system(command);
+    command = "temp_derivative.exe";
+    system(command);
+
+    fp = fopen("temp_answer.txt", "r");
+    fscanf(fp, "%lf", &answer);
+    fclose(fp);
+
+    remove("temp_derivative.exe");
+    remove("temp_derivative.c");
+    remove("temp_answer.txt");
+
+    return answer;
+}
+
+double integrate(char *function, double lower_bound, double upper_bound)
+{
+    double temp, answer = 0;
+    char *format = "%0.15lf";
+    int sign = 1;
+
+    if (upper_bound < lower_bound)
+    {
+        sign = -1;
+        temp = upper_bound;
+        upper_bound = lower_bound;
+        lower_bound = temp;
+    }
+
+    FILE *fp;
+    fp = fopen("temp_integral.c", "w");
+
+    fprintf(fp, "#include <stdio.h>\n#include <math.h>\n\n");
+    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", function);
+    fprintf(fp, "void main()\n{\n");
+    fprintf(fp, "\tdouble sum = 0, x = 0, a = %0.15lf, b = %0.15lf, dx = 0.0000001, result = 0;\nint sign = %d;\n\n", lower_bound, upper_bound, sign);
+    fprintf(fp, "\tfor (int i = 1; i <= 10000000; i++)\n");
+    fprintf(fp, "\t{\n");
+    fprintf(fp, "\t\tx = a + ((b-a)*(i - 0.5)*dx);\n");
+    fprintf(fp, "\t\tsum += f(x);\n");
+    fprintf(fp, "\t}\n\n");
+    fprintf(fp, "\tresult = sign * (b - a) * sum * dx;\n\n");
+    fprintf(fp, "\tFILE *fp;\n");
+    fprintf(fp, "\tfp = fopen(\"temp_answer.txt\", \"w\");\n");
+    fprintf(fp, "\tfprintf(fp, \"%s\", result);\n", format);
+    fprintf(fp, "\tfclose(fp);\n");
+    fprintf(fp, "}");
+
+    fclose(fp);
+
+    char *command = "gcc temp_integral.c -o temp_integral.exe";
+    system(command);
+    command = "temp_integral.exe";
+    system(command);
+
+    fp = fopen("temp_answer.txt", "r");
+    fscanf(fp, "%lf", &answer);
+    fclose(fp);
+
+    remove("temp_integral.exe");
+    remove("temp_integral.c");
+    remove("temp_answer.txt");
+
+    return answer;
+}
+
 bool is_null(Matrix matrix)
 {
     return (matrix->rows == 0 && matrix->cols == 0) ? true : false;
@@ -778,6 +876,14 @@ Complex new_complex(double real_part, double imaginary_part)
     complex_number->real = real_part;
     complex_number->imaginary = imaginary_part;
     return complex_number;
+}
+
+Complex_Array new_complex_array(int length)
+{
+    Complex_Array complex_array = (Complex_Array)malloc(sizeof(Complex_Array));
+    complex_array->length = length;
+    complex_array->complex_numbers = (Complex *)malloc(length * sizeof(Complex));
+    return complex_array;
 }
 
 Pair copy_pair(Pair p)
@@ -1879,6 +1985,27 @@ void print_complex(Complex number)
     }
 }
 
+void print_complex_array(Complex_Array complex_array)
+{
+    if (complex_array->length == 1)
+    {
+        printf("[");
+        print_complex(complex_array->complex_numbers[0]);
+        printf("]\n");
+    }
+    else if (complex_array->length > 1)
+    {
+        printf("[");
+        print_complex(complex_array->complex_numbers[0]);
+        for (int i = 1; i < complex_array->length; i++)
+        {
+            printf(", ");
+            print_complex(complex_array->complex_numbers[i]);
+        }
+        printf("]\n");
+    }
+}
+
 void print_vector2D(Vector2D vector)
 {
     if (vector->X == 0 && vector->Y == 0)
@@ -2464,7 +2591,7 @@ Matrix rotate_matrix_in_3D(Matrix matrix, Vector rotation_axis_vector, double an
         return matrix;
 }
 
-Matrix solve(Matrix coefficients_square_matrix, Matrix constants_column_matrix)
+Matrix solve_xy(Matrix coefficients_square_matrix, Matrix constants_column_matrix)
 {
     Matrix result_column_matrix = new_matrix(coefficients_square_matrix->cols, 1);
     if (is_square_matrix(coefficients_square_matrix) && constants_column_matrix->rows == coefficients_square_matrix->cols && constants_column_matrix->cols == 1)
@@ -2474,6 +2601,62 @@ Matrix solve(Matrix coefficients_square_matrix, Matrix constants_column_matrix)
             result_column_matrix->data[i][0] = scaling_factor * determinant(replace_column_matrix(coefficients_square_matrix, i, constants_column_matrix));
     }
     return result_column_matrix;
+}
+
+double solve_x(double a, double b)
+{
+    return -(b/a);
+}
+
+Complex_Array solve_x2(double a, double b, double c)
+{
+    Complex_Array complex_array = new_complex_array(2);
+    double m = b*b - 4*a*c;
+    if (m >= 0)
+    {
+        double sqrt_m = sqrt(m);
+        complex_array->complex_numbers[0] = new_complex((-b - sqrt_m)/2, 0);
+        complex_array->complex_numbers[1] = new_complex((-b + sqrt_m)/2, 0);
+        return complex_array;
+    }
+    Complex csqrt_m = power_complex(new_complex(m, 0), new_complex(0.5, 0));
+    csqrt_m->real /= 2;
+    csqrt_m->imaginary /= 2;
+    Complex cb = new_complex(-b/2, 0);
+    complex_array->complex_numbers[0] = subtract_complex(cb, csqrt_m);
+    complex_array->complex_numbers[1] = add_complex(cb, csqrt_m);
+    return complex_array;
+}
+
+Complex_Array solve_x3(double a, double b, double c, double d)
+{
+    double p, q, m, N, n, t;
+    Complex u = new_complex(a/3, 0), y = new_complex(0, 0);
+    Complex_Array complex_array_2 = new_complex_array(2);
+    Complex_Array complex_array_3 = new_complex_array(3);
+    a = b/a;
+    b = c/a;
+    c = d/a;
+    d = 0;
+    p = b - ((a*a)/3);
+    q = (2*(a*a*a)/27) - (a*b/3) + c;
+    m = -q/2;
+    N = ((q*q)/4) + (p*p*p/27);
+    n = sqrt(abs(N));
+    if (N >= 0) t = pow(m+n, 1/3) + pow(m-n, 1/3);
+    else
+    {
+        Complex z = new_complex(m, n);
+        double r = value_of_complex(z);
+        double theta = argument(z, radian)/3;
+        t = 2*pow(r, 1/3)*cos(theta);
+    }
+    y->real = t;
+    complex_array_2 = solve_x2(1, t, (t*t)+p);
+    complex_array_3->complex_numbers[0] = subtract_complex(y, u);
+    complex_array_3->complex_numbers[1] = subtract_complex(complex_array_2->complex_numbers[0], u);
+    complex_array_3->complex_numbers[2] = subtract_complex(complex_array_2->complex_numbers[1], u);
+    return complex_array_3;
 }
 
 bool is_type_of(Matrix matrix, matrix_type type)
@@ -2677,7 +2860,7 @@ bool is_type_of(Matrix matrix, matrix_type type)
             int trial = 0;
             Matrix temp_matrix = new_matrix(matrix->rows, matrix->cols);
             temp_matrix = matrix;
-            while (trial != 100)
+            while (trial != 1024)
             {
                 temp_matrix = multiply_matrix(temp_matrix, matrix);
                 if (is_type_of(temp_matrix, null_matrix))
