@@ -1264,6 +1264,17 @@ bool is_number(char *string)
     return true;
 }
 
+char *remove_char(char *str, char c)
+{
+    char *new_str = (char *)malloc(strlen(str) * sizeof(char));
+    strcpy(new_str, str);
+    int count = 0;
+    for (int i = 0; new_str[i]; i++)
+        if (new_str[i] != c) new_str[count++] = new_str[i];
+    new_str[count] = '\0';
+    return new_str;
+}
+
 char **split(char *string, char c)
 {
     // Initialize...
@@ -2623,36 +2634,39 @@ Complex_Array solve_x2(double a, double b, double c)
     csqrt_m->real /= 2;
     csqrt_m->imaginary /= 2;
     Complex cb = new_complex(-b/2, 0);
-    complex_array->complex_numbers[0] = subtract_complex(cb, csqrt_m);
-    complex_array->complex_numbers[1] = add_complex(cb, csqrt_m);
+    complex_array->complex_numbers[0] = add_complex(cb, csqrt_m);
+    complex_array->complex_numbers[1] = subtract_complex(cb, csqrt_m);
     return complex_array;
 }
 
 Complex_Array solve_x3(double a, double b, double c, double d)
 {
-    double p, q, m, N, n, t;
-    Complex u = new_complex(a/3, 0), y = new_complex(0, 0);
+    double p, q, m, N, n, t, a0 = a;
+    Complex y = new_complex(0, 0);
     Complex_Array complex_array_2 = new_complex_array(2);
     Complex_Array complex_array_3 = new_complex_array(3);
-    a = b/a;
-    b = c/a;
-    c = d/a;
+    a = b/a0;
+    b = c/a0;
+    c = d/a0;
     d = 0;
     p = b - ((a*a)/3);
     q = (2*(a*a*a)/27) - (a*b/3) + c;
     m = -q/2;
     N = ((q*q)/4) + (p*p*p/27);
-    n = sqrt(abs(N));
-    if (N >= 0) t = pow(m+n, 1/3) + pow(m-n, 1/3);
+    n = sqrt(absolute(N));
+
+    if (N >= 0) t = cbrt(m+n) + cbrt(m-n);
     else
     {
         Complex z = new_complex(m, n);
-        double r = value_of_complex(z);
+        double r = sqrt((m*m) + absolute(N));
         double theta = argument(z, radian)/3;
-        t = 2*pow(r, 1/3)*cos(theta);
+        t = 2*cbrt(r)*cos(theta);
     }
+    Complex u = new_complex(a/3, 0);
     y->real = t;
     complex_array_2 = solve_x2(1, t, (t*t)+p);
+
     complex_array_3->complex_numbers[0] = subtract_complex(y, u);
     complex_array_3->complex_numbers[1] = subtract_complex(complex_array_2->complex_numbers[0], u);
     complex_array_3->complex_numbers[2] = subtract_complex(complex_array_2->complex_numbers[1], u);
