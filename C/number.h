@@ -25,8 +25,8 @@
 
 #define E (double)2.71828182845904523536028747135266249775724709369995 // e ---> Euler's Constant
 
-#define TAU (double)6.28318530717958647692528676655900576839433879875021 // TAU = 2 * PI
-#define PI (double)3.14159265358979323846264338327950288419716939937510 // PI
+#define TAU (double)6.28318530717958647692528676655900576839433879875021     // TAU = 2 * PI
+#define PI (double)3.14159265358979323846264338327950288419716939937510      // PI
 #define PI_BY_2 (double)1.57079632679489661923132169163975144209858469968755 // PI / 2
 #define PI_BY_3 (double)1.04719755119659774615421446109316762806572313312503 // PI / 3
 #define PI_BY_4 (double)0.78539816339744830961566084581987572104929234984377 // PI / 4
@@ -159,7 +159,6 @@ struct matrix_struct //  matrix
     double **data;
 };
 typedef struct matrix_struct *Matrix;
-
 
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
@@ -710,33 +709,102 @@ double differentiate(char *function, double x)
     return answer;
 }
 
-double integrate(char *function, double lower_bound, double upper_bound)
+double integrate(char *integrand, char *interval)
 {
-    double temp, answer = 0;
+    char *lower_bound = (char *)malloc(64 * sizeof(char));
+    char *upper_bound = (char *)malloc(64 * sizeof(char));
+    sscanf(interval, "%s %s", lower_bound, upper_bound);
+
+    if (!strcmp(lower_bound, upper_bound))
+        return 0;
+
+    double temp, a, b, A, B, C, dx = 0.0000001, answer = 0;
     char *format = "%0.15lf";
     int sign = 1;
+    bool m = false;
 
-    if (upper_bound < lower_bound)
+    if (!strcmp(lower_bound, "-inf"))
     {
-        sign = -1;
-        temp = upper_bound;
-        upper_bound = lower_bound;
-        lower_bound = temp;
+        m = true;
+        A = -PI_BY_2;
+        if (!strcmp(lower_bound, "inf"))
+        {
+            B = PI_BY_2;
+        }
+        else
+        {
+            sscanf(upper_bound, "%lf", &b);
+            B = atan(b);
+        }
     }
+
+    else if (!strcmp(lower_bound, "inf"))
+    {
+        m = true;
+        sign = -1;
+        B = PI_BY_2;
+        if (!strcmp(upper_bound, "-inf"))
+        {
+            A = -PI_BY_2;
+        }
+        else
+        {
+            sscanf(upper_bound, "%lf", &b);
+            A = atan(b);
+        }
+    }
+
+    else
+    {
+        sscanf(lower_bound, "%lf", &a);
+        if (!strcmp(upper_bound, "inf"))
+        {
+            m = true;
+            A = atan(a);
+            B = PI_BY_2;
+        }
+        else if (!strcmp(upper_bound, "-inf"))
+        {
+            m = true;
+            sign = -1;
+            B = atan(a);
+            A = -PI_BY_2;
+        }
+        else
+        {
+            sscanf(upper_bound, "%lf", &b);
+            A = a;
+            B = b;
+            if (b < a)
+            {
+                sign = -1;
+                B = a;
+                A = b;
+            }
+        }
+    }
+
+    C = B - A;
 
     FILE *fp;
     fp = fopen("temp_integral.c", "w");
 
     fprintf(fp, "#include <stdio.h>\n#include <math.h>\n\n");
-    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", function);
+    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", integrand);
     fprintf(fp, "void main()\n{\n");
-    fprintf(fp, "\tdouble sum = 0, x = 0, a = %0.15lf, b = %0.15lf, dx = 0.0000001, result = 0;\nint sign = %d;\n\n", lower_bound, upper_bound, sign);
+    fprintf(fp, "\tdouble sum = 0, x = 0, t = 0, result = 0;\n\n");
     fprintf(fp, "\tfor (int i = 1; i <= 10000000; i++)\n");
     fprintf(fp, "\t{\n");
-    fprintf(fp, "\t\tx = a + ((b-a)*(i - 0.5)*dx);\n");
-    fprintf(fp, "\t\tsum += f(x);\n");
+    fprintf(fp, "\t\tx = %0.15lf + (%0.15lf * (i - 0.5) * %0.15lf);\n", A, C, dx);
+    if (m)
+    {
+        fprintf(fp, "\t\tx = tan(x);\n");
+        fprintf(fp, "\t\tsum += f(x)*(1 + x*x);\n");
+    }
+    else
+        fprintf(fp, "\t\tsum += f(x);\n");
     fprintf(fp, "\t}\n\n");
-    fprintf(fp, "\tresult = sign * (b - a) * sum * dx;\n\n");
+    fprintf(fp, "\tresult = %d * %0.15lf * sum * %0.15lf;\n\n", sign, C, dx);
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer.txt\", \"w\");\n");
     fprintf(fp, "\tfprintf(fp, \"%s\", result);\n", format);
@@ -1270,7 +1338,8 @@ char *remove_char(char *str, char c)
     strcpy(new_str, str);
     int count = 0;
     for (int i = 0; new_str[i]; i++)
-        if (new_str[i] != c) new_str[count++] = new_str[i];
+        if (new_str[i] != c)
+            new_str[count++] = new_str[i];
     new_str[count] = '\0';
     return new_str;
 }
@@ -2616,24 +2685,24 @@ Matrix solve_xy(Matrix coefficients_square_matrix, Matrix constants_column_matri
 
 double solve_x(double a, double b)
 {
-    return -(b/a);
+    return -(b / a);
 }
 
 Complex_Array solve_x2(double a, double b, double c)
 {
     Complex_Array complex_array = new_complex_array(2);
-    double m = b*b - 4*a*c;
+    double m = b * b - 4 * a * c;
     if (m >= 0)
     {
         double sqrt_m = sqrt(m);
-        complex_array->complex_numbers[0] = new_complex((-b - sqrt_m)/2, 0);
-        complex_array->complex_numbers[1] = new_complex((-b + sqrt_m)/2, 0);
+        complex_array->complex_numbers[0] = new_complex((-b - sqrt_m) / 2, 0);
+        complex_array->complex_numbers[1] = new_complex((-b + sqrt_m) / 2, 0);
         return complex_array;
     }
     Complex csqrt_m = power_complex(new_complex(m, 0), new_complex(0.5, 0));
     csqrt_m->real /= 2;
     csqrt_m->imaginary /= 2;
-    Complex cb = new_complex(-b/2, 0);
+    Complex cb = new_complex(-b / 2, 0);
     complex_array->complex_numbers[0] = add_complex(cb, csqrt_m);
     complex_array->complex_numbers[1] = subtract_complex(cb, csqrt_m);
     return complex_array;
@@ -2645,27 +2714,28 @@ Complex_Array solve_x3(double a, double b, double c, double d)
     Complex y = new_complex(0, 0);
     Complex_Array complex_array_2 = new_complex_array(2);
     Complex_Array complex_array_3 = new_complex_array(3);
-    a = b/a0;
-    b = c/a0;
-    c = d/a0;
+    a = b / a0;
+    b = c / a0;
+    c = d / a0;
     d = 0;
-    p = b - ((a*a)/3);
-    q = (2*(a*a*a)/27) - (a*b/3) + c;
-    m = -q/2;
-    N = ((q*q)/4) + (p*p*p/27);
+    p = b - ((a * a) / 3);
+    q = (2 * (a * a * a) / 27) - (a * b / 3) + c;
+    m = -q / 2;
+    N = ((q * q) / 4) + (p * p * p / 27);
     n = sqrt(absolute(N));
 
-    if (N >= 0) t = cbrt(m+n) + cbrt(m-n);
+    if (N >= 0)
+        t = cbrt(m + n) + cbrt(m - n);
     else
     {
         Complex z = new_complex(m, n);
-        double r = sqrt((m*m) + absolute(N));
-        double theta = argument(z, radian)/3;
-        t = 2*cbrt(r)*cos(theta);
+        double r = sqrt((m * m) + absolute(N));
+        double theta = argument(z, radian) / 3;
+        t = 2 * cbrt(r) * cos(theta);
     }
-    Complex u = new_complex(a/3, 0);
+    Complex u = new_complex(a / 3, 0);
     y->real = t;
-    complex_array_2 = solve_x2(1, t, (t*t)+p);
+    complex_array_2 = solve_x2(1, t, (t * t) + p);
 
     complex_array_3->complex_numbers[0] = subtract_complex(y, u);
     complex_array_3->complex_numbers[1] = subtract_complex(complex_array_2->complex_numbers[0], u);
