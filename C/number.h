@@ -1002,6 +1002,15 @@ Complex copy_complex(Complex z)
     return new_complex(z->real, z->imaginary);
 }
 
+Complex_Array copy_complex_array(Complex_Array complex_array)
+{
+    int len = complex_array->length;
+    Complex_Array copy_of_complex_array = new_complex_array(len);
+    for (int i = 0; i < len; i++)
+        copy_of_complex_array->complex_numbers[i] = complex_array->complex_numbers[i];
+    return copy_of_complex_array;
+}
+
 Point2D copy_point2D(Point2D p)
 {
     return new_point2D(p->X, p->Y);
@@ -2186,7 +2195,7 @@ void print_matrix(Matrix matrix)
     }
 }
 
-void print_types(char **types)
+void print_types_of_matrix(char **types)
 {
     int count = 0;
     while (types[count])
