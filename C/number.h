@@ -20,6 +20,8 @@
 //                            M A C R O s                           //
 // ---------------------------------------------------------------- //
 
+#define inf INFINITY
+
 #define PHI_0 (double)1.61803398874989484820458683436563811772030917980576    // [1 + sqrt(5)] / 2
 #define PHI_1 (double)(-0.61803398874989484820458683436563811772030917980576) // [1 - sqrt(5)] / 2
 
@@ -411,6 +413,10 @@ double power_double(double base, double n)
         return 1;
     else if (n == 1)
         return base;
+    else if (n == 0.5 || n == 1 / 2)
+        return sqrt(base);
+    else if (n == 0.333333 || n == 1 / 3)
+        return cbrt(base);
     else
     {
         int r = 1, sign_of_base = sign(base), sign_of_n = sign(n);
@@ -455,7 +461,16 @@ double power_double(double base, double n)
             p /= 2;
         }
         if (remaining_power != 0)
-            result *= pow(b, remaining_power);
+        {
+            if (remaining_power == 1)
+                result *= 1;
+            else if (remaining_power == 0.5 || remaining_power == 1 / 2)
+                result *= sqrt(b);
+            else if (remaining_power == 0.333333 || remaining_power == 1 / 3)
+                result *= cbrt(b);
+            else
+                result *= pow(b, remaining_power);
+        }
         return (r * result);
     }
 }
@@ -466,6 +481,10 @@ long double power_ldouble(long double base, long double n)
         return 1;
     else if (n == 1)
         return base;
+    else if (n == 0.5 || n == 1 / 2)
+        return sqrt(base);
+    else if (n == 0.333333 || n == 1 / 3)
+        return cbrt(base);
     else
     {
         int r = 1, sign_of_base = sign(base), sign_of_n = sign(n);
@@ -510,7 +529,16 @@ long double power_ldouble(long double base, long double n)
             p /= 2;
         }
         if (remaining_power != 0)
-            result *= pow(b, remaining_power);
+        {
+            if (remaining_power == 1)
+                result *= 1;
+            else if (remaining_power == 0.5 || remaining_power == 1 / 2)
+                result *= sqrt(b);
+            else if (remaining_power == 0.333333 || remaining_power == 1 / 3)
+                result *= cbrt(b);
+            else
+                result *= pow(b, remaining_power);
+        }
         return (r * result);
     }
 }
