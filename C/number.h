@@ -1001,7 +1001,7 @@ Matrix new_secondary_diagonal_matrix(int order, Matrix row_matrix)
 {
     Matrix matrix = new_matrix(order, order);
     for (int r = 0; r < order; r++)
-        matrix->data[r][order-r-1] = row_matrix->data[0][r];
+        matrix->data[r][order - r - 1] = row_matrix->data[0][r];
     return matrix;
 }
 
@@ -2689,44 +2689,50 @@ Matrix rotation_matrix_in_3D(Vector rotation_axis_vector, float angle, angle_mod
     return r_matrix;
 }
 
-Point2D rotate_point_in_2D(Point2D point, double angle, angle_mode angle_mode)
+Point2D rotate_point_in_2D(Point2D point, Point2D reference_point_origin, double angle, angle_mode angle_mode)
 {
-    return vector2D_to_point2D(vectorize2D(multiply_matrix(rotation_matrix_in_2D(angle, angle_mode), to_column_matrix2D(point2D_to_vector2D(point)))));
+    Matrix p_matrix = to_column_matrix2D(point2D_to_vector2D(point));
+    Matrix rp_matrix = to_column_matrix2D(point2D_to_vector2D(reference_point_origin));
+    Matrix rotation_matrix = rotate_matrix_in_2D(angle, angle_mode);
+    return vector2D_to_point2D(vectorize2D(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(p_matrix, rp_matrix)), rp_matrix)));
 }
 
-Point rotate_point_in_3D(Point point, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
+Point rotate_point_in_3D(Point point, Point reference_point_origin, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
 {
-    return vector_to_point(vectorize(multiply_matrix(rotation_matrix_in_3D(rotation_axis_vector, angle, angle_mode), to_column_matrix(point_to_vector(point)))));
+    Matrix p_matrix = to_column_matrix(point_to_vector(point));
+    Matrix rp_matrix = to_column_matrix(point_to_vector(reference_point_origin));
+    Matrix rotation_matrix = rotation_matrix_in_3D(rotation_axis_vector, angle, angle_mode);
+    return vector_to_point(vectorize(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(p_matrix, rp_matrix)), rp_matrix)));
 }
 
-Vector2D rotate_vector_in_2D(Vector2D vector, double angle, angle_mode angle_mode)
+Vector2D rotate_vector_in_2D(Vector2D vector, Vector2D reference_vector_origin, double angle, angle_mode angle_mode)
 {
-    return vectorize2D(multiply_matrix(rotation_matrix_in_2D(angle, angle_mode), to_column_matrix2D(vector)));
+    Matrix v_matrix = to_column_matrix2D(point2D_to_vector2D(point));
+    Matrix rv_matrix = to_column_matrix2D(point2D_to_vector2D(reference_vector_origin));
+    Matrix rotation_matrix = rotate_matrix_in_2D(angle, angle_mode);
+    return vectorize2D(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(v_matrix, rv_matrix)), rv_matrix));
 }
 
-Vector rotate_vector_in_3D(Vector vector, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
+Vector rotate_vector_in_3D(Vector vector, Vector reference_vector_origin, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
 {
-    return vectorize(multiply_matrix(rotation_matrix_in_3D(rotation_axis_vector, angle, angle_mode), to_column_matrix(vector)));
+    Matrix v_matrix = to_column_matrix(vector);
+    Matrix rv_matrix = to_column_matrix(reference_vector_origin);
+    Matrix rotation_matrix = rotation_matrix_in_3D(rotation_axis_vector, angle, angle_mode);
+    return vectorize(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(v_matrix, rv_matrix)), rv_matrix));
 }
 
-Matrix rotate_matrix_in_2D(Matrix matrix, double angle, angle_mode angle_mode)
+Matrix rotate_matrix_in_2D(Matrix column_vector2D_matrix, Vector2D reference_vector_origin, double angle, angle_mode angle_mode)
 {
-    if (matrix->rows == 2 && matrix->cols > 0)
-        return multiply_matrix(rotation_matrix_in_2D(angle, angle_mode), matrix);
-    else if (matrix->rows > 0 && matrix->cols == 2)
-        return multiply_matrix(rotation_matrix_in_2D(angle, angle_mode), transpose(matrix));
-    else
-        return matrix;
+    Matrix rv_matrix = to_column_matrix(reference_vector_origin);
+    Matrix rotation_matrix = rotate_matrix_in_2D(angle, angle_mode);
+    return add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(column_vector2D_matrix, rv_matrix)), rv_matrix);
 }
 
-Matrix rotate_matrix_in_3D(Matrix matrix, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
+Matrix rotate_matrix_in_3D(Matrix column_vector_matrix, Vector reference_vector_origin, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
 {
-    if (matrix->rows == 2 && matrix->cols > 0)
-        return multiply_matrix(rotation_matrix_in_3D(rotation_axis_vector, angle, angle_mode), matrix);
-    else if (matrix->rows > 0 && matrix->cols == 2)
-        return multiply_matrix(rotation_matrix_in_3D(rotation_axis_vector, angle, angle_mode), transpose(matrix));
-    else
-        return matrix;
+    Matrix rv_matrix = to_column_matrix(reference_vector_origin);
+    Matrix rotation_matrix = rotation_matrix_in_3D(rotation_axis_vector, angle, angle_mode);
+    return add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(column_vector_matrix, rv_matrix)), rv_matrix);
 }
 
 Matrix solve_xy(Matrix coefficients_square_matrix, Matrix constants_column_matrix)
