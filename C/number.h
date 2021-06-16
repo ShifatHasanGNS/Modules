@@ -74,11 +74,16 @@ typedef enum // operation
 
 typedef enum // matrix_type
 {
-    row_matrix,      //  number of rows = 1
-    column_matrix,   //  number of columns = 1
-    square_matrix,   //  number of rows = number of columns = n
-    diagonal_matrix, //  a square-matrix whose all the entries outside the main diagonal are all 0
-    scalar_matrix,   //  a diagonal-matrix whose all diagonal elements are equal
+    row_matrix,         //  number of rows = 1
+    column_matrix,      //  number of columns = 1
+    horizontal_matrix,  //  number of columns > number of rows
+    vertical_matrix,    //  number of rows > number of columns
+    singleton_matrix,   //  a matrix that has only one element
+    square_matrix,      //  number of rows = number of columns
+    singular_matrix,    //  determinant of a matrix = 0
+    nonsingular_matrix, //  determinant of a matrix not = 0
+    diagonal_matrix,    //  a square-matrix whose all the entries outside the main diagonal are all 0
+    scalar_matrix,      //  a diagonal-matrix whose all diagonal elements are equal
     identity_matrix,
     unit_matrix = identity_matrix, //  a diagonal-matrix whose all diagonal elements are 1
     null_matrix,
@@ -87,9 +92,11 @@ typedef enum // matrix_type
     lower_triangular_matrix,   //  a square-matrix whose all the entries above the main diagonal are 0
     triangular_matrix,         //  a square-matrix whose all the entries above/below the main diagonal are 0
     involutory_matrix,         //  a square-matrix that is its own inverse; --->  A = inverse(A)
-    idempotent_matrix,         //  a square-matrix which, when multiplied by itself, yields itself;  A x A = A
     symmetric_matrix,          //  a square-matrix that is equal to its transpose;  A = transpose(A)
     skew_symmetric_matrix,     //  a square-matrix whose transpose equals its negative;  transpose(A) = -A
+    orthogonal_matrix,         //  A * transpose(A) = identity matrix = transpose(A) * A
+    idempotent_matrix,         //  a square-matrix which, when multiplied by itself, yields itself;  A x A = A
+    periodic_matrix,           //  a matrix --> if A^(k+1) = A, then A has period of k, else k = 0
     nilpotent_matrix           //  a square-matrix N such that N^{k}=0, for some positive integer k. The smallest such k is called the index of N, sometimes the degree of N
 } matrix_type;
 
@@ -966,6 +973,38 @@ Matrix new_matrix(int rows, int cols)
     return matrix;
 }
 
+Matrix new_identity_matrix(int order)
+{
+    Matrix matrix = new_matrix(order, order);
+    for (int r = 0; r < order; r++)
+        matrix->data[r][r] = 1;
+    return matrix;
+}
+
+Matrix new_scalar_matrix(int order, double scalar_number)
+{
+    Matrix matrix = new_matrix(order, order);
+    for (int r = 0; r < order; r++)
+        matrix->data[r][r] = scalar_number;
+    return matrix;
+}
+
+Matrix new_primary_diagonal_matrix(int order, Matrix row_matrix)
+{
+    Matrix matrix = new_matrix(order, order);
+    for (int r = 0; r < order; r++)
+        matrix->data[r][r] = row_matrix->data[0][r];
+    return matrix;
+}
+
+Matrix new_secondary_diagonal_matrix(int order, Matrix row_matrix)
+{
+    Matrix matrix = new_matrix(order, order);
+    for (int r = 0; r < order; r++)
+        matrix->data[r][order-r-1] = row_matrix->data[0][r];
+    return matrix;
+}
+
 Complex new_complex(double real_part, double imaginary_part)
 {
     Complex complex_number = (Complex)malloc(sizeof(Complex));
@@ -1321,18 +1360,6 @@ Complex complex_log10(Complex z)
 Complex complex_log(Complex base, Complex z)
 {
     return divide_complex(complex_ln(z), complex_ln(base));
-}
-
-Matrix new_identity_matrix(int order)
-{
-    Matrix matrix = new_matrix(order, order);
-    for (int r = 0; r < order; r++)
-    {
-        for (int c = 0; c < order; c++)
-            if (r == c)
-                matrix->data[r][c] = 1;
-    }
-    return matrix;
 }
 
 bool is_number(char *string)
@@ -2281,6 +2308,17 @@ double secondary_trace(Matrix matrix)
     return 0;
 }
 
+Matrix scale_matrix(Matrix matrix, double scalar_number)
+{
+    Matrix scaled_matrix = new_matrix(matrix->rows, matrix->cols);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        for (int c = 0; c < matrix->cols; c++)
+            scaled_matrix->data[r][c] = scalar_number * matrix->data[r][c];
+    }
+    return scaled_matrix;
+}
+
 Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, addition))
@@ -2369,53 +2407,6 @@ Matrix subtract_column_matrix(Matrix base_matrix, Matrix column_matrix)
         return result;
     }
     return new_matrix(0, 0);
-}
-
-Matrix translate_row_vector2D_matrix(Matrix matrix, Point2D changed_point_of_origin)
-{
-    if (matrix->rows > 0 && matrix->cols == 2)
-    {
-        Matrix row_matrix = to_row_matrix2D(point2D_to_vector2D(changed_point_of_origin));
-        return subtract_row_matrix(matrix, row_matrix);
-    }
-}
-
-Matrix translate_row_vector_matrix(Matrix matrix, Point changed_point_of_origin)
-{
-    if (matrix->rows > 0 && matrix->cols == 3)
-    {
-        Matrix row_matrix = to_row_matrix(point_to_vector(changed_point_of_origin));
-        return subtract_row_matrix(matrix, row_matrix);
-    }
-}
-
-Matrix translate_column_vector2D_matrix(Matrix matrix, Point2D changed_point_of_origin)
-{
-    if (matrix->rows == 2 && matrix->cols > 0)
-    {
-        Matrix col_matrix = to_column_matrix2D(point2D_to_vector2D(changed_point_of_origin));
-        return subtract_column_matrix(matrix, col_matrix);
-    }
-}
-
-Matrix translate_column_vector_matrix(Matrix matrix, Point changed_point_of_origin)
-{
-    if (matrix->rows == 3 && matrix->cols > 0)
-    {
-        Matrix col_matrix = to_column_matrix(point_to_vector(changed_point_of_origin));
-        return subtract_column_matrix(matrix, col_matrix);
-    }
-}
-
-Matrix scale_matrix(Matrix matrix, double scalar_number)
-{
-    Matrix scaled_matrix = new_matrix(matrix->rows, matrix->cols);
-    for (int r = 0; r < matrix->rows; r++)
-    {
-        for (int c = 0; c < matrix->cols; c++)
-            scaled_matrix->data[r][c] = scalar_number * matrix->data[r][c];
-    }
-    return scaled_matrix;
 }
 
 Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
@@ -2636,6 +2627,36 @@ double angle_between_vectors(Vector vector_1, Vector vector_2, angle_mode angle_
     return ((angle_mode == radian) ? angle : to_degree(angle));
 }
 
+Matrix translate_row_vector_matrix(Matrix matrix, Matrix translate_by_row_matrix)
+{
+    if (!is_null(matrix))
+        return add_row_matrix(matrix, translate_by_row_matrix);
+}
+
+Matrix translate_column_vector_matrix(Matrix matrix, Matrix translate_by_column_matrix)
+{
+    if (!is_null(matrix))
+        return add_column_matrix(matrix, translate_by_column_matrix);
+}
+
+Matrix scale_row_vector_matrix(Matrix matrix, Matrix scale_by_row_matrix)
+{
+    if (scale_by_row_matrix->cols == matrix->cols)
+    {
+        Matrix scalar_matrix = new_primary_diagonal_matrix(matrix->cols, scale_by_row_matrix);
+        return multiply_matrix(matrix, scalar_matrix);
+    }
+}
+
+Matrix scale_column_vector_matrix(Matrix matrix, Matrix scale_by_column_matrix)
+{
+    if (scale_by_row_matrix->cols == matrix->rows)
+    {
+        Matrix scalar_matrix = new_primary_diagonal_matrix(matrix->cols, transpose(scale_by_row_matrix));
+        return transpose(multiply_matrix(scalar_matrix, matrix));
+    }
+}
+
 Matrix rotation_matrix_in_2D(double angle, angle_mode angle_mode)
 {
     if (angle_mode == degree)
@@ -2796,9 +2817,44 @@ bool is_type_of(Matrix matrix, matrix_type type)
         return false;
     }
 
+    else if (type == horizontal_matrix)
+    {
+        if (matrix->rows < matrix->cols)
+            return true;
+        return false;
+    }
+
+    else if (type == vertical_matrix)
+    {
+        if (matrix->rows > matrix->cols)
+            return true;
+        return false;
+    }
+
+    else if (type == singleton_matrix)
+    {
+        if (matrix->rows == 1 && matrix->cols == 1)
+            return true;
+        return false;
+    }
+
     else if (type == square_matrix)
     {
         if (matrix->rows == matrix->cols)
+            return true;
+        return false;
+    }
+
+    else if (type == singular_matrix)
+    {
+        if (determinant(matrix) == 0)
+            return true;
+        return false;
+    }
+
+    else if (type == nonsingular_matrix)
+    {
+        if (determinant(matrix) != 0)
             return true;
         return false;
     }
@@ -2939,40 +2995,62 @@ bool is_type_of(Matrix matrix, matrix_type type)
     else if (type == involutory_matrix)
     {
         if (matrix->rows == matrix->cols)
-        {
             return is_type_of(multiply_matrix(matrix, matrix), identity_matrix);
-        }
-        return false;
-    }
-
-    else if (type == idempotent_matrix)
-    {
-        if (matrix->rows == matrix->cols)
-        {
-            return are_identical(matrix, multiply_matrix(matrix, matrix));
-        }
         return false;
     }
 
     else if (type == symmetric_matrix)
     {
         if (matrix->rows == matrix->cols)
-        {
             return are_identical(matrix, transpose(matrix));
-        }
         return false;
     }
 
     else if (type == skew_symmetric_matrix)
     {
         if (matrix->rows == matrix->cols)
-        {
             return are_identical(scale_matrix(matrix, -1), transpose(matrix));
+        return false;
+    }
+
+    else if (type == orthogonal_matrix)
+    {
+        if (matrix->rows == matrix->cols)
+            return are_identical(multiply_matrix(matrix, transpose(matrix)), new_identity_matrix(matrix->rows));
+        return false;
+    }
+
+    else if (type == idempotent_matrix)
+    {
+        if (matrix->rows == matrix->cols)
+            return are_identical(matrix, multiply_matrix(matrix, matrix));
+        return false;
+    }
+
+    else if (type == periodic_matrix) // It is seriously very complicated to check...
+    {
+        if (matrix->rows == matrix->cols)
+        {
+            if (is_type_of(matrix, null_matrix))
+                return true;
+            else if (is_type_of(matrix, identity_matrix))
+                return true;
+            int trial = 0;
+            Matrix temp_matrix = new_matrix(matrix->rows, matrix->cols);
+            temp_matrix = copy_matrix(matrix);
+            while (trial != 1024)
+            {
+                temp_matrix = multiply_matrix(temp_matrix, matrix);
+                if (are_identical(matrix, temp_matrix))
+                    return true;
+                trial++;
+            }
+            return false;
         }
         return false;
     }
 
-    else if (type == nilpotent_matrix) // It is seriously very complicated to check...
+    else if (type == nilpotent_matrix) // It is seriously very complicated to check as well...
     {
         if (matrix->rows == matrix->cols)
         {
@@ -2980,7 +3058,7 @@ bool is_type_of(Matrix matrix, matrix_type type)
                 return true;
             int trial = 0;
             Matrix temp_matrix = new_matrix(matrix->rows, matrix->cols);
-            temp_matrix = matrix;
+            temp_matrix = copy_matrix(matrix);
             while (trial != 1024)
             {
                 temp_matrix = multiply_matrix(temp_matrix, matrix);
@@ -2997,7 +3075,7 @@ bool is_type_of(Matrix matrix, matrix_type type)
         return false;
 }
 
-char **types(Matrix matrix, text_style text_style)
+char **types_of_matrix(Matrix matrix, text_style text_style)
 {
     char **list_of_types = (char **)malloc(375 * sizeof(char) + 15 * sizeof(char *));
     int count = 0;
@@ -3010,7 +3088,7 @@ char **types(Matrix matrix, text_style text_style)
             list_of_types[count] = "row-matrix";
         else
             list_of_types[count] = "Row-Matrix";
-        return list_of_types;
+        count++;
     }
 
     if (is_type_of(matrix, column_matrix))
@@ -3021,7 +3099,40 @@ char **types(Matrix matrix, text_style text_style)
             list_of_types[count] = "column-matrix";
         else
             list_of_types[count] = "Column-Matrix";
+        count++;
+    }
+
+    if (is_type_of(matrix, horizontal_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "HORIZONTAL-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "horizontal-matrix";
+        else
+            list_of_types[count] = "Horizontal-Matrix";
         return list_of_types;
+    }
+
+    if (is_type_of(matrix, vertical_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "VERTICAL-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "vertical-matrix";
+        else
+            list_of_types[count] = "Vertical-Matrix";
+        return list_of_types;
+    }
+
+    if (is_type_of(matrix, singleton_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "SINGLETON-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "singleton-matrix";
+        else
+            list_of_types[count] = "Singleton-Matrix";
+        count++;
     }
 
     if (is_type_of(matrix, square_matrix))
@@ -3032,6 +3143,28 @@ char **types(Matrix matrix, text_style text_style)
             list_of_types[count] = "square-matrix";
         else
             list_of_types[count] = "Square-Matrix";
+        count++;
+    }
+
+    if (is_type_of(matrix, singular_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "SINGULAR-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "singular-matrix";
+        else
+            list_of_types[count] = "Singular-Matrix";
+        count++;
+    }
+
+    if (is_type_of(matrix, nonsingular_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "NONSINGULAR-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "nonsingular-matrix";
+        else
+            list_of_types[count] = "Nonsingular-Matrix";
         count++;
     }
 
@@ -3123,17 +3256,6 @@ char **types(Matrix matrix, text_style text_style)
         count++;
     }
 
-    if (is_type_of(matrix, idempotent_matrix))
-    {
-        if (text_style == upper)
-            list_of_types[count] = "IDEMPOTENT-MATRIX";
-        else if (text_style == lower)
-            list_of_types[count] = "idempotent-matrix";
-        else
-            list_of_types[count] = "Idempotent-Matrix";
-        count++;
-    }
-
     if (is_type_of(matrix, symmetric_matrix))
     {
         if (text_style == upper)
@@ -3153,6 +3275,39 @@ char **types(Matrix matrix, text_style text_style)
             list_of_types[count] = "skew-symmetric-matrix";
         else
             list_of_types[count] = "Skew-Symmetric-Matrix";
+        count++;
+    }
+
+    if (is_type_of(matrix, orthogonal_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "ORTHOGONAL-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "orthogonal-matrix";
+        else
+            list_of_types[count] = "Orthogonal-Matrix";
+        count++;
+    }
+
+    if (is_type_of(matrix, idempotent_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "IDEMPOTENT-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "idempotent-matrix";
+        else
+            list_of_types[count] = "Idempotent-Matrix";
+        count++;
+    }
+
+    if (is_type_of(matrix, periodic_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "PERIODIC-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "periodic-matrix";
+        else
+            list_of_types[count] = "Periodic-Matrix";
         count++;
     }
 
