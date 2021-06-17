@@ -714,7 +714,7 @@ double differentiate(char *function, double x)
     FILE *fp;
     fp = fopen("temp_derivative.c", "w");
 
-    fprintf(fp, "#include <stdio.h>\n#include <math.h>\n\n");
+    fprintf(fp, "#include \"number.h\"\n\n");
     fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", function);
     fprintf(fp, "void main()\n{\n");
     fprintf(fp, "\tdouble dx = 0.00000005, a = 0, b = 0, x = %lf, result = 0;\n\n", x);
@@ -824,7 +824,7 @@ double integrate(char *integrand, char *interval)
     FILE *fp;
     fp = fopen("temp_integral.c", "w");
 
-    fprintf(fp, "#include <stdio.h>\n#include <math.h>\n\n");
+    fprintf(fp, "#include \"number.h\"\n\n");
     fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", integrand);
     fprintf(fp, "void main()\n{\n");
     fprintf(fp, "\tdouble sum = 0, x = 0, t = 0, result = 0;\n\n");
