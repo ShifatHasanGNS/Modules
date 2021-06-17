@@ -2788,8 +2788,7 @@ Complex_Array solve_x3(double a, double b, double c, double d)
     N = ((q * q) / 4) + (p * p * p / 27);
     n = sqrt(absolute(N));
 
-    if (N >= 0)
-        t = cbrt(m + n) + cbrt(m - n);
+    if (N >= 0) t = cbrt(m + n) + cbrt(m - n);
     else
     {
         Complex z = new_complex(m, n);
