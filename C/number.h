@@ -2650,9 +2650,9 @@ Matrix scale_row_vector_matrix(Matrix matrix, Matrix scale_by_row_matrix)
 
 Matrix scale_column_vector_matrix(Matrix matrix, Matrix scale_by_column_matrix)
 {
-    if (scale_by_row_matrix->cols == matrix->rows)
+    if (scale_by_column_matrix->cols == matrix->rows)
     {
-        Matrix scalar_matrix = new_primary_diagonal_matrix(matrix->cols, transpose(scale_by_row_matrix));
+        Matrix scalar_matrix = new_primary_diagonal_matrix(matrix->cols, transpose(scale_by_column_matrix));
         return transpose(multiply_matrix(scalar_matrix, matrix));
     }
 }
@@ -2693,7 +2693,7 @@ Point2D rotate_point_in_2D(Point2D point, Point2D reference_point_origin, double
 {
     Matrix p_matrix = to_column_matrix2D(point2D_to_vector2D(point));
     Matrix rp_matrix = to_column_matrix2D(point2D_to_vector2D(reference_point_origin));
-    Matrix rotation_matrix = rotate_matrix_in_2D(angle, angle_mode);
+    Matrix rotation_matrix = rotation_matrix_in_2D(angle, angle_mode);
     return vector2D_to_point2D(vectorize2D(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(p_matrix, rp_matrix)), rp_matrix)));
 }
 
@@ -2707,9 +2707,9 @@ Point rotate_point_in_3D(Point point, Point reference_point_origin, Vector rotat
 
 Vector2D rotate_vector_in_2D(Vector2D vector, Vector2D reference_vector_origin, double angle, angle_mode angle_mode)
 {
-    Matrix v_matrix = to_column_matrix2D(point2D_to_vector2D(point));
-    Matrix rv_matrix = to_column_matrix2D(point2D_to_vector2D(reference_vector_origin));
-    Matrix rotation_matrix = rotate_matrix_in_2D(angle, angle_mode);
+    Matrix v_matrix = to_column_matrix2D(vector);
+    Matrix rv_matrix = to_column_matrix2D(reference_vector_origin);
+    Matrix rotation_matrix = rotation_matrix_in_2D(angle, angle_mode);
     return vectorize2D(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(v_matrix, rv_matrix)), rv_matrix));
 }
 
@@ -2723,8 +2723,8 @@ Vector rotate_vector_in_3D(Vector vector, Vector reference_vector_origin, Vector
 
 Matrix rotate_matrix_in_2D(Matrix column_vector2D_matrix, Vector2D reference_vector_origin, double angle, angle_mode angle_mode)
 {
-    Matrix rv_matrix = to_column_matrix(reference_vector_origin);
-    Matrix rotation_matrix = rotate_matrix_in_2D(angle, angle_mode);
+    Matrix rv_matrix = to_column_matrix2D(reference_vector_origin);
+    Matrix rotation_matrix = rotation_matrix_in_2D(angle, angle_mode);
     return add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(column_vector2D_matrix, rv_matrix)), rv_matrix);
 }
 
