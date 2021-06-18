@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <limits.h>
 #include <math.h>
-#include <complex.h>
 
 // ---------------------------------------------------------------- //
 //                            M A C R O s                           //
@@ -717,7 +717,7 @@ double differentiate(char *function, double x)
     fprintf(fp, "#include \"number.h\"\n\n");
     fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", function);
     fprintf(fp, "void main()\n{\n");
-    fprintf(fp, "\tdouble dx = 0.00000005, a = 0, b = 0, x = %lf, result = 0;\n\n", x);
+    fprintf(fp, "\tdouble dx = 0.000000000000001, a = 0, b = 0, x = %lf, result = 0;\n\n", x);
     fprintf(fp, "\ta = f(x+dx);\n\tb = f(x-dx);\n");
     fprintf(fp, "\tresult = (a - b)/(2 * dx);\n\n");
     fprintf(fp, "\tFILE *fp;\n");
@@ -746,8 +746,8 @@ double differentiate(char *function, double x)
 
 double integrate(char *integrand, char *interval)
 {
-    char *lower_bound = (char *)malloc(64 * sizeof(char));
-    char *upper_bound = (char *)malloc(64 * sizeof(char));
+    char *lower_bound = (char *)malloc(128 * sizeof(char));
+    char *upper_bound = (char *)malloc(128 * sizeof(char));
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
     if (!strcmp(lower_bound, upper_bound))
@@ -827,7 +827,7 @@ double integrate(char *integrand, char *interval)
     fprintf(fp, "#include \"number.h\"\n\n");
     fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", integrand);
     fprintf(fp, "void main()\n{\n");
-    fprintf(fp, "\tdouble sum = 0, x = 0, t = 0, result = 0;\n\n");
+    fprintf(fp, "\tdouble sum = 0, x = 0, t = 0, result = 0;\n");
     fprintf(fp, "\tfor (int i = 1; i <= 10000000; i++)\n");
     fprintf(fp, "\t{\n");
     fprintf(fp, "\t\tx = %0.15lf + (%0.15lf * (i - 0.5) * %0.15lf);\n", A, C, dx);
