@@ -703,6 +703,176 @@ int fibonacci(int n_th)
     return (ONE_OVER_SQRT_5 * (power_double(PHI_0, n_th) - power_double(PHI_1, n_th)));
 }
 
+int factorial(int n) // MAX --> n = 12
+{
+    if (n < 0)
+        return 0;
+    else if (n == 0)
+        return 1;
+    int N = 1;
+    for (int i=1; i<=n; i++)
+        N *= i;
+    return N;
+}
+
+int multiply_for_factorial_str(int x, int res[], int res_size)
+{
+    int carry = 0;
+    for (int i=0; i<res_size; i++)
+    {
+        int prod = res[i] * x + carry;
+        res[i] = prod % 10; 
+        carry = prod/10;   
+    }
+    while (carry)
+    {
+        res[res_size] = carry%10;
+        carry = carry/10;
+        res_size++;
+    }
+    return res_size;
+}
+
+char *factorial_str(int n)
+{
+    int res[1024];
+    char *N = (char *)malloc(1024 * sizeof(char));
+    res[0] = 1;
+    int res_size = 1;
+    for (int x=2; x<=n; x++)
+        res_size = multiply_for_factorial_str(x, res, res_size);
+    sprintf(N, "%d", res[res_size-1]);
+    for (int i=res_size-2; i>=0; i--)
+        sprintf(N, "%s%d", N, res[i]);
+    return N;
+}
+
+double sum(char *expression, char *interval)
+{
+    char *lower_bound = (char *)malloc(128 * sizeof(char));
+    char *upper_bound = (char *)malloc(128 * sizeof(char));
+    sscanf(interval, "%s %s", lower_bound, upper_bound);
+
+    char *format = "%0.15lf";
+    int a, b; // MAX = 2147483647
+    double answer = 0;
+
+    if (!strcmp(lower_bound, "-inf"))
+    {
+        a = -10000000;
+        sscanf(upper_bound, "%d", &b);
+    }
+    
+    if (!strcmp(upper_bound, "inf"))
+    {
+        sscanf(lower_bound, "%d", &a);
+        b = 10000000;
+    }
+
+    else
+    {
+        sscanf(lower_bound, "%d", &a);
+        sscanf(upper_bound, "%d", &b);
+    }
+
+    if (b < a) return 0;
+
+    FILE *fp;
+    fp = fopen("temp_sum.c", "w");
+
+    fprintf(fp, "#include \"number.h\"\n\n");
+    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", expression);
+    fprintf(fp, "void main()\n{\n");
+    fprintf(fp, "\tdouble sum = 0;\n");
+    fprintf(fp, "\tfor (int x = %d; x <= %d; x++)\n", a, b);
+    fprintf(fp, "\t\tsum += f(x);\n");
+    fprintf(fp, "\tFILE *fp;\n");
+    fprintf(fp, "\tfp = fopen(\"temp_answer_sum.txt\", \"w\");\n");
+    fprintf(fp, "\tfprintf(fp, \"%s\", sum);\n", format);
+    fprintf(fp, "\tfclose(fp);\n");
+    fprintf(fp, "}");
+
+    fclose(fp);
+
+    char *command = "gcc temp_sum.c -o temp_sum.exe";
+    system(command);
+    command = "temp_sum.exe";
+    system(command);
+
+    fp = fopen("temp_answer_sum.txt", "r");
+    fscanf(fp, "%lf", &answer);
+    fclose(fp);
+
+    remove("temp_sum.exe");
+    remove("temp_sum.c");
+    remove("temp_answer_sum.txt");
+
+    return answer;
+}
+
+double product(char *expression, char *interval)
+{
+    char *lower_bound = (char *)malloc(128 * sizeof(char));
+    char *upper_bound = (char *)malloc(128 * sizeof(char));
+    sscanf(interval, "%s %s", lower_bound, upper_bound);
+    
+    char *format = "%0.15lf";
+    int a, b; // MAX = 2147483647
+    double answer = 0;
+
+    if (!strcmp(lower_bound, "-inf"))
+    {
+        a = -10000000;
+        sscanf(upper_bound, "%d", &b);
+    }
+    
+    if (!strcmp(upper_bound, "inf"))
+    {
+        sscanf(lower_bound, "%d", &a);
+        b = 10000000;
+    }
+
+    else
+    {
+        sscanf(lower_bound, "%d", &a);
+        sscanf(upper_bound, "%d", &b);
+    }
+
+    if (b < a) return 0;
+
+    FILE *fp;
+    fp = fopen("temp_sum.c", "w");
+
+    fprintf(fp, "#include \"number.h\"\n\n");
+    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", expression);
+    fprintf(fp, "void main()\n{\n");
+    fprintf(fp, "\tdouble sum = 1;\n");
+    fprintf(fp, "\tfor (int x = %d; x <= %d; x++)\n", a, b);
+    fprintf(fp, "\t\tsum *= f(x);\n");
+    fprintf(fp, "\tFILE *fp;\n");
+    fprintf(fp, "\tfp = fopen(\"temp_answer_product.txt\", \"w\");\n");
+    fprintf(fp, "\tfprintf(fp, \"%s\", sum);\n", format);
+    fprintf(fp, "\tfclose(fp);\n");
+    fprintf(fp, "}");
+
+    fclose(fp);
+
+    char *command = "gcc temp_sum.c -o temp_sum.exe";
+    system(command);
+    command = "temp_sum.exe";
+    system(command);
+
+    fp = fopen("temp_answer_product.txt", "r");
+    fscanf(fp, "%lf", &answer);
+    fclose(fp);
+
+    remove("temp_sum.exe");
+    remove("temp_sum.c");
+    remove("temp_answer_product.txt");
+
+    return answer;
+}
+
 double differentiate(char *function, double x)
 {
     double answer = 0;
@@ -718,7 +888,7 @@ double differentiate(char *function, double x)
     fprintf(fp, "\ta = f(x+dx);\n\tb = f(x-dx);\n");
     fprintf(fp, "\tresult = (a - b)/(2 * dx);\n\n");
     fprintf(fp, "\tFILE *fp;\n");
-    fprintf(fp, "\tfp = fopen(\"temp_answer.txt\", \"w\");\n");
+    fprintf(fp, "\tfp = fopen(\"temp_answer_derivative.txt\", \"w\");\n");
     fprintf(fp, "\tfprintf(fp, \"%s\", result);\n", format);
     fprintf(fp, "\tfclose(fp);\n");
     fprintf(fp, "}");
@@ -730,13 +900,13 @@ double differentiate(char *function, double x)
     command = "temp_derivative.exe";
     system(command);
 
-    fp = fopen("temp_answer.txt", "r");
+    fp = fopen("temp_answer_derivative.txt", "r");
     fscanf(fp, "%lf", &answer);
     fclose(fp);
 
     remove("temp_derivative.exe");
     remove("temp_derivative.c");
-    remove("temp_answer.txt");
+    remove("temp_answer_derivative.txt");
 
     return answer;
 }
@@ -838,7 +1008,7 @@ double integrate(char *integrand, char *interval)
     fprintf(fp, "\t}\n\n");
     fprintf(fp, "\tresult = %d * %0.15lf * sum * %0.15lf;\n\n", sign, C, dx);
     fprintf(fp, "\tFILE *fp;\n");
-    fprintf(fp, "\tfp = fopen(\"temp_answer.txt\", \"w\");\n");
+    fprintf(fp, "\tfp = fopen(\"temp_answer_integral.txt\", \"w\");\n");
     fprintf(fp, "\tfprintf(fp, \"%s\", result);\n", format);
     fprintf(fp, "\tfclose(fp);\n");
     fprintf(fp, "}");
@@ -850,13 +1020,13 @@ double integrate(char *integrand, char *interval)
     command = "temp_integral.exe";
     system(command);
 
-    fp = fopen("temp_answer.txt", "r");
+    fp = fopen("temp_answer_integral.txt", "r");
     fscanf(fp, "%lf", &answer);
     fclose(fp);
 
     remove("temp_integral.exe");
     remove("temp_integral.c");
-    remove("temp_answer.txt");
+    remove("temp_answer_integral.txt");
 
     return answer;
 }
