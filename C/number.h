@@ -166,6 +166,8 @@ struct matrix_struct //  matrix
 };
 typedef struct matrix_struct *Matrix;
 
+typedef Matrix* Tensor;
+
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
 // --------------------------------------------------------------- //

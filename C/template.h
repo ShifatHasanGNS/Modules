@@ -98,7 +98,7 @@
 
 // define types
 
-typedef char *String;
+typedef char* String;
 /*
     u  ---> unsigned
     s ---> short
