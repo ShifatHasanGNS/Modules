@@ -1148,7 +1148,7 @@ NumArray new_num_array(int number_of_elements)
     return na;
 }
 
-NumArray assign_new_num_array(int number_of_elements, double nums[])
+NumArray new_num_array_(int number_of_elements, double nums[])
 {
     NumArray na = (NumArray)malloc(sizeof(NumArray));
     na->len = number_of_elements;
