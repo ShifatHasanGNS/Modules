@@ -44,7 +44,7 @@
 
 #define angle_mode(polar) polar->angle_mode // angle-mode of polar, where variable 'polar' is of type 'Polar2D/Polar'
 
-#define NUMS (double [])
+#define $ (double [])
 
 // ---------------------------------------------------------------- //
 //                       E N U M E R A T O R s                      //
