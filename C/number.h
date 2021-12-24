@@ -44,6 +44,8 @@
 
 #define angle_mode(polar) polar->angle_mode // angle-mode of polar, where variable 'polar' is of type 'Polar2D/Polar'
 
+#define NUMS (double [])
+
 // ---------------------------------------------------------------- //
 //                       E N U M E R A T O R s                      //
 // ---------------------------------------------------------------- //
@@ -157,6 +159,13 @@ struct vector_struct //  vector
 };
 typedef struct vector_struct *Point;
 typedef struct vector_struct *Vector;
+
+struct num_array_struct //  num_array
+{
+    int len;
+    double *nums;
+};
+typedef struct num_array_struct *NumArray;
 
 struct matrix_struct //  matrix
 {
@@ -1130,6 +1139,23 @@ Vector new_vector(double X, double Y, double Z)
     return v;
 }
 
+NumArray new_num_array(int number_of_elements)
+{
+    NumArray na = (NumArray)malloc(sizeof(NumArray));
+    na->len = number_of_elements;
+    double *nums = (double *)calloc(number_of_elements, sizeof(double));
+    na->nums = nums;
+    return na;
+}
+
+NumArray assign_new_num_array(int number_of_elements, double nums[])
+{
+    NumArray na = (NumArray)malloc(sizeof(NumArray));
+    na->len = number_of_elements;
+    na->nums = nums;
+    return na;
+}
+
 Matrix new_matrix(int rows, int cols)
 {
     Matrix matrix = (Matrix)malloc(sizeof(Matrix));
@@ -1140,6 +1166,16 @@ Matrix new_matrix(int rows, int cols)
         data[x] = (double *)calloc(cols, sizeof(double));
     matrix->data = data;
     return matrix;
+}
+
+Matrix new_column_vector(int rows)
+{
+    return new_matrix(rows, 1);
+}
+
+Matrix new_row_vector(int cols)
+{
+    return new_matrix(1, cols);
 }
 
 Matrix new_identity_matrix(int order)
@@ -1658,44 +1694,41 @@ Matrix input_square_matrix(int order)
     return input_matrix(order, order);
 }
 
-bool is_convertable(double *array, int rows, int cols)
+Matrix array_to_matrix(NumArray array, int rows, int cols)
 {
-    int count = 0;
-    while (*array)
-    {
-        count++;
-        array++;
-    }
-    if (count == (rows * cols))
-        return true;
-    return false;
-}
-
-Matrix array_to_matrix(double *data, int rows, int cols)
-{
-    if (is_convertable(data, rows, cols))
+    if ((rows*cols) == array->len)
     {
         Matrix matrix = new_matrix(rows, cols);
         for (int r = 0; r < rows; r++)
         {
             for (int c = 0; c < cols; c++)
-                matrix->data[r][c] = data[cols * r + c];
+                matrix->data[r][c] = array->nums[cols * r + c];
         }
         return matrix;
     }
     return new_matrix(0, 0);
 }
 
-double *matrix_to_array(Matrix matrix)
+Matrix array_to_column_vector(NumArray array)
+{
+    return array_to_matrix(array, array->len, 1);
+}
+
+Matrix array_to_row_vector(NumArray array)
+{
+    return array_to_matrix(array, 1, array->len);
+}
+
+NumArray matrix_to_array(Matrix matrix)
 {
     if (!is_null(matrix))
     {
-        double *array = (double *)malloc(matrix->rows * matrix->cols * sizeof(double));
+        NumArray array = new_num_array(matrix->rows * matrix->cols);
         int i = 0;
         for (int r = 0; r < matrix->rows; r++)
         {
             for (int c = 0; c < matrix->cols; c++)
-                array[i++] = matrix->data[r][c];
+                array->nums[i++] = matrix->data[r][c];
         }
         return array;
     }
@@ -1704,8 +1737,8 @@ double *matrix_to_array(Matrix matrix)
 
 Matrix copy_matrix(Matrix matrix)
 {
-    double *data = matrix_to_array(matrix);
-    return array_to_matrix(data, matrix->rows, matrix->cols);
+    NumArray array = matrix_to_array(matrix);
+    return array_to_matrix(array, matrix->rows, matrix->cols);
 }
 
 Matrix to_row_matrix2D(Vector2D vector)
@@ -2824,6 +2857,16 @@ Matrix scale_column_vector_matrix(Matrix matrix, Matrix scale_by_column_matrix)
         Matrix scalar_matrix = new_primary_diagonal_matrix(matrix->cols, transpose(scale_by_column_matrix));
         return transpose(multiply_matrix(scalar_matrix, matrix));
     }
+}
+
+double inner_product(Matrix column_vector_1, Matrix column_vector_2)
+{
+    return (multiply_matrix(transpose(column_vector_1), column_vector_2))->data[0][0];
+}
+
+double dot_array(NumArray array_1, NumArray array_2)
+{
+    return (multiply_matrix(array_to_row_vector(array_1), array_to_column_vector(array_2)))->data[0][0];
 }
 
 Matrix rotation_matrix_in_2D(double angle, angle_mode angle_mode)
