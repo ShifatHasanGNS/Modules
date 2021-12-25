@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 // ---------------------------------------------------------------- //
 //                            M A C R O s                           //
@@ -43,6 +44,10 @@
 #define ONE_OVER_SQRT_5 (double)0.44721359549995793928183473374625524708812367192231 // 1 / sqrt(5)
 
 #define angle_mode(polar) polar->angle_mode // angle-mode of polar, where variable 'polar' is of type 'Polar2D/Polar'
+
+#define newline(number_of_new_lines)                            \
+    for (int temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
+    printf("\n")
 
 #define $ (double [])
 
@@ -175,7 +180,12 @@ struct matrix_struct //  matrix
 };
 typedef struct matrix_struct *Matrix;
 
-typedef Matrix* Tensor;
+struct tensor_struct //  matrix
+{
+    int n;
+    Matrix *mat;
+};
+typedef struct tensor_struct *Tensor;
 
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
@@ -1168,12 +1178,23 @@ Matrix new_matrix(int rows, int cols)
     return matrix;
 }
 
-Matrix new_column_vector(int rows)
+Tensor new_tensor(int number_of_mats, int rows, int cols)
+{
+    Tensor tensor = (Tensor)malloc(sizeof(Tensor));
+    tensor->n = number_of_mats;
+    Matrix *mat = (Matrix *)malloc(sizeof(Matrix) * number_of_mats);
+    for (int x = 0; x < number_of_mats; x++)
+        mat[x] = new_matrix(rows, cols);
+    tensor->mat = mat;
+    return tensor;
+}
+
+Matrix new_column_matrix(int rows)
 {
     return new_matrix(rows, 1);
 }
 
-Matrix new_row_vector(int cols)
+Matrix new_row_matrix(int cols)
 {
     return new_matrix(1, cols);
 }
@@ -1224,6 +1245,37 @@ Complex_Array new_complex_array(int length)
     complex_array->length = length;
     complex_array->complex_numbers = (Complex *)malloc(length * sizeof(Complex));
     return complex_array;
+}
+
+NumArray random_num_array(int number_of_elements)
+{
+    srand(time(0) % 10);
+    NumArray na = new_num_array(number_of_elements);
+    for (int i = 0; i < number_of_elements; i++)
+        na->nums[i] = rand();
+    return na;
+}
+
+NumArray random_num_array_(double seed, int number_of_elements)
+{
+    srand(seed);
+    NumArray na = new_num_array(number_of_elements);
+    for (int i = 0; i < number_of_elements; i++)
+        na->nums[i] = rand();
+    return na;
+}
+
+NumArray scale_num_array(NumArray array, double scalar)
+{
+    NumArray na = new_num_array(array->len);
+    for (int i = 0; i < array->len; i++)
+        na->nums[i] = scalar * array->nums[i];
+    return na;
+}
+
+NumArray copy_num_array(NumArray array)
+{
+    return new_num_array_(array->len, array->nums);
 }
 
 Pair copy_pair(Pair p)
@@ -1709,14 +1761,31 @@ Matrix array_to_matrix(NumArray array, int rows, int cols)
     return new_matrix(0, 0);
 }
 
-Matrix array_to_column_vector(NumArray array)
+Matrix array_to_matrix_(double nums[], int rows, int cols)
+{
+    return array_to_matrix(new_num_array_(rows*cols, nums), rows, cols);
+}
+
+Matrix array_to_column_matrix(NumArray array)
 {
     return array_to_matrix(array, array->len, 1);
 }
 
-Matrix array_to_row_vector(NumArray array)
+Matrix array_to_column_matrix_(int len, double array[])
+{
+    NumArray narray = new_num_array_(len, array);
+    return array_to_matrix(narray, len, 1);
+}
+
+Matrix array_to_row_matrix(NumArray array)
 {
     return array_to_matrix(array, 1, array->len);
+}
+
+Matrix array_to_row_matrix_(int len, double array[])
+{
+    NumArray narray = new_num_array_(len, array);
+    return array_to_matrix(narray, 1, len);
 }
 
 NumArray matrix_to_array(Matrix matrix)
@@ -1733,6 +1802,16 @@ NumArray matrix_to_array(Matrix matrix)
         return array;
     }
     return NULL;
+}
+
+Matrix random_matrix(int rows, int cols)
+{
+    return array_to_matrix(random_num_array(rows * cols), rows, cols);
+}
+
+Matrix random_matrix_(double seed, int rows, int cols)
+{
+    return array_to_matrix(random_num_array_(seed, rows * cols), rows, cols);
 }
 
 Matrix copy_matrix(Matrix matrix)
@@ -2250,6 +2329,12 @@ void print_pair(Pair pair)
     printf("(%d, %d)", pair->first, pair->second);
 }
 
+void print_pair_(Pair pair)
+{
+    print_pair(pair);
+    newline(1);
+}
+
 void print_polar2D(Polar2D point)
 {
     if (point->r == 0 && point->theta == 0)
@@ -2260,6 +2345,12 @@ void print_polar2D(Polar2D point)
         printf("(0, %lf)", point->theta);
     else
         printf("(%lf, %lf)", point->r, point->theta);
+}
+
+void print_polar2D_(Polar2D point)
+{
+    print_polar2D(point);
+    newline(1);
 }
 
 void print_polar(Polar point)
@@ -2282,6 +2373,12 @@ void print_polar(Polar point)
         printf("(%lf, %lf, %lf)", point->r, point->theta_x, point->theta_z);
 }
 
+void print_polar_(Polar point)
+{
+    print_polar(point);
+    newline(1);
+}
+
 void print_point2D(Point2D point)
 {
     if (point->X == 0 && point->Y == 0)
@@ -2292,6 +2389,12 @@ void print_point2D(Point2D point)
         printf("(0, %lf)", point->Y);
     else
         printf("(%lf, %lf)", point->X, point->Y);
+}
+
+void print_point2D_(Point2D point)
+{
+    print_point2D_(point);
+    newline(1);
 }
 
 void print_point(Point point)
@@ -2314,6 +2417,12 @@ void print_point(Point point)
         printf("(%lf, %lf, %lf)", point->X, point->Y, point->Z);
 }
 
+void print_point_(Point point)
+{
+    print_point(point);
+    newline(1);
+}
+
 void print_complex(Complex number)
 {
     if (number->real == 0 && number->imaginary == 0)
@@ -2329,6 +2438,12 @@ void print_complex(Complex number)
         else
             printf("(%lf + %lfi)", number->real, number->imaginary);
     }
+}
+
+void print_complex_(Complex number)
+{
+    print_complex(number);
+    newline(1);
 }
 
 void print_complex_array(Complex_Array complex_array)
@@ -2352,6 +2467,12 @@ void print_complex_array(Complex_Array complex_array)
     }
 }
 
+void print_complex_array_(Complex_Array complex_array)
+{
+    print_complex_array(complex_array);
+    newline(1);
+}
+
 void print_vector2D(Vector2D vector)
 {
     if (vector->X == 0 && vector->Y == 0)
@@ -2367,6 +2488,12 @@ void print_vector2D(Vector2D vector)
         else
             printf("<%lfi + %lfj>", vector->X, vector->Y);
     }
+}
+
+void print_vector2D_(Vector2D vector)
+{
+    print_vector2D(vector);
+    newline(1);
 }
 
 void print_vector(Vector vector)
@@ -2413,15 +2540,81 @@ void print_vector(Vector vector)
     }
 }
 
+void print_vector_(Vector vector)
+{
+    print_vector(vector);
+    newline(1);
+}
+
+void print_num_array(NumArray num_array)
+{
+    printf("{");
+    for (int i = 0; i < num_array->len; i++)
+    {
+        printf("%lf", num_array->nums[i]);
+        if ((i+1) != num_array->len)
+            printf(", ");
+    }
+    printf("}");
+}
+
+void print_num_array_(NumArray num_array)
+{
+    print_num_array(num_array);
+    newline(1);
+}
+
 void print_matrix(Matrix matrix)
 {
+    printf("[[");
     for (int r = 0; r < matrix->rows; r++)
     {
-        printf("[");
+        if (r > 0)
+            printf(" [");
         for (int c = 0; c < matrix->cols; c++)
             printf("%lf\t", matrix->data[r][c]);
-        printf("]\n");
+        if (r < matrix->cols)
+            printf("]\n");
+        else
+            printf("]]");
     }
+}
+
+void print_matrix_(Matrix matrix)
+{
+    print_matrix(matrix);
+    newline(1);
+}
+
+void print_tensor(Tensor tensor)
+{
+    printf("[[[");
+    for (int n = 0; n < tensor->n; n++)
+    {
+        if (n > 0)
+            printf(" [[");
+        for (int r = 0; r < tensor->mat[n]->rows; r++)
+        {
+            if (r > 0)
+                printf("  [");
+            for (int c = 0; c < tensor->mat[n]->cols; c++)
+                printf("%lf\t", tensor->mat[n]->data[r][c]);
+            if (r < (tensor->mat[n]->cols - 1))
+                printf("]\n");
+            else
+                printf("]");
+        }
+        if (n < (tensor->n - 1))
+            printf("]\n\n");
+        else
+            printf("]]");
+    }
+}
+
+void print_tensor_(Tensor tensor)
+{
+    print_tensor(tensor);
+    newline(1);
 }
 
 void print_types_of_matrix(char **types)
@@ -2436,6 +2629,12 @@ void print_types_of_matrix(char **types)
     for (int i = 1; i < count; i++)
         printf(", '%s'", types[i]);
     printf("]");
+}
+
+void print_types_of_matrix_(char **types)
+{
+    print_types_of_matrix(types);
+    newline(1);
 }
 
 Matrix principal_diagonal(Matrix matrix)
@@ -2859,14 +3058,19 @@ Matrix scale_column_vector_matrix(Matrix matrix, Matrix scale_by_column_matrix)
     }
 }
 
-double inner_product(Matrix column_vector_1, Matrix column_vector_2)
+Matrix dot_t1(Matrix matrix_1, Matrix matrix_2)
 {
-    return (multiply_matrix(transpose(column_vector_1), column_vector_2))->data[0][0];
+    return (multiply_matrix(transpose(matrix_1), matrix_2));
+}
+
+Matrix dot_t2(Matrix matrix_1, Matrix matrix_2)
+{
+    return (multiply_matrix(matrix_1, transpose(matrix_2)));
 }
 
 double dot_array(NumArray array_1, NumArray array_2)
 {
-    return (multiply_matrix(array_to_row_vector(array_1), array_to_column_vector(array_2)))->data[0][0];
+    return (multiply_matrix(array_to_row_matrix(array_1), array_to_column_matrix(array_2)))->data[0][0];
 }
 
 Matrix rotation_matrix_in_2D(double angle, angle_mode angle_mode)
