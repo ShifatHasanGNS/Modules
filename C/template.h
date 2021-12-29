@@ -12,8 +12,9 @@
 #define exit0 return 0
 #define exit1 return 1
 #define exit(x) return x
-#define stop return 0
+#define stop break
 #define skip continue
+#define eif else if
 
 // input
 #define input(prompt_text, format_spesifier_string, var) \

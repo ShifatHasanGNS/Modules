@@ -1,8 +1,8 @@
 /*
-	Module :: [ number.h ]
+    Module :: [ number.h ]
 
-	AUTHOR  : MD. Shifat Hasan
-	Email   : shifathasangns@gmail.com
+    AUTHOR  : MD. Shifat Hasan
+    Email   : shifathasangns@gmail.com
 */
 
 // ---------------------------------------------------------------- //
@@ -45,11 +45,11 @@
 
 #define angle_mode(polar) polar->angle_mode // angle-mode of polar, where variable 'polar' is of type 'Polar2D/Polar'
 
-#define newline(number_of_new_lines)                            \
+#define newline(number_of_new_lines)                             \
     for (int temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
     printf("\n")
 
-#define $ (double [])
+#define $ (double[])
 
 // ---------------------------------------------------------------- //
 //                       E N U M E R A T O R s                      //
@@ -236,19 +236,49 @@ double to_degree(double angle_in_radian)
     return ((angle_in_radian * 180) / PI);
 }
 
-int absolute_int(int number)
+int abs_int(int number)
 {
     return (sign(number) * number);
 }
 
-double absolute(double number)
+double abs_double(double number)
 {
     return (sign(number) * number);
 }
 
-long double absolute_ldouble(long double number)
+long double abs_ldouble(long double number)
 {
     return (sign_ldouble(number) * number);
+}
+
+int max_int(int number_1, int number_2)
+{
+    return (number_1 > number_2) ? number_1 : number_2;
+}
+
+double max_double(double number_1, double number_2)
+{
+    return (number_1 > number_2) ? number_1 : number_2;
+}
+
+long double max_ldouble(long double number_1, long double number_2)
+{
+    return (number_1 > number_2) ? number_1 : number_2;
+}
+
+int min_int(int number_1, int number_2)
+{
+    return (number_1 < number_2) ? number_1 : number_2;
+}
+
+double min_double(double number_1, double number_2)
+{
+    return (number_1 < number_2) ? number_1 : number_2;
+}
+
+long double min_ldouble(long double number_1, long double number_2)
+{
+    return (number_1 < number_2) ? number_1 : number_2;
 }
 
 double trim(double num)
@@ -273,9 +303,9 @@ double trim_ldouble(long double num)
 
 int mod(int a, int m)
 {
-    if (absolute(a) < absolute(m))
+    if (abs_double(a) < abs_double(m))
         return a;
-    else if (absolute(a) == absolute(m))
+    else if (abs_double(a) == abs_double(m))
         return 1;
     else
         return a % m;
@@ -302,8 +332,8 @@ int bigmod_str(char *num, int m)
 
 int gcd_int(int a, int b)
 {
-    a = absolute_int(a);
-    b = absolute_int(b);
+    a = abs_int(a);
+    b = abs_int(b);
     int min = (a < b) ? a : b;
     int max = (a > b) ? a : b;
     int r = mod(max, min);
@@ -344,8 +374,8 @@ unsigned long long int gcd_ullint(unsigned long long int a, unsigned long long i
 
 int lcm_int(int a, int b)
 {
-    a = absolute_int(a);
-    b = absolute_int(b);
+    a = abs_int(a);
+    b = abs_int(b);
     return ((a * b) / gcd_int(a, b));
 }
 
@@ -445,8 +475,8 @@ double power_double(double base, double n)
     else
     {
         int r = 1, sign_of_base = sign(base), sign_of_n = sign(n);
-        base = absolute(base);
-        n = absolute(n);
+        base = abs_double(base);
+        n = abs_double(n);
         double remaining_power = n - floor(n), result = 1;
         int p = floor(n);
         if (sign_of_n == -1)
@@ -513,8 +543,8 @@ long double power_ldouble(long double base, long double n)
     else
     {
         int r = 1, sign_of_base = sign(base), sign_of_n = sign(n);
-        base = absolute(base);
-        n = absolute(n);
+        base = abs_double(base);
+        n = abs_double(n);
         long double remaining_power = n - floor(n), result = 1;
         int p = floor(n);
         if (sign_of_n == -1)
@@ -605,8 +635,8 @@ int last_digit_uint(unsigned int number, unsigned int power) // number, power >=
         return 1;
     if (number == 0)
         return 0;
-    number = absolute(number);
-    power = absolute(power);
+    number = abs_double(number);
+    power = abs_double(power);
     int n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
@@ -639,8 +669,8 @@ int last_digit_ulint(unsigned long int number, unsigned long int power) // numbe
         return 1;
     if (number == 0)
         return 0;
-    number = absolute(number);
-    power = absolute(power);
+    number = abs_double(number);
+    power = abs_double(power);
     int n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
@@ -673,8 +703,8 @@ int last_digit_ullint(unsigned long long int number, unsigned long long int powe
         return 1;
     if (number == 0)
         return 0;
-    number = absolute(number);
-    power = absolute(power);
+    number = abs_double(number);
+    power = abs_double(power);
     int n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
@@ -731,7 +761,7 @@ int factorial(int n) // MAX --> n = 12
     else if (n == 0)
         return 1;
     int N = 1;
-    for (int i=1; i<=n; i++)
+    for (int i = 1; i <= n; i++)
         N *= i;
     return N;
 }
@@ -739,16 +769,16 @@ int factorial(int n) // MAX --> n = 12
 int multiply_for_factorial_str(int x, int res[], int res_size)
 {
     int carry = 0;
-    for (int i=0; i<res_size; i++)
+    for (int i = 0; i < res_size; i++)
     {
         int prod = res[i] * x + carry;
-        res[i] = prod % 10; 
-        carry = prod/10;   
+        res[i] = prod % 10;
+        carry = prod / 10;
     }
     while (carry)
     {
-        res[res_size] = carry%10;
-        carry = carry/10;
+        res[res_size] = carry % 10;
+        carry = carry / 10;
         res_size++;
     }
     return res_size;
@@ -760,10 +790,10 @@ char *factorial_str(int n)
     char *N = (char *)malloc(1024 * sizeof(char));
     res[0] = 1;
     int res_size = 1;
-    for (int x=2; x<=n; x++)
+    for (int x = 2; x <= n; x++)
         res_size = multiply_for_factorial_str(x, res, res_size);
-    sprintf(N, "%d", res[res_size-1]);
-    for (int i=res_size-2; i>=0; i--)
+    sprintf(N, "%d", res[res_size - 1]);
+    for (int i = res_size - 2; i >= 0; i--)
         sprintf(N, "%s%d", N, res[i]);
     return N;
 }
@@ -783,7 +813,7 @@ double sum(char *expression, char *interval)
         a = -10000000;
         sscanf(upper_bound, "%d", &b);
     }
-    
+
     if (!strcmp(upper_bound, "inf"))
     {
         sscanf(lower_bound, "%d", &a);
@@ -796,7 +826,8 @@ double sum(char *expression, char *interval)
         sscanf(upper_bound, "%d", &b);
     }
 
-    if (b < a) return 0;
+    if (b < a)
+        return 0;
 
     FILE *fp;
     fp = fopen("temp_sum.c", "w");
@@ -836,7 +867,7 @@ double product(char *expression, char *interval)
     char *lower_bound = (char *)malloc(128 * sizeof(char));
     char *upper_bound = (char *)malloc(128 * sizeof(char));
     sscanf(interval, "%s %s", lower_bound, upper_bound);
-    
+
     char *format = "%0.15lf";
     int a, b; // MAX = 2147483647
     double answer = 0;
@@ -846,7 +877,7 @@ double product(char *expression, char *interval)
         a = -10000000;
         sscanf(upper_bound, "%d", &b);
     }
-    
+
     if (!strcmp(upper_bound, "inf"))
     {
         sscanf(lower_bound, "%d", &a);
@@ -859,7 +890,8 @@ double product(char *expression, char *interval)
         sscanf(upper_bound, "%d", &b);
     }
 
-    if (b < a) return 0;
+    if (b < a)
+        return 0;
 
     FILE *fp;
     fp = fopen("temp_sum.c", "w");
@@ -1431,7 +1463,7 @@ double argument(Complex z, angle_mode angle_mode)
     }
     else
     {
-        double arg = atan(absolute(imaginary / real));
+        double arg = atan(abs_double(imaginary / real));
         if (real > 0 && imaginary > 0)
         {
             if (angle_mode == radian)
@@ -1490,7 +1522,7 @@ double angle_for_complex(Complex z, angle_mode angle_mode)
     }
     else
     {
-        double arg = atan(absolute(imaginary / real));
+        double arg = atan(abs_double(imaginary / real));
         if (real > 0 && imaginary > 0)
         {
             if (angle_mode == radian)
@@ -1524,7 +1556,7 @@ double angle_for_complex(Complex z, angle_mode angle_mode)
 
 int quadrent_for_angle(double angle, angle_mode angle_mode)
 {
-    double theta = remainder(absolute(angle), TAU), pi_1 = PI / 2, pi_2 = (3 * PI) / 2;
+    double theta = remainder(abs_double(angle), TAU), pi_1 = PI / 2, pi_2 = (3 * PI) / 2;
     int quadrent = -1;
     if (angle_mode == radian)
     {
@@ -1599,7 +1631,7 @@ Complex complex_ln(Complex z)
     double r = value_of_complex(z);
     double t = argument(z, radian);
     if (r < 0)
-        return new_complex(log(absolute(r)), (t + PI));
+        return new_complex(log(abs_double(r)), (t + PI));
     if (r > 0)
         return new_complex(log(r), t);
 }
@@ -1609,7 +1641,7 @@ Complex complex_log10(Complex z)
     double r = value_of_complex(z);
     double t = argument(z, radian);
     if (r < 0)
-        return new_complex(log(absolute(r)) / log(10), (t + PI) / log(10));
+        return new_complex(log(abs_double(r)) / log(10), (t + PI) / log(10));
     if (r > 0)
         return new_complex(log(r) / log(10), t / log(10));
 }
@@ -1748,7 +1780,7 @@ Matrix input_square_matrix(int order)
 
 Matrix array_to_matrix(NumArray array, int rows, int cols)
 {
-    if ((rows*cols) == array->len)
+    if ((rows * cols) == array->len)
     {
         Matrix matrix = new_matrix(rows, cols);
         for (int r = 0; r < rows; r++)
@@ -1763,7 +1795,7 @@ Matrix array_to_matrix(NumArray array, int rows, int cols)
 
 Matrix array_to_matrix_(double nums[], int rows, int cols)
 {
-    return array_to_matrix(new_num_array_(rows*cols, nums), rows, cols);
+    return array_to_matrix(new_num_array_(rows * cols, nums), rows, cols);
 }
 
 Matrix array_to_column_matrix(NumArray array)
@@ -2434,7 +2466,7 @@ void print_complex(Complex number)
     else
     {
         if (number->imaginary < 0)
-            printf("(%lf - %lfi)", number->real, absolute(number->imaginary));
+            printf("(%lf - %lfi)", number->real, abs_double(number->imaginary));
         else
             printf("(%lf + %lfi)", number->real, number->imaginary);
     }
@@ -2484,7 +2516,7 @@ void print_vector2D(Vector2D vector)
     else
     {
         if (vector->Y < 0)
-            printf("<%lfi - %lfj>", vector->X, absolute(vector->Y));
+            printf("<%lfi - %lfj>", vector->X, abs_double(vector->Y));
         else
             printf("<%lfi + %lfj>", vector->X, vector->Y);
     }
@@ -2509,21 +2541,21 @@ void print_vector(Vector vector)
     else if (vector->X != 0 && vector->Y != 0 && vector->Z == 0)
     {
         if (vector->Y < 0)
-            printf("<%lfi - %lfj>", vector->X, absolute(vector->Y));
+            printf("<%lfi - %lfj>", vector->X, abs_double(vector->Y));
         else
             printf("<%lfi + %lfj>", vector->X, vector->Y);
     }
     else if (vector->X != 0 && vector->Y == 0 && vector->Z != 0)
     {
         if (vector->Z < 0)
-            printf("<%lfi - %lfk>", vector->X, absolute(vector->Z));
+            printf("<%lfi - %lfk>", vector->X, abs_double(vector->Z));
         else
             printf("<%lfi + %lfk>", vector->X, vector->Z);
     }
     else if (vector->X == 0 && vector->Y != 0 && vector->Z != 0)
     {
         if (vector->Z < 0)
-            printf("<%lfj - %lfk>", vector->Y, absolute(vector->Z));
+            printf("<%lfj - %lfk>", vector->Y, abs_double(vector->Z));
         else
             printf("<%lfj + %lfk>", vector->Y, vector->Z);
     }
@@ -2552,7 +2584,7 @@ void print_num_array(NumArray num_array)
     for (int i = 0; i < num_array->len; i++)
     {
         printf("%lf", num_array->nums[i]);
-        if ((i+1) != num_array->len)
+        if ((i + 1) != num_array->len)
             printf(", ");
     }
     printf("}");
@@ -2635,6 +2667,439 @@ void print_types_of_matrix_(char **types)
 {
     print_types_of_matrix(types);
     newline(1);
+}
+
+Pair matrix_shape(Matrix matrix)
+{
+    return new_pair(matrix->rows, matrix->cols);
+}
+
+bool are_similar_num_array(NumArray array_1, NumArray array_2)
+{
+    return (array_1->len == array_2->len) ? true : false;
+}
+
+bool are_similar_matrix(Matrix matrix_1, Matrix matrix_2)
+{
+    return (matrix_1->rows == matrix_2->rows && matrix_1->cols == matrix_2->cols) ? true : false;
+}
+
+double clip_double(double number, double min, double max)
+{
+
+    if (number >= min && number <= max)
+        return number;
+    else if (number < min)
+        return min;
+    else if (number > max)
+        return max;
+}
+
+NumArray clip_number_array(NumArray array, double min, double max)
+{
+    NumArray clipped_array = new_num_array(array->len);
+    for (int i = 0; i < array->len; i++)
+    {
+        if (array->nums[i] >= min && array->nums[i] <= max)
+            clipped_array->nums[i] = array->nums[i];
+        else if (array->nums[i] < min)
+            clipped_array->nums[i] = min;
+        else if (array->nums[i] > max)
+            clipped_array->nums[i] = max;
+    }
+    return clipped_array;
+}
+
+Matrix clip_matrix(Matrix matrix, double min, double max)
+{
+    Matrix clipped_matrix = new_matrix(matrix->rows, matrix->cols);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        for (int c = 0; c < matrix->cols; c++)
+        {
+            if (matrix->data[r][c] >= min && matrix->data[r][c] <= max)
+                clipped_matrix->data[r][c] = matrix->data[r][c];
+            else if (matrix->data[r][c] < min)
+                clipped_matrix->data[r][c] = min;
+            else if (matrix->data[r][c] > max)
+                clipped_matrix->data[r][c] = max;
+        }
+    }
+    return clipped_matrix;
+}
+
+int argmax_num_array_index(NumArray array)
+{
+    int arg = 0;
+    for (int i = 1; i < array->len; i++)
+        arg = (array->nums[arg] > array->nums[i]) ? arg : i;
+    return arg;
+}
+
+int argmin_num_array_index(NumArray array)
+{
+    int arg = 0;
+    for (int i = 1; i < array->len; i++)
+        arg = (array->nums[arg] < array->nums[i]) ? arg : i;
+    return arg;
+}
+
+NumArray argmax_matrix_row_indices(Matrix matrix)
+{
+    NumArray arg_array = new_num_array(matrix->rows * matrix->cols);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        int arg_c = 0;
+        for (int c = 1; c < matrix->cols; c++)
+            arg_c = (matrix->data[r][arg_c] > matrix->data[r][c]) ? arg_c : c;
+        arg_array->nums[r] = arg_c;
+    }
+    return arg_array;
+}
+
+NumArray argmax_matrix_column_indices(Matrix matrix)
+{
+    NumArray arg_array = new_num_array(matrix->rows * matrix->cols);
+    for (int c = 0; c < matrix->cols; c++)
+    {
+        int arg_r = 0;
+        for (int r = 1; r < matrix->rows; r++)
+            arg_r = (matrix->data[arg_r][c] > matrix->data[r][c]) ? arg_r : r;
+        arg_array->nums[c] = arg_r;
+    }
+    return arg_array;
+}
+
+NumArray argmin_matrix_row_indices(Matrix matrix)
+{
+    NumArray arg_array = new_num_array(matrix->rows * matrix->cols);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        int arg_c = 0;
+        for (int c = 1; c < matrix->cols; c++)
+            arg_c = (matrix->data[r][arg_c] < matrix->data[r][c]) ? arg_c : c;
+        arg_array->nums[r] = arg_c;
+    }
+    return arg_array;
+}
+
+NumArray argmin_matrix_column_indices(Matrix matrix)
+{
+    NumArray arg_array = new_num_array(matrix->rows * matrix->cols);
+    for (int c = 0; c < matrix->cols; c++)
+    {
+        int arg_r = 0;
+        for (int r = 1; r < matrix->rows; r++)
+            arg_r = (matrix->data[arg_r][c] < matrix->data[r][c]) ? arg_r : r;
+        arg_array->nums[c] = arg_r;
+    }
+    return arg_array;
+}
+
+double sum_num_array(NumArray array)
+{
+    double sum = 0;
+    for (int i = 0; i < array->len; i++)
+        sum += array->nums[i];
+    return sum;
+}
+
+double mean_num_array(NumArray array)
+{
+    return sum_num_array(array) / (array->len);
+}
+
+double product_num_array(NumArray array)
+{
+    double product = 0;
+    for (int i = 0; i < array->len; i++)
+        product *= array->nums[i];
+    return product;
+}
+
+double max_num_array_element(NumArray array)
+{
+    double max = array->nums[0];
+    for (int i = 1; i < array->len; i++)
+        max = (max > array->nums[i]) ? max : array->nums[i];
+    return max;
+}
+
+double min_num_array_element(NumArray array)
+{
+    double min = array->nums[0];
+    for (int i = 1; i < array->len; i++)
+        min = (min < array->nums[i]) ? min : array->nums[i];
+    return min;
+}
+
+Matrix sum_matrix_row_elements(Matrix matrix)
+{
+    Matrix sum_matrix = new_matrix(matrix->rows, 1);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        double sum = 0;
+        for (int c = 0; c < matrix->cols; c++)
+            sum += matrix->data[r][c];
+        sum_matrix->data[r][0] = sum;
+    }
+    return sum_matrix;
+}
+
+Matrix sum_matrix_column_elements(Matrix matrix)
+{
+    Matrix sum_matrix = new_matrix(1, matrix->cols);
+    for (int c = 0; c < matrix->cols; c++)
+    {
+        double sum = 0;
+        for (int r = 0; r < matrix->rows; r++)
+            sum += matrix->data[r][c];
+        sum_matrix->data[0][c] = sum;
+    }
+    return sum_matrix;
+}
+
+Matrix product_matrix_row_elements(Matrix matrix)
+{
+    Matrix product_matrix = new_matrix(matrix->rows, 1);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        double product = 0;
+        for (int c = 0; c < matrix->cols; c++)
+            product *= matrix->data[r][c];
+        product_matrix->data[r][0] = product;
+    }
+    return product_matrix;
+}
+
+Matrix product_matrix_column_elements(Matrix matrix)
+{
+    Matrix product_matrix = new_matrix(1, matrix->cols);
+    for (int c = 0; c < matrix->cols; c++)
+    {
+        double product = 0;
+        for (int r = 0; r < matrix->rows; r++)
+            product *= matrix->data[r][c];
+        product_matrix->data[0][c] = product;
+    }
+    return product_matrix;
+}
+
+Matrix max_matrix_row_elements(Matrix matrix)
+{
+    Matrix max_matrix = new_matrix(matrix->rows, 1);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        double max = matrix->data[r][0];
+        for (int c = 1; c < matrix->cols; c++)
+            max = (max > matrix->data[r][c]) ? max : matrix->data[r][c];
+        max_matrix->data[r][0] = max;
+    }
+    return max_matrix;
+}
+
+Matrix max_matrix_column_elements(Matrix matrix)
+{
+    Matrix max_matrix = new_matrix(1, matrix->cols);
+    for (int c = 0; c < matrix->cols; c++)
+    {
+        double max = matrix->data[0][c];
+        for (int r = 1; r < matrix->rows; r++)
+            max = (max > matrix->data[r][c]) ? max : matrix->data[r][c];
+        max_matrix->data[0][c] = max;
+    }
+    return max_matrix;
+}
+
+Matrix min_matrix_row_elements(Matrix matrix)
+{
+    Matrix min_matrix = new_matrix(matrix->rows, 1);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        double min = matrix->data[r][0];
+        for (int c = 1; c < matrix->cols; c++)
+            min = (min < matrix->data[r][c]) ? min : matrix->data[r][c];
+        min_matrix->data[r][0] = min;
+    }
+    return min_matrix;
+}
+
+Matrix min_matrix_column_elements(Matrix matrix)
+{
+    Matrix min_matrix = new_matrix(1, matrix->cols);
+    for (int c = 0; c < matrix->cols; c++)
+    {
+        double min = matrix->data[0][c];
+        for (int r = 1; r < matrix->rows; r++)
+            min = (min < matrix->data[r][c]) ? min : matrix->data[r][c];
+        min_matrix->data[0][c] = min;
+    }
+    return min_matrix;
+}
+
+Matrix max_matrix_elements(Matrix matrix_1, Matrix matrix_2)
+{
+    if (are_similar_matrix(matrix_1, matrix_2))
+    {
+        Matrix max_matrix = new_matrix(matrix_1->rows, matrix_1->cols);
+        for (int r = 0; r < matrix_1->rows; r++)
+        {
+            for (int c = 0; c < matrix_1->cols; c++)
+                max_matrix->data[r][c] = max_double(matrix_1->data[r][c], matrix_2->data[r][c]);
+        }
+        return max_matrix;
+    }
+    else
+        return new_matrix(0, 0);
+}
+
+Matrix min_matrix_elements(Matrix matrix_1, Matrix matrix_2)
+{
+    if (are_similar_matrix(matrix_1, matrix_2))
+    {
+        Matrix min_matrix = new_matrix(matrix_1->rows, matrix_1->cols);
+        for (int r = 0; r < matrix_1->rows; r++)
+        {
+            for (int c = 0; c < matrix_1->cols; c++)
+                min_matrix->data[r][c] = min_double(matrix_1->data[r][c], matrix_2->data[r][c]);
+        }
+        return min_matrix;
+    }
+    else
+        return new_matrix(0, 0);
+}
+
+Matrix exp_matrix(Matrix matrix)
+{
+    Matrix exped_matrix = new_matrix(matrix->rows, matrix->cols);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        for (int c = 0; c < matrix->cols; c++)
+            exped_matrix->data[r][c] = exp(matrix->data[r][c]);
+    }
+    return exped_matrix;
+}
+
+Matrix exp_matrix_(Matrix matrix, double base)
+{
+    Matrix exped_matrix = new_matrix(matrix->rows, matrix->cols);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        for (int c = 0; c < matrix->cols; c++)
+            exped_matrix->data[r][c] = power_double(base, matrix->data[r][c]);
+    }
+    return exped_matrix;
+}
+
+NumArray compare_num_array_elements(NumArray array_1, char *comparator, NumArray array_2)
+{
+    if (are_similar_num_array(array_1, array_2))
+    {
+        NumArray new_array = new_num_array(array_1->len);
+        if (!strcmp(comparator, "=="))
+        {
+            for (int i = 0; i < array_1->len; i++)
+                new_array->nums[i] = (array_1->nums[i] == array_2->nums[i]) ? 1 : 0;
+            return new_array;
+        }
+        else if (!strcmp(comparator, "!="))
+        {
+            for (int i = 0; i < array_1->len; i++)
+                new_array->nums[i] = (array_1->nums[i] != array_2->nums[i]) ? 1 : 0;
+            return new_array;
+        }
+        else if (!strcmp(comparator, "<"))
+        {
+            for (int i = 0; i < array_1->len; i++)
+                new_array->nums[i] = (array_1->nums[i] < array_2->nums[i]) ? 1 : 0;
+            return new_array;
+        }
+        else if (!strcmp(comparator, "<="))
+        {
+            for (int i = 0; i < array_1->len; i++)
+                new_array->nums[i] = (array_1->nums[i] <= array_2->nums[i]) ? 1 : 0;
+            return new_array;
+        }
+        else if (!strcmp(comparator, ">"))
+        {
+            for (int i = 0; i < array_1->len; i++)
+                new_array->nums[i] = (array_1->nums[i] > array_2->nums[i]) ? 1 : 0;
+            return new_array;
+        }
+        else if (!strcmp(comparator, ">="))
+        {
+            for (int i = 0; i < array_1->len; i++)
+                new_array->nums[i] = (array_1->nums[i] >= array_2->nums[i]) ? 1 : 0;
+            return new_array;
+        }
+        return new_array;
+    }
+    return new_num_array(array_1->len);
+}
+
+Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_2)
+{
+    if (are_similar_matrix(matrix_1, matrix_2))
+    {
+        Matrix new_mat = new_matrix(matrix_1->rows, matrix_1->cols);
+        if (!strcmp(comparator, "=="))
+        {
+            for (int r = 0; r < matrix_1->rows; r++)
+            {
+                for (int c = 0; c < matrix_1->cols; c++)
+                    new_mat->data[r][c] = (matrix_1->data[r][c] == matrix_2->data[r][c]) ? 1 : 0;
+            }
+            return new_mat;
+        }
+        else if (!strcmp(comparator, "!="))
+        {
+            for (int r = 0; r < matrix_1->rows; r++)
+            {
+                for (int c = 0; c < matrix_1->cols; c++)
+                    new_mat->data[r][c] = (matrix_1->data[r][c] != matrix_2->data[r][c]) ? 1 : 0;
+            }
+            return new_mat;
+        }
+        else if (!strcmp(comparator, "<"))
+        {
+            for (int r = 0; r < matrix_1->rows; r++)
+            {
+                for (int c = 0; c < matrix_1->cols; c++)
+                    new_mat->data[r][c] = (matrix_1->data[r][c] < matrix_2->data[r][c]) ? 1 : 0;
+            }
+            return new_mat;
+        }
+        else if (!strcmp(comparator, "<="))
+        {
+            for (int r = 0; r < matrix_1->rows; r++)
+            {
+                for (int c = 0; c < matrix_1->cols; c++)
+                    new_mat->data[r][c] = (matrix_1->data[r][c] <= matrix_2->data[r][c]) ? 1 : 0;
+            }
+            return new_mat;
+        }
+        else if (!strcmp(comparator, ">"))
+        {
+            for (int r = 0; r < matrix_1->rows; r++)
+            {
+                for (int c = 0; c < matrix_1->cols; c++)
+                    new_mat->data[r][c] = (matrix_1->data[r][c] > matrix_2->data[r][c]) ? 1 : 0;
+            }
+            return new_mat;
+        }
+        else if (!strcmp(comparator, ">="))
+        {
+            for (int r = 0; r < matrix_1->rows; r++)
+            {
+                for (int c = 0; c < matrix_1->cols; c++)
+                    new_mat->data[r][c] = (matrix_1->data[r][c] >= matrix_2->data[r][c]) ? 1 : 0;
+            }
+            return new_mat;
+        }
+        return new_mat;
+    }
+    else
+        return new_matrix(matrix_1->rows, matrix_1->cols);
 }
 
 Matrix principal_diagonal(Matrix matrix)
@@ -2720,6 +3185,16 @@ Matrix scale_matrix(Matrix matrix, double scalar_number)
     return scaled_matrix;
 }
 
+Matrix mean_matrix_row_elements(Matrix matrix)
+{
+    return scale_matrix(sum_matrix_row_elements(matrix), 1 / (matrix->cols));
+}
+
+Matrix mean_matrix_column_elements(Matrix matrix)
+{
+    return scale_matrix(sum_matrix_column_elements(matrix), 1 / (matrix->rows));
+}
+
 Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if (are_perfect(matrix_1, matrix_2, addition))
@@ -2729,6 +3204,21 @@ Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
         {
             for (int c = 0; c < matrix_1->cols; c++)
                 result->data[r][c] = matrix_1->data[r][c] + matrix_2->data[r][c];
+        }
+        return result;
+    }
+    return new_matrix(0, 0);
+}
+
+Matrix subtract_matrix(Matrix matrix_1, Matrix matrix_2)
+{
+    if (are_perfect(matrix_1, matrix_2, subtraction))
+    {
+        Matrix result = new_matrix(matrix_1->rows, matrix_1->cols);
+        for (int r = 0; r < matrix_1->rows; r++)
+        {
+            for (int c = 0; c < matrix_1->cols; c++)
+                result->data[r][c] = matrix_1->data[r][c] - matrix_2->data[r][c];
         }
         return result;
     }
@@ -2765,21 +3255,6 @@ Matrix add_column_matrix(Matrix base_matrix, Matrix column_matrix)
     return new_matrix(0, 0);
 }
 
-Matrix subtract_matrix(Matrix matrix_1, Matrix matrix_2)
-{
-    if (are_perfect(matrix_1, matrix_2, subtraction))
-    {
-        Matrix result = new_matrix(matrix_1->rows, matrix_1->cols);
-        for (int r = 0; r < matrix_1->rows; r++)
-        {
-            for (int c = 0; c < matrix_1->cols; c++)
-                result->data[r][c] = matrix_1->data[r][c] - matrix_2->data[r][c];
-        }
-        return result;
-    }
-    return new_matrix(0, 0);
-}
-
 Matrix subtract_row_matrix(Matrix base_matrix, Matrix row_matrix)
 {
     if (base_matrix->cols == row_matrix->cols)
@@ -2804,6 +3279,66 @@ Matrix subtract_column_matrix(Matrix base_matrix, Matrix column_matrix)
         {
             for (int c = 0; c < base_matrix->cols; c++)
                 result->data[r][c] = base_matrix->data[r][c] - column_matrix->data[r][0];
+        }
+        return result;
+    }
+    return new_matrix(0, 0);
+}
+
+Matrix divide_row_matrix(Matrix base_matrix, Matrix row_matrix)
+{
+    if (base_matrix->cols == row_matrix->cols)
+    {
+        Matrix result = new_matrix(base_matrix->rows, base_matrix->cols);
+        for (int r = 0; r < base_matrix->rows; r++)
+        {
+            for (int c = 0; c < base_matrix->cols; c++)
+                result->data[r][c] = base_matrix->data[r][c] / row_matrix->data[0][c];
+        }
+        return result;
+    }
+    return new_matrix(0, 0);
+}
+
+Matrix divide_column_matrix(Matrix base_matrix, Matrix column_matrix)
+{
+    if (base_matrix->rows == column_matrix->rows)
+    {
+        Matrix result = new_matrix(base_matrix->rows, base_matrix->cols);
+        for (int r = 0; r < base_matrix->rows; r++)
+        {
+            for (int c = 0; c < base_matrix->cols; c++)
+                result->data[r][c] = base_matrix->data[r][c] / column_matrix->data[r][0];
+        }
+        return result;
+    }
+    return new_matrix(0, 0);
+}
+
+Matrix mod_row_matrix(Matrix base_matrix, Matrix row_matrix)
+{
+    if (base_matrix->cols == row_matrix->cols)
+    {
+        Matrix result = new_matrix(base_matrix->rows, base_matrix->cols);
+        for (int r = 0; r < base_matrix->rows; r++)
+        {
+            for (int c = 0; c < base_matrix->cols; c++)
+                result->data[r][c] = (int)base_matrix->data[r][c] % (int)row_matrix->data[0][c];
+        }
+        return result;
+    }
+    return new_matrix(0, 0);
+}
+
+Matrix mod_column_matrix(Matrix base_matrix, Matrix column_matrix)
+{
+    if (base_matrix->rows == column_matrix->rows)
+    {
+        Matrix result = new_matrix(base_matrix->rows, base_matrix->cols);
+        for (int r = 0; r < base_matrix->rows; r++)
+        {
+            for (int c = 0; c < base_matrix->cols; c++)
+                result->data[r][c] = (int)base_matrix->data[r][c] % (int)column_matrix->data[r][0];
         }
         return result;
     }
@@ -3202,14 +3737,14 @@ Complex_Array solve_x3(double a, double b, double c, double d)
     q = (2 * (a * a * a) / 27) - (a * b / 3) + c;
     m = -q / 2;
     N = ((q * q) / 4) + (p * p * p / 27);
-    n = sqrt(absolute(N));
+    n = sqrt(abs_double(N));
 
     if (N >= 0)
         t = cbrt(m + n) + cbrt(m - n);
     else
     {
         Complex z = new_complex(m, n);
-        double r = sqrt((m * m) + absolute(N));
+        double r = sqrt((m * m) + abs_double(N));
         double theta = argument(z, radian) / 3;
         t = 2 * cbrt(r) * cos(theta);
     }
