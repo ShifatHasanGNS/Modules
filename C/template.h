@@ -5,15 +5,17 @@
 #include "string.h"
 
 // start = main(),  stop = return 0
-#define start int main(int argc, char const *argv[])
-#define exit return
-#define exit_success return 0
-#define exit_failed return 1
-#define exit0 return 0
-#define exit1 return 1
-#define exit(x) return x
-#define stop break
-#define skip continue
+#define start void main(int argc, char const *argv[]) {
+#define start_ int main(int argc, char const *argv[]) {
+#define exit }
+#define Exit return 0; }
+#define exit_success return 0; }
+#define exit_failed return 1; }
+#define exit0 return 0; }
+#define exit1 return 1; }
+#define Exit_(x) return x; }
+#define stop break;
+#define skip continue;
 #define eif else if
 #define If if (
 #define For for (
@@ -48,15 +50,20 @@
 #define scan_double(double_var) scanf("%lf", &double_var)
 // print
 #define print printf
-#define println(text) printf(text"\n")
+#define print_(text) printf(text"\n")
 #define print_char(char_var) printf("%c", char_var)
+#define print_char_(char_var) printf("%c\n", char_var)
 #define print_str(string_var) printf("%s", string_var)
+#define print_str_(string_var) printf("%s\n", string_var)
 #define print_int(int_var) printf("%d", int_var)
+#define print_int_(int_var) printf("%d\n", int_var)
 #define print_float(float_var) printf("%f", float_var)
+#define print_float_(float_var) printf("%f\n", float_var)
 #define print_double(double_var) printf("%lf", double_var)
+#define print_double_(double_var) printf("%lf\n", double_var)
 // new_line
 #define newline printf("\n")
-#define new_line(number_of_new_lines)                            \
+#define newline_(number_of_new_lines)                            \
     for (int temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
     printf("\n")
 
