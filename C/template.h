@@ -15,6 +15,10 @@
 #define stop break
 #define skip continue
 #define eif else if
+#define If if (
+#define For for (
+#define then ){
+#define done }
 
 // input
 #define input(prompt_text, format_spesifier_string, var) \
@@ -64,8 +68,8 @@
 #define new3(type, m, n, p) malloc(sizeof(type[m][n][p]))
 
 // for loop
-#define For(i, start, end, step) for (int i = (start); i < (end); i += (step))
-#define For_(type, i, start, end, step) for (type i = (start); i < (end); i += (step))
+#define _for(i, start, end, step) for (int i = (start); i < (end); i += (step))
+#define _for_(type, i, start, end, step) for (type i = (start); i < (end); i += (step))
 
 // memory size of a variable
 #define size(var) sizeof(var)

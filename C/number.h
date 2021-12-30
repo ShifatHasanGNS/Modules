@@ -2605,7 +2605,7 @@ void print_matrix(Matrix matrix)
             printf(" [");
         for (int c = 0; c < matrix->cols; c++)
             printf("%lf\t", matrix->data[r][c]);
-        if (r < matrix->cols)
+        if (r < (matrix->rows - 1))
             printf("]\n");
         else
             printf("]]");
@@ -2631,7 +2631,7 @@ void print_tensor(Tensor tensor)
                 printf("  [");
             for (int c = 0; c < tensor->mat[n]->cols; c++)
                 printf("%lf\t", tensor->mat[n]->data[r][c]);
-            if (r < (tensor->mat[n]->cols - 1))
+            if (r < (tensor->mat[n]->rows - 1))
                 printf("]\n");
             else
                 printf("]");
