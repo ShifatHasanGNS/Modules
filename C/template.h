@@ -1,3 +1,8 @@
+#ifndef TEMPLATE_H
+#define TEMPLATE_H
+// add definitions after this line
+
+
 // necessary libraries / header-files
 #include "stdio.h"
 #include "stdlib.h"
@@ -134,3 +139,8 @@ typedef signed long long int llint;    // %lld
 typedef unsigned long long int ullint; // %llu
 // ... double
 typedef long double ldouble; // %Lf
+
+
+
+// add definitions before this line
+#endif
