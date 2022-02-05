@@ -5,6 +5,11 @@
     Email   : shifathasangns@gmail.com
 */
 
+#pragma once
+#ifndef _INC_NUMBER // include guard for 3rd party interop
+#define _INC_NUMBER
+
+
 // ---------------------------------------------------------------- //
 //                      H E A D E R -- F I L E s                    //
 // ---------------------------------------------------------------- //
@@ -4280,3 +4285,8 @@ char **types_of_matrix(Matrix matrix, text_style text_style)
 
     return list_of_types;
 }
+
+_CRT_END_C_HEADER
+_UCRT_RESTORE_CLANG_WARNINGS
+#pragma warning(pop) // _UCRT_DISABLED_WARNINGS
+#endif // _INC_NUMBER
