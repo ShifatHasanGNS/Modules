@@ -196,6 +196,12 @@ typedef struct tensor_struct *Tensor;
 //                        F U N C T I O N s                        //
 // --------------------------------------------------------------- //
 
+void Free(void *any_structure)
+{
+    free(any_structure);
+    any_structure = NULL;
+}
+
 int sign_int(int number)
 {
     return ((number < 0) ? -1 : 1);
@@ -1284,21 +1290,21 @@ Complex_Array new_complex_array(int length)
     return complex_array;
 }
 
-NumArray random_num_array(int number_of_elements)
+NumArray random_num_array(int number_of_elements, int rounding_number, double scalar)
 {
     srand(time(0) % 10);
     NumArray na = new_num_array(number_of_elements);
     for (int i = 0; i < number_of_elements; i++)
-        na->nums[i] = rand();
+        na->nums[i] = scalar * ((rand() % rounding_number) + 1);
     return na;
 }
 
-NumArray random_num_array_(double seed, int number_of_elements)
+NumArray random_num_array_(int number_of_elements, int rounding_number, double scalar, double seed)
 {
     srand(seed);
     NumArray na = new_num_array(number_of_elements);
     for (int i = 0; i < number_of_elements; i++)
-        na->nums[i] = rand();
+        na->nums[i] = scalar * ((rand() % rounding_number) + 1);
     return na;
 }
 
@@ -1841,20 +1847,39 @@ NumArray matrix_to_array(Matrix matrix)
     return NULL;
 }
 
-Matrix random_matrix(int rows, int cols)
+Matrix random_matrix(int rows, int cols, int rounding_number, double scalar)
 {
-    return array_to_matrix(random_num_array(rows * cols), rows, cols);
+    srand(time(0) % 10);
+    Matrix r_matrix = new_matrix(rows, cols);
+    for (int r = 0; r < rows; r++)
+    {
+        for (int c = 0; c < cols; c++)
+            r_matrix->data[r][c] = scalar * ((rand() % rounding_number) + 1);
+    }
+    return r_matrix;
 }
 
-Matrix random_matrix_(double seed, int rows, int cols)
+Matrix random_matrix_(int rows, int cols, int rounding_number, double scalar, double seed)
 {
-    return array_to_matrix(random_num_array_(seed, rows * cols), rows, cols);
+    srand(seed);
+    Matrix r_matrix = new_matrix(rows, cols);
+    for (int r = 0; r < rows; r++)
+    {
+        for (int c = 0; c < cols; c++)
+            r_matrix->data[r][c] = scalar * ((rand() % rounding_number) + 1);
+    }
+    return r_matrix;
 }
 
 Matrix copy_matrix(Matrix matrix)
 {
-    NumArray array = matrix_to_array(matrix);
-    return array_to_matrix(array, matrix->rows, matrix->cols);
+    Matrix c_matrix = new_matrix(matrix->rows, matrix->cols);
+    for (int r = 0; r < matrix->rows; r++)
+    {
+        for (int c = 0; c < matrix->cols; c++)
+            c_matrix->data[r][c] = matrix->data[r][c];
+    }
+    return c_matrix;
 }
 
 Matrix to_row_matrix2D(Vector2D vector)
