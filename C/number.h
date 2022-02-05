@@ -4286,7 +4286,5 @@ char **types_of_matrix(Matrix matrix, text_style text_style)
     return list_of_types;
 }
 
-_CRT_END_C_HEADER
-_UCRT_RESTORE_CLANG_WARNINGS
 #pragma warning(pop) // _UCRT_DISABLED_WARNINGS
 #endif // _INC_NUMBER
