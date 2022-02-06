@@ -54,7 +54,8 @@
     for (int temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
     printf("\n")
 
-#define $ (double[])
+#define $ (double)
+#define $$ (double[])
 
 // ---------------------------------------------------------------- //
 //                       E N U M E R A T O R s                      //
@@ -195,12 +196,6 @@ typedef struct tensor_struct *Tensor;
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
 // --------------------------------------------------------------- //
-
-void Free(void *any_structure)
-{
-    free(any_structure);
-    any_structure = NULL;
-}
 
 int sign_int(int number)
 {
@@ -1108,7 +1103,7 @@ bool is_square_matrix(Matrix matrix)
 bool are_perfect(Matrix matrix_1, Matrix matrix_2, operation operation)
 {
     if (operation == addition || operation == subtraction)
-        return (matrix_1->rows == matrix_2->rows && matrix_1->cols == matrix_2->cols);
+        return ((matrix_1->rows == matrix_2->rows) && (matrix_1->cols == matrix_2->cols));
     else if (operation == multiplication)
         return (matrix_1->cols == matrix_2->rows);
     return false;
