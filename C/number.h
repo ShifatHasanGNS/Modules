@@ -814,13 +814,13 @@ double sum(char *expression, char *interval)
     int a, b; // MAX = 2147483647
     double answer = 0;
 
-    if (!strcmp(lower_bound, "-inf"))
+    if (strcmp(lower_bound, "-inf") == 0)
     {
         a = -10000000;
         sscanf(upper_bound, "%d", &b);
     }
 
-    if (!strcmp(upper_bound, "inf"))
+    if (strcmp(upper_bound, "inf") == 0)
     {
         sscanf(lower_bound, "%d", &a);
         b = 10000000;
@@ -878,13 +878,13 @@ double product(char *expression, char *interval)
     int a, b; // MAX = 2147483647
     double answer = 0;
 
-    if (!strcmp(lower_bound, "-inf"))
+    if (strcmp(lower_bound, "-inf") == 0)
     {
         a = -10000000;
         sscanf(upper_bound, "%d", &b);
     }
 
-    if (!strcmp(upper_bound, "inf"))
+    if (strcmp(upper_bound, "inf") == 0)
     {
         sscanf(lower_bound, "%d", &a);
         b = 10000000;
@@ -976,7 +976,7 @@ double integrate(char *integrand, char *interval)
     char *upper_bound = (char *)malloc(128 * sizeof(char));
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
-    if (!strcmp(lower_bound, upper_bound))
+    if (strcmp(lower_bound, upper_bound) == 0)
         return 0;
 
     double temp, a, b, A, B, C, dx = 0.0000001, answer = 0;
@@ -984,11 +984,11 @@ double integrate(char *integrand, char *interval)
     int sign = 1;
     bool m = false;
 
-    if (!strcmp(lower_bound, "-inf"))
+    if (strcmp(lower_bound, "-inf") == 0)
     {
         m = true;
         A = -PI_BY_2;
-        if (!strcmp(lower_bound, "inf"))
+        if (strcmp(lower_bound, "inf") == 0)
         {
             B = PI_BY_2;
         }
@@ -999,12 +999,12 @@ double integrate(char *integrand, char *interval)
         }
     }
 
-    else if (!strcmp(lower_bound, "inf"))
+    else if (strcmp(lower_bound, "inf") == 0)
     {
         m = true;
         sign = -1;
         B = PI_BY_2;
-        if (!strcmp(upper_bound, "-inf"))
+        if (strcmp(upper_bound, "-inf") == 0)
         {
             A = -PI_BY_2;
         }
@@ -1018,13 +1018,13 @@ double integrate(char *integrand, char *interval)
     else
     {
         sscanf(lower_bound, "%lf", &a);
-        if (!strcmp(upper_bound, "inf"))
+        if (strcmp(upper_bound, "inf") == 0)
         {
             m = true;
             A = atan(a);
             B = PI_BY_2;
         }
-        else if (!strcmp(upper_bound, "-inf"))
+        else if (strcmp(upper_bound, "-inf") == 0)
         {
             m = true;
             sign = -1;
@@ -3021,37 +3021,38 @@ NumArray compare_num_array_elements(NumArray array_1, char *comparator, NumArray
     if (are_similar_num_array(array_1, array_2))
     {
         NumArray new_array = new_num_array(array_1->len);
-        if (!strcmp(comparator, "=="))
+
+        if (strcmp(comparator, "==") == 0)
         {
             for (int i = 0; i < array_1->len; i++)
                 new_array->nums[i] = (array_1->nums[i] == array_2->nums[i]) ? 1 : 0;
             return new_array;
         }
-        else if (!strcmp(comparator, "!="))
+        else if (strcmp(comparator, "!=") == 0)
         {
             for (int i = 0; i < array_1->len; i++)
                 new_array->nums[i] = (array_1->nums[i] != array_2->nums[i]) ? 1 : 0;
             return new_array;
         }
-        else if (!strcmp(comparator, "<"))
+        else if (strcmp(comparator, "<") == 0)
         {
             for (int i = 0; i < array_1->len; i++)
                 new_array->nums[i] = (array_1->nums[i] < array_2->nums[i]) ? 1 : 0;
             return new_array;
         }
-        else if (!strcmp(comparator, "<="))
+        else if (strcmp(comparator, "<=") == 0)
         {
             for (int i = 0; i < array_1->len; i++)
                 new_array->nums[i] = (array_1->nums[i] <= array_2->nums[i]) ? 1 : 0;
             return new_array;
         }
-        else if (!strcmp(comparator, ">"))
+        else if (strcmp(comparator, ">") == 0)
         {
             for (int i = 0; i < array_1->len; i++)
                 new_array->nums[i] = (array_1->nums[i] > array_2->nums[i]) ? 1 : 0;
             return new_array;
         }
-        else if (!strcmp(comparator, ">="))
+        else if (strcmp(comparator, ">=") == 0)
         {
             for (int i = 0; i < array_1->len; i++)
                 new_array->nums[i] = (array_1->nums[i] >= array_2->nums[i]) ? 1 : 0;
@@ -3067,7 +3068,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
     if (are_similar_matrix(matrix_1, matrix_2))
     {
         Matrix new_mat = new_matrix(matrix_1->rows, matrix_1->cols);
-        if (!strcmp(comparator, "=="))
+        if (strcmp(comparator, "==") == 0)
         {
             for (int r = 0; r < matrix_1->rows; r++)
             {
@@ -3076,7 +3077,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             }
             return new_mat;
         }
-        else if (!strcmp(comparator, "!="))
+        else if (strcmp(comparator, "!=") == 0)
         {
             for (int r = 0; r < matrix_1->rows; r++)
             {
@@ -3085,7 +3086,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             }
             return new_mat;
         }
-        else if (!strcmp(comparator, "<"))
+        else if (strcmp(comparator, "<") == 0)
         {
             for (int r = 0; r < matrix_1->rows; r++)
             {
@@ -3094,7 +3095,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             }
             return new_mat;
         }
-        else if (!strcmp(comparator, "<="))
+        else if (strcmp(comparator, "<=") == 0)
         {
             for (int r = 0; r < matrix_1->rows; r++)
             {
@@ -3103,7 +3104,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             }
             return new_mat;
         }
-        else if (!strcmp(comparator, ">"))
+        else if (strcmp(comparator, ">") == 0)
         {
             for (int r = 0; r < matrix_1->rows; r++)
             {
@@ -3112,7 +3113,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             }
             return new_mat;
         }
-        else if (!strcmp(comparator, ">="))
+        else if (strcmp(comparator, ">=") == 0)
         {
             for (int r = 0; r < matrix_1->rows; r++)
             {
