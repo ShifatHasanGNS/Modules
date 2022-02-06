@@ -9,7 +9,6 @@
 #ifndef _INC_NUMBER // include guard for 3rd party interop
 #define _INC_NUMBER
 
-
 // ---------------------------------------------------------------- //
 //                      H E A D E R -- F I L E s                    //
 // ---------------------------------------------------------------- //
@@ -1287,7 +1286,7 @@ Complex_Array new_complex_array(int length)
 
 NumArray random_num_array(int number_of_elements, int rounding_number, double scalar)
 {
-    srand(time(0) % 10);
+    srand(time(0));
     NumArray na = new_num_array(number_of_elements);
     for (int i = 0; i < number_of_elements; i++)
         na->nums[i] = scalar * ((rand() % rounding_number) + 1);
@@ -1844,7 +1843,7 @@ NumArray matrix_to_array(Matrix matrix)
 
 Matrix random_matrix(int rows, int cols, int rounding_number, double scalar)
 {
-    srand(time(0) % 10);
+    srand(time(0));
     Matrix r_matrix = new_matrix(rows, cols);
     for (int r = 0; r < rows; r++)
     {
@@ -2831,7 +2830,7 @@ double sum_num_array(NumArray array)
 
 double mean_num_array(NumArray array)
 {
-    return sum_num_array(array) / (array->len);
+    return (sum_num_array(array) / (array->len));
 }
 
 double product_num_array(NumArray array)
@@ -4308,4 +4307,4 @@ char **types_of_matrix(Matrix matrix, text_style text_style)
 }
 
 #pragma warning(pop) // _UCRT_DISABLED_WARNINGS
-#endif // _INC_NUMBER
+#endif               // _INC_NUMBER
