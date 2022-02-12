@@ -2121,14 +2121,14 @@ Matrix transpose(Matrix matrix)
     return transposed_matrix;
 }
 
-Matrix reform(Matrix matrix, int rows, int cols)
+Matrix reshape(Matrix matrix, int rows, int cols)
 {
     if (!is_null(matrix) && (rows * cols) == (matrix->rows * matrix->cols))
         return array_to_matrix(matrix_to_array(matrix), rows, cols);
     return matrix;
 }
 
-Matrix reshape(Matrix matrix, int rows, int cols)
+Matrix resize(Matrix matrix, int rows, int cols)
 {
     Matrix m = new_matrix(rows, cols);
     for (int r = 0; r < matrix->rows; r++)
@@ -2143,7 +2143,7 @@ Matrix append_row_matrix(Matrix base_matrix, Matrix row_matrix)
 {
     if (row_matrix->rows == 1)
     {
-        Matrix new_matrix = reshape(base_matrix, base_matrix->rows + 1, base_matrix->cols);
+        Matrix new_matrix = resize(base_matrix, base_matrix->rows + 1, base_matrix->cols);
         for (int c = 0; c < base_matrix->cols; c++)
             new_matrix->data[base_matrix->rows][c] = row_matrix->data[0][c];
         return new_matrix;
@@ -2155,7 +2155,7 @@ Matrix append_column_matrix(Matrix base_matrix, Matrix column_matrix)
 {
     if (column_matrix->cols == 1)
     {
-        Matrix new_matrix = reshape(base_matrix, base_matrix->rows, base_matrix->cols + 1);
+        Matrix new_matrix = resize(base_matrix, base_matrix->rows, base_matrix->cols + 1);
         for (int r = 0; r < base_matrix->rows; r++)
             new_matrix->data[r][base_matrix->cols] = column_matrix->data[r][0];
         return new_matrix;
