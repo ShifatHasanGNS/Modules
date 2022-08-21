@@ -632,6 +632,7 @@ int last_digit_int(int number, int power) // number, power >= 0
         else if (m == 0)
             return (n == 2 || n == 8) ? 6 : 1;
     }
+    return -1;
 }
 
 int last_digit_uint(unsigned int number, unsigned int power) // number, power >= 0
@@ -666,6 +667,7 @@ int last_digit_uint(unsigned int number, unsigned int power) // number, power >=
         else if (m == 0)
             return (n == 2 || n == 8) ? 6 : 1;
     }
+    return -1;
 }
 
 int last_digit_ulint(unsigned long int number, unsigned long int power) // number, power >= 0
@@ -700,6 +702,7 @@ int last_digit_ulint(unsigned long int number, unsigned long int power) // numbe
         else if (m == 0)
             return (n == 2 || n == 8) ? 6 : 1;
     }
+    return -1;
 }
 
 int last_digit_ullint(unsigned long long int number, unsigned long long int power) // number, power >= 0
@@ -734,24 +737,28 @@ int last_digit_ullint(unsigned long long int number, unsigned long long int powe
         else if (m == 0)
             return (n == 2 || n == 8) ? 6 : 1;
     }
+    return -1;
 }
 
 double ln(double x)
 {
     if (x > 0)
         return log(x);
+    return -INFINITY;
 }
 
 double log_double(double base, double x)
 {
     if (x > 0)
         return (ln(x) / ln(base));
+    return -INFINITY;
 }
 
 long double log_ldouble(long double base, long double x)
 {
     if (x > 0)
         return (ln(x) / ln(base));
+    return -INFINITY;
 }
 
 int fibonacci(int n_th)
@@ -771,6 +778,33 @@ int factorial(int n) // MAX --> n = 12
     return N;
 }
 
+char *factorial_str(int n)
+{
+    char *N = (char *)malloc(1024 * sizeof(char));
+    int a[200], counter, temp, i;
+    a[0] = 1;
+    counter = 0;
+    for (; n >= 2; n--)
+    {
+        temp = 0;
+        for (i = 0; i <= counter; i++)
+        {
+            temp = (a[i] * n) + temp;
+            a[i] = temp % 10;
+            temp = temp / 10;
+        }
+        while (temp > 0)
+        {
+            a[++counter] = temp % 10;
+            temp = temp / 10;
+        }
+    }
+    for (i = counter; i >= 0; i--)
+        sprintf(N, "%d", a[i]);
+    return N;
+}
+
+/*
 int multiply_for_factorial_str(int x, int res[], int res_size)
 {
     int carry = 0;
@@ -802,6 +836,7 @@ char *factorial_str(int n)
         sprintf(N, "%s%d", N, res[i]);
     return N;
 }
+*/
 
 double sum(char *expression, char *interval)
 {
@@ -978,7 +1013,7 @@ double integrate(char *integrand, char *interval)
     if (strcmp(lower_bound, upper_bound) == 0)
         return 0;
 
-    double temp, a, b, A, B, C, dx = 0.0000001, answer = 0;
+    double a, b, A, B, C, dx = 0.0000001, answer = 0;
     char *format = "%0.15lf";
     int sign = 1;
     bool m = false;
@@ -1123,6 +1158,7 @@ bool are_identical(Matrix matrix_1, Matrix matrix_2)
             return true;
         return false;
     }
+    return false;
 }
 
 Pair new_pair(int first, int second)
@@ -1439,6 +1475,7 @@ int quadrent_for_complex(Complex z)
         return 3;
     if (real >= 0 && imaginary < 0)
         return 4;
+    return -1;
 }
 
 double argument(Complex z, angle_mode angle_mode)
@@ -1498,6 +1535,7 @@ double argument(Complex z, angle_mode angle_mode)
                 return (-to_degree(arg));
         }
     }
+    return NAN;
 }
 
 double angle_for_complex(Complex z, angle_mode angle_mode)
@@ -1556,7 +1594,9 @@ double angle_for_complex(Complex z, angle_mode angle_mode)
             else if (angle_mode == degree)
                 return (360 - to_degree(arg));
         }
+        return NAN;
     }
+    return NAN;
 }
 
 int quadrent_for_angle(double angle, angle_mode angle_mode)
@@ -1637,8 +1677,9 @@ Complex complex_ln(Complex z)
     double t = argument(z, radian);
     if (r < 0)
         return new_complex(log(abs_double(r)), (t + PI));
-    if (r > 0)
+    else if (r > 0)
         return new_complex(log(r), t);
+    return new_complex(-INFINITY, 0);
 }
 
 Complex complex_log10(Complex z)
@@ -1647,8 +1688,9 @@ Complex complex_log10(Complex z)
     double t = argument(z, radian);
     if (r < 0)
         return new_complex(log(abs_double(r)) / log(10), (t + PI) / log(10));
-    if (r > 0)
+    else if (r > 0)
         return new_complex(log(r) / log(10), t / log(10));
+    return new_complex(-INFINITY, 0);
 }
 
 Complex complex_log(Complex base, Complex z)
@@ -1702,12 +1744,13 @@ char *remove_char(char *str, char c)
     return new_str;
 }
 
-char **split(char *string, char c)
+char **split(char *str, int str_len, char c)
 {
     // Initialize...
-    sprintf(string, "%s ", string);
+    char *string = (char *)malloc((str_len + 3) * sizeof(char));
+    sprintf(string, "%s ", str);
     int len = strlen(string), count_c = 0, number_of_tokens = 0;
-    char str_c[1], **list_of_tokens = malloc(sizeof(char *) * (len - count_c - 2) + sizeof(char) * (len - count_c));
+    char str_c[2], **list_of_tokens = malloc(sizeof(char *) * (len - count_c - 2) + sizeof(char) * (len - count_c));
     sprintf(str_c, "%c", c);
     // Split...
     char *token = strtok(string, str_c);
@@ -1721,12 +1764,12 @@ char **split(char *string, char c)
     return list_of_tokens;
 }
 
-double *parse_number(char *string, int num)
+double *parse_number(char *string, int string_len, int num)
 {
     int count = 0, c = 0, i;
     double temp_num;
     // Get the splitted_String as a 2D_Character_Array...
-    char **splitted_string = split(string, ' ');
+    char **splitted_string = split(string, string_len, ' ');
     // Initialize the Number_Array...
     while (splitted_string[count])
         count++;
@@ -1748,10 +1791,11 @@ double *parse_number(char *string, int num)
 
 Matrix input_matrix(int rows, int cols)
 {
-    int r, c, count;
+    int r, c;
     // Temporary Variables...
     double *temp_row = (double *)malloc(cols * sizeof(double));
     char *temp_str = (char *)malloc(100 * cols * sizeof(char));
+    int len = 100 * cols;
     // Creating the Matrix...
     Matrix matrix = new_matrix(rows, cols);
     // Getting the Matrix_Input...
@@ -1761,7 +1805,7 @@ Matrix input_matrix(int rows, int cols)
         gets(temp_str);
         for (c = 0; c < cols; c++)
             temp_row[c] = 0;
-        temp_row = parse_number(temp_str, cols);
+        temp_row = parse_number(temp_str, len, cols);
         for (c = 0; c < cols; c++)
             matrix->data[r][c] = temp_row[c];
     }
@@ -1926,8 +1970,7 @@ Vector2D vectorize2D(Matrix matrix)
         else if (matrix->cols == 2)
             return new_vector2D(matrix->data[0][0], matrix->data[0][1]);
     }
-    else
-        return new_vector2D(0, 0);
+    return new_vector2D(0, 0);
 }
 
 Vector vectorize(Matrix matrix)
@@ -1950,8 +1993,7 @@ Vector vectorize(Matrix matrix)
         else if (matrix->cols == 3)
             return new_vector(matrix->data[0][0], matrix->data[0][1], matrix->data[0][2]);
     }
-    else
-        return new_vector(0, 0, 0);
+    return new_vector(0, 0, 0);
 }
 
 Polar2D complex_to_polar2D(Complex z, angle_mode angle_mode) // z = (x + iy) ---> r * e^(i * theta)
@@ -1970,6 +2012,7 @@ Complex polar2D_to_complex(Polar2D number) // r * e^(i * theta) ---> (x + iy) = 
         double angle = to_radian(number->theta);
         return scale_complex(new_complex(cos(angle), sin(angle)), number->r);
     }
+    return new_complex(0, 0);
 }
 
 Complex point2D_to_complex(Point2D point)
@@ -2012,7 +2055,7 @@ Polar point_to_polar(Point point, angle_mode angle_mode)
     double r = sqrt(x * x + y + y + z * z);
     double t1 = acos(x / sqrt(x * x + y * y));
     double t2 = acos(z / r);
-    if (angle_mode = degree)
+    if (angle_mode == degree)
     {
         t1 = to_degree(t1);
         t2 = to_degree(t2);
@@ -2449,7 +2492,7 @@ void print_point2D(Point2D point)
 
 void print_point2D_(Point2D point)
 {
-    print_point2D_(point);
+    print_point2D(point);
     newline(1);
 }
 
@@ -2710,13 +2753,11 @@ bool are_similar_matrix(Matrix matrix_1, Matrix matrix_2)
 
 double clip_double(double number, double min, double max)
 {
-
-    if (number >= min && number <= max)
-        return number;
-    else if (number < min)
+    if (number < min)
         return min;
     else if (number > max)
         return max;
+    return number;
 }
 
 NumArray clip_number_array(NumArray array, double min, double max)
@@ -3592,12 +3633,14 @@ Matrix translate_row_vector_matrix(Matrix matrix, Matrix translate_by_row_matrix
 {
     if (!is_null(matrix))
         return add_row_matrix(matrix, translate_by_row_matrix);
+    return matrix;
 }
 
 Matrix translate_column_vector_matrix(Matrix matrix, Matrix translate_by_column_matrix)
 {
     if (!is_null(matrix))
         return add_column_matrix(matrix, translate_by_column_matrix);
+    return matrix;
 }
 
 Matrix scale_row_vector_matrix(Matrix matrix, Matrix scale_by_row_matrix)
@@ -3607,6 +3650,7 @@ Matrix scale_row_vector_matrix(Matrix matrix, Matrix scale_by_row_matrix)
         Matrix scalar_matrix = new_primary_diagonal_matrix(matrix->cols, scale_by_row_matrix);
         return multiply_matrix(matrix, scalar_matrix);
     }
+    return matrix;
 }
 
 Matrix scale_column_vector_matrix(Matrix matrix, Matrix scale_by_column_matrix)
@@ -3616,6 +3660,7 @@ Matrix scale_column_vector_matrix(Matrix matrix, Matrix scale_by_column_matrix)
         Matrix scalar_matrix = new_primary_diagonal_matrix(matrix->cols, transpose(scale_by_column_matrix));
         return transpose(multiply_matrix(scalar_matrix, matrix));
     }
+    return matrix;
 }
 
 Matrix dot_t1(Matrix matrix_1, Matrix matrix_2)
@@ -4306,5 +4351,4 @@ char **types_of_matrix(Matrix matrix, text_style text_style)
     return list_of_types;
 }
 
-#pragma warning(pop) // _UCRT_DISABLED_WARNINGS
-#endif               // _CMATHLIB__ARITHMOS_
+#endif // _CMATHLIB__ARITHMOS_
