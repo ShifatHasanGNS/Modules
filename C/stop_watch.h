@@ -4,7 +4,7 @@
 #include <time.h>
 #include <string.h>
 
-#define TIME(_TIME_STAMP_) clock_gettime(CLOCK_MONOTONIC, &_TIME_STAMP_);
+#define TIME(_TIME_STAMP_) clock_gettime(CLOCK_MONOTONIC, &_TIME_STAMP_)
 
 typedef struct timespec TimeStamp;
 
