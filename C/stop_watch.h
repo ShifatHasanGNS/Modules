@@ -4,6 +4,10 @@
 #include <time.h>
 #include <string.h>
 
+#define TIME(_TIME_STAMP_) clock_gettime(CLOCK_MONOTONIC, &_TIME_STAMP_);
+
+typedef struct timespec TimeStamp;
+
 typedef enum
 {
     nanosecond,
@@ -11,10 +15,6 @@ typedef enum
     milisecond,
     second,
 } time_unit;
-
-typedef struct timespec TimeStamp;
-
-#define TIME(_TIME_STAMP_) clock_gettime(CLOCK_MONOTONIC, &_TIME_STAMP_);
 
 double time_elapsed(TimeStamp before, TimeStamp after, time_unit unit) // returns elapsed time according to the time_unit.
 {
