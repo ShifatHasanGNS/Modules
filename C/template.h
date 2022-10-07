@@ -1,7 +1,5 @@
 #ifndef TEMPLATE_H
 #define TEMPLATE_H
-// add definitions after this line
-
 
 // necessary libraries / header-files
 #include "stdio.h"
