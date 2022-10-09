@@ -23,6 +23,7 @@
 //                            M A C R O s                           //
 // ---------------------------------------------------------------- //
 
+#define DONE printf("Done...\n")
 #define $ (double)
 #define $$ (double[])
 
@@ -168,7 +169,7 @@ typedef struct _Complex_
 
 typedef struct _Complex_Array_
 {
-    uint64_t length;
+    int64_t length;
     Complex *complex_numbers;
 } Complex_Array;
 
@@ -187,20 +188,20 @@ typedef struct _Vector_
 
 typedef struct _NumArray_
 {
-    uint64_t len;
+    int64_t len;
     double *nums;
 } NumArray;
 
 typedef struct _Matrix_
 {
-    uint64_t rows;
-    uint64_t cols;
+    int64_t rows;
+    int64_t cols;
     double **data;
 } Matrix;
 
 typedef struct _Tensor_
 {
-    uint64_t n;
+    int64_t n;
     Matrix *mat;
 } Tensor;
 
@@ -380,7 +381,7 @@ int64_t gcd_int(int64_t a, int64_t b)
     return gcd_int(min, r);
 }
 
-uint64_t gcd_uint(uint64_t a, uint64_t b)
+int64_t gcd_uint(int64_t a, int64_t b)
 {
     int64_t min = (a < b) ? a : b;
     int64_t max = (a > b) ? a : b;
@@ -397,7 +398,7 @@ int64_t lcm_int(int64_t a, int64_t b)
     return ((a * b) / gcd_int(a, b));
 }
 
-uint64_t lcm_uint(uint64_t a, uint64_t b)
+int64_t lcm_uint(int64_t a, int64_t b)
 {
     return ((a * b) / gcd_uint(a, b));
 }
@@ -419,7 +420,7 @@ int64_t power_int(int64_t base, int64_t n)
     return result;
 }
 
-uint64_t power_uint(uint64_t base, uint64_t n)
+int64_t power_uint(int64_t base, int64_t n)
 {
     if (n == 0)
         return 1;
@@ -536,7 +537,7 @@ int64_t last_digit_int(int64_t number, int64_t power) // number, power >= 0
     return -1;
 }
 
-int64_t last_digit_uint(uint64_t number, uint64_t power) // number, power >= 0
+int64_t last_digit_uint(int64_t number, int64_t power) // number, power >= 0
 {
     if (power == 0)
         return 1;
@@ -544,7 +545,7 @@ int64_t last_digit_uint(uint64_t number, uint64_t power) // number, power >= 0
         return 0;
     number = abs_double(number);
     power = abs_double(power);
-    uint64_t n = number - floor(number / 10) * 10;
+    int64_t n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
     if (n == 0 || n == 1 || n == 5 || n == 6)
@@ -555,7 +556,7 @@ int64_t last_digit_uint(uint64_t number, uint64_t power) // number, power >= 0
     }
     else
     {
-        char *str = (char *)malloc(floor(log10(power) + 1) * sizeof(char));
+        char *str = (char *)calloc(floor(log10(power) + 1), sizeof(char));
         sprintf(str, "%lld", power);
         int64_t m = bigmod_str(str, 4);
         FREE_PTR(str);
@@ -604,7 +605,7 @@ int64_t factorial(int64_t n) // MAX --> n = 12
 
 char *factorial_str(int64_t n)
 {
-    char *N = (char *)malloc(1024 * sizeof(char));
+    char *N = (char *)calloc(1024, sizeof(char));
     int64_t a[200], counter, temp, i;
     a[0] = 1;
     counter = 0;
@@ -650,7 +651,7 @@ int64_t multiply_for_factorial_str(int64_t x, int64_t res[], int64_t res_size)
 char *factorial_str(int64_t n)
 {
     int64_t res[1024];
-    char *N = (char *)malloc(1024 * sizeof(char));
+    char *N = (char *)calloc(1024, sizeof(char));
     res[0] = 1;
     int64_t res_size = 1;
     for (int64_t x = 2; x <= n; x++)
@@ -664,8 +665,8 @@ char *factorial_str(int64_t n)
 
 double sum(char *expression, char *interval)
 {
-    char *lower_bound = (char *)malloc(128 * sizeof(char));
-    char *upper_bound = (char *)malloc(128 * sizeof(char));
+    char *lower_bound = (char *)calloc(128, sizeof(char));
+    char *upper_bound = (char *)calloc(128, sizeof(char));
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
     char *format = "%0.15lf";
@@ -728,8 +729,8 @@ double sum(char *expression, char *interval)
 
 double product(char *expression, char *interval)
 {
-    char *lower_bound = (char *)malloc(128 * sizeof(char));
-    char *upper_bound = (char *)malloc(128 * sizeof(char));
+    char *lower_bound = (char *)calloc(128, sizeof(char));
+    char *upper_bound = (char *)calloc(128, sizeof(char));
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
     char *format = "%0.15lf";
@@ -830,8 +831,8 @@ double differentiate(char *function, double x)
 
 double integrate(char *integrand, char *interval)
 {
-    char *lower_bound = (char *)malloc(128 * sizeof(char));
-    char *upper_bound = (char *)malloc(128 * sizeof(char));
+    char *lower_bound = (char *)calloc(128, sizeof(char));
+    char *upper_bound = (char *)calloc(128, sizeof(char));
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
     if (strcmp(lower_bound, upper_bound) == 0)
@@ -1046,7 +1047,7 @@ Vector new_vector(double X, double Y, double Z)
     return v;
 }
 
-NumArray new_num_array(uint64_t number_of_elements)
+NumArray new_num_array(int64_t number_of_elements)
 {
     NumArray na;
     na.len = number_of_elements;
@@ -1055,7 +1056,7 @@ NumArray new_num_array(uint64_t number_of_elements)
     return na;
 }
 
-NumArray new_num_array_(uint64_t number_of_elements, double nums[])
+NumArray new_num_array_(int64_t number_of_elements, double nums[])
 {
     NumArray na;
     na.len = number_of_elements;
@@ -1063,24 +1064,24 @@ NumArray new_num_array_(uint64_t number_of_elements, double nums[])
     return na;
 }
 
-Matrix new_matrix(uint64_t rows, uint64_t cols)
+Matrix new_matrix(int64_t rows, int64_t cols)
 {
     Matrix matrix;
     matrix.rows = rows;
     matrix.cols = cols;
-    double **data = (double **)malloc(sizeof(double *) * rows);
+    double **data = (double **)calloc(rows, sizeof(double *));
     for (int64_t x = 0; x < rows; x++)
         data[x] = (double *)calloc(cols, sizeof(double));
     matrix.data = data;
     return matrix;
 }
 
-Tensor new_tensor(uint64_t number_of_mats, uint64_t rows, uint64_t cols)
+Tensor new_tensor(int64_t number_of_mats, int64_t rows, int64_t cols)
 {
     Tensor tensor;
     tensor.n = number_of_mats;
-    Matrix *mat = (Matrix *)malloc(sizeof(Matrix) * number_of_mats);
-    for (uint64_t x = 0; x < number_of_mats; x++)
+    Matrix *mat = (Matrix *)calloc(number_of_mats, sizeof(Matrix));
+    for (int64_t x = 0; x < number_of_mats; x++)
         mat[x] = new_matrix(rows, cols);
     tensor.mat = mat;
     return tensor;
@@ -1136,11 +1137,11 @@ Complex new_complex(double real_part, double imaginary_part)
     return complex_number;
 }
 
-Complex_Array new_complex_array(uint64_t length)
+Complex_Array new_complex_array(int64_t length)
 {
     Complex_Array complex_array;
     complex_array.length = length;
-    complex_array.complex_numbers = (Complex *)malloc(length * sizeof(Complex));
+    complex_array.complex_numbers = (Complex *)calloc(length, sizeof(Complex));
     return complex_array;
 }
 
@@ -1558,7 +1559,7 @@ _Bool is_number(char *string)
 
 char *remove_char(char *str, char c)
 {
-    char *new_str = (char *)malloc(strlen(str) * sizeof(char));
+    char *new_str = (char *)calloc(strlen(str), sizeof(char));
     strcpy(new_str, str);
     int64_t count = 0;
     for (int64_t i = 0; new_str[i]; i++)
@@ -1571,10 +1572,10 @@ char *remove_char(char *str, char c)
 char **split(char *str, int64_t str_len, char c)
 {
     // Initialize...
-    char *string = (char *)malloc((str_len + 3) * sizeof(char));
+    char *string = (char *)calloc((str_len + 3), sizeof(char));
     sprintf(string, "%s ", str);
     int64_t len = strlen(string), count_c = 0, number_of_tokens = 0;
-    char str_c[2], **list_of_tokens = malloc(sizeof(char *) * (len - count_c - 2) + sizeof(char) * (len - count_c));
+    char str_c[2], **list_of_tokens = (char **)malloc(sizeof(char *) * (len - count_c - 2) + sizeof(char) * (len - count_c));
     sprintf(str_c, "%c", c);
     // Split...
     char *token = strtok(string, str_c);
@@ -1597,7 +1598,7 @@ double *parse_number(char *string, int64_t string_len, int64_t num)
     // Initialize the Number_Array...
     while (splitted_string[count])
         count++;
-    double *list_of_nums = (double *)malloc(count * sizeof(double));
+    double *list_of_nums = (double *)calloc(count, sizeof(double));
     // Parse the numbers...
     for (i = 0; i < count; i++)
     {
@@ -1617,8 +1618,8 @@ Matrix input_matrix(int64_t rows, int64_t cols)
 {
     int64_t r, c;
     // Temporary Variables...
-    double *temp_row = (double *)malloc(cols * sizeof(double));
-    char *temp_str = (char *)malloc(100 * cols * sizeof(char));
+    double *temp_row = (double *)calloc(cols, sizeof(double));
+    char *temp_str = (char *)calloc((100 * cols), sizeof(char));
     int64_t len = 100 * cols;
     // Creating the Matrix...
     Matrix matrix = new_matrix(rows, cols);
@@ -1651,14 +1652,14 @@ Matrix input_square_matrix(int64_t order)
     return input_matrix(order, order);
 }
 
-Matrix matrix_from_array(uint64_t rows, uint64_t cols, NumArray array)
+Matrix matrix_from_array(int64_t rows, int64_t cols, NumArray array)
 {
     if ((rows * cols) == array.len)
     {
         Matrix matrix = new_matrix(rows, cols);
-        for (uint64_t r = 0; r < rows; r++)
+        for (int64_t r = 0; r < rows; r++)
         {
-            for (uint64_t c = 0; c < cols; c++)
+            for (int64_t c = 0; c < cols; c++)
                 matrix.data[r][c] = array.nums[cols * r + c];
         }
         return matrix;
@@ -1666,7 +1667,7 @@ Matrix matrix_from_array(uint64_t rows, uint64_t cols, NumArray array)
     return new_matrix(0, 0);
 }
 
-Matrix matrix_from_array_(uint64_t rows, uint64_t cols, double nums[])
+Matrix matrix_from_array_(int64_t rows, int64_t cols, double nums[])
 {
     return matrix_from_array(rows, cols, new_num_array_(rows * cols, nums));
 }
@@ -2006,7 +2007,7 @@ Matrix resize(Matrix matrix, int64_t rows, int64_t cols)
     return m;
 }
 
-NumArray nth_row_data(Matrix matrix, uint64_t nth_row) // First Column = 0
+NumArray nth_row_data(Matrix matrix, int64_t nth_row) // First Column = 0
 {
     NumArray row_data = new_num_array(matrix.cols);
     for (int64_t c = 0; c < matrix.cols; c++)
@@ -2014,7 +2015,7 @@ NumArray nth_row_data(Matrix matrix, uint64_t nth_row) // First Column = 0
     return row_data;
 }
 
-NumArray nth_column_data(Matrix matrix, uint64_t nth_column) // First Row = 0
+NumArray nth_column_data(Matrix matrix, int64_t nth_column) // First Row = 0
 {
     NumArray col_data = new_num_array(matrix.rows);
     for (int64_t r = 0; r < matrix.rows; r++)
@@ -3653,7 +3654,7 @@ char **types_of_matrix(Matrix matrix, text_style text_style)
     for (int i = 0; i < 22; i++)
         list_of_types[i] = (char *)calloc(32, sizeof(char));
 
-    uint64_t count = 0;
+    int64_t count = 0;
 
     if (is_type_of(matrix, row_matrix))
     {
@@ -4139,16 +4140,14 @@ void print_num_array_(NumArray num_array)
     newline(1);
 }
 
-uint64_t num_len(double number, uint64_t number_of_digits_after_the_radix_dot) // number --> 123.000000 (length = 10), -56789.101010 (length = 13), ...
+int64_t num_len(double number, int64_t number_of_digits_after_the_radix_dot)
 {
-    uint64_t length = (number < 0.0) ? 2 : 1;
-    length += number_of_digits_after_the_radix_dot;
-    uint64_t abs_int_num = (uint64_t)abs_double(number);
-    uint64_t count = 0;
-    if (abs_int_num < 1)
-    {
-        count = 1;
-    }
+    int64_t length = (number < 0.0) ? 1 : 0;
+    length += (number_of_digits_after_the_radix_dot == 0) ? 0 : (number_of_digits_after_the_radix_dot + 1);
+    int64_t abs_int_num = (int64_t)abs_double(number);
+    int64_t count = 0;
+    if (abs_int_num == 0)
+        return (length + 1);
     while (abs_int_num != 0)
     {
         abs_int_num /= 10;
@@ -4158,43 +4157,27 @@ uint64_t num_len(double number, uint64_t number_of_digits_after_the_radix_dot) /
     return length;
 }
 
-uint64_t min_num_len(NumArray numbers, uint64_t number_of_digits_after_the_radix_dot)
+int64_t max_num_len(NumArray numbers, int64_t number_of_digits_after_the_radix_dot)
 {
-    double min_num = numbers.nums[0];
-    for (uint64_t i = 1; i < numbers.len; i++)
+    if (numbers.len == 0)
+        return 0;
+    int64_t max_len = num_len(numbers.nums[0], number_of_digits_after_the_radix_dot);
+    int64_t next_num_len = 0;
+    if (numbers.len == 1)
+        return max_len;
+    for (int64_t i = 1; i < numbers.len; i++)
     {
-        if (abs_double(numbers.nums[i]) < abs_double(min_num))
-            min_num = numbers.nums[i];
+        next_num_len = num_len(numbers.nums[i], number_of_digits_after_the_radix_dot);
+        if (next_num_len > max_len)
+            max_len = next_num_len;
     }
-    return num_len(min_num, number_of_digits_after_the_radix_dot);
+    return max_len;
 }
 
-uint64_t max_num_len(NumArray numbers, uint64_t number_of_digits_after_the_radix_dot)
+int64_t *max_num_len_array(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
 {
-    double max_num = numbers.nums[0];
-    for (uint64_t i = 1; i < numbers.len; i++)
-    {
-        if (abs_double(numbers.nums[i]) > abs_double(max_num))
-            max_num = numbers.nums[i];
-    }
-    return num_len(max_num, number_of_digits_after_the_radix_dot);
-}
-
-char *pre_space(double number, uint64_t max_number_length, uint64_t number_of_digits_after_the_radix_dot)
-{
-    uint64_t extra_space_number = max_number_length - num_len(number, number_of_digits_after_the_radix_dot);
-    char *spaces = (char *)calloc(extra_space_number, sizeof(char));
-    for (uint64_t i = 0; i < extra_space_number; i++)
-    {
-        spaces[i] = ' ';
-    }
-    return spaces;
-}
-
-uint64_t *max_num_len_array(Matrix matrix, uint64_t number_of_digits_after_the_radix_dot)
-{
-    uint64_t *max_number_length_array = (uint64_t *)malloc(matrix.cols * sizeof(uint64_t));
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    int64_t *max_number_length_array = (int64_t *)calloc(matrix.cols, sizeof(int64_t));
+    for (int64_t c = 0; c < matrix.cols; c++)
     {
         NumArray matrix_column_data = nth_column_data(matrix, c);
         max_number_length_array[c] = max_num_len(matrix_column_data, number_of_digits_after_the_radix_dot);
@@ -4202,17 +4185,28 @@ uint64_t *max_num_len_array(Matrix matrix, uint64_t number_of_digits_after_the_r
     return max_number_length_array;
 }
 
-void print_matrix(Matrix matrix)
+char *pre_space(double number, int64_t max_number_length, int64_t number_of_digits_after_the_radix_dot)
 {
-    uint64_t number_of_digits_after_the_radix_dot = 10;
-    uint64_t *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
+    int64_t extra_space_number = max_number_length - num_len(number, number_of_digits_after_the_radix_dot);
+    char *spaces = (char *)calloc(extra_space_number, sizeof(char));
+    for (int64_t i = 0; i < extra_space_number; i++)
+        spaces[i] = ' ';
+    return spaces;
+}
+
+void print_matrix(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
+{
+    char *format = (char *)calloc(128, sizeof(char));
+    sprintf(format, " %%s%%0.%lldlf ", number_of_digits_after_the_radix_dot);
+    int64_t *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
+
     printf("[[");
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
         if (r > 0)
             printf(" [");
-        for (uint64_t c = 0; c < matrix.cols; c++)
-            printf(" %s%0.10lf ", pre_space(matrix.data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), matrix.data[r][c]);
+        for (int64_t c = 0; c < matrix.cols; c++)
+            printf((const char *)format, pre_space(matrix.data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), matrix.data[r][c]);
         if (r < (matrix.rows - 1))
             printf("]\n");
         else
@@ -4220,28 +4214,29 @@ void print_matrix(Matrix matrix)
     }
 }
 
-void print_matrix_(Matrix matrix)
+void print_matrix_(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
 {
-    print_matrix(matrix);
+    print_matrix(matrix, number_of_digits_after_the_radix_dot);
     newline(1);
 }
 
-void print_tensor(Tensor tensor)
+void print_tensor(Tensor tensor, int64_t number_of_digits_after_the_radix_dot)
 {
-    uint64_t number_of_digits_after_the_radix_dot = 10;
+    char *format = (char *)calloc(128, sizeof(char));
+    sprintf(format, " %%s%%0.%lldlf ", number_of_digits_after_the_radix_dot);
     printf("[[[");
     for (int64_t n = 0; n < tensor.n; n++)
     {
         if (n > 0)
             printf(" [[");
 
-        uint64_t *max_number_length_array = max_num_len_array(tensor.mat[n], number_of_digits_after_the_radix_dot);
+        int64_t *max_number_length_array = max_num_len_array(tensor.mat[n], number_of_digits_after_the_radix_dot);
         for (int64_t r = 0; r < tensor.mat[n].rows; r++)
         {
             if (r > 0)
                 printf("  [");
             for (int64_t c = 0; c < tensor.mat[n].cols; c++)
-                printf(" %s%0.10lf ", pre_space(tensor.mat[n].data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), tensor.mat[n].data[r][c]);
+                printf(format, pre_space(tensor.mat[n].data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), tensor.mat[n].data[r][c]);
             if (r < (tensor.mat[n].rows - 1))
                 printf("]\n");
             else
@@ -4255,9 +4250,9 @@ void print_tensor(Tensor tensor)
     }
 }
 
-void print_tensor_(Tensor tensor)
+void print_tensor_(Tensor tensor, int64_t number_of_digits_after_the_radix_dot)
 {
-    print_tensor(tensor);
+    print_tensor(tensor, number_of_digits_after_the_radix_dot);
     newline(1);
 }
 
