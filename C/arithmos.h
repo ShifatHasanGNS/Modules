@@ -1668,29 +1668,29 @@ Matrix matrix_from_array(uint64_t rows, uint64_t cols, NumArray array)
 
 Matrix matrix_from_array_(uint64_t rows, uint64_t cols, double nums[])
 {
-    return matrix_from_array(new_num_array_(rows * cols, nums), rows, cols);
+    return matrix_from_array(rows, cols, new_num_array_(rows * cols, nums));
 }
 
 Matrix column_matrix_from_array(NumArray array)
 {
-    return matrix_from_array(array, array.len, 1);
+    return matrix_from_array(array.len, 1, array);
 }
 
 Matrix column_matrix_from_array_(int64_t len, double array[])
 {
     NumArray narray = new_num_array_(len, array);
-    return matrix_from_array(narray, len, 1);
+    return matrix_from_array(len, 1, narray);
 }
 
 Matrix row_matrix_from_array(NumArray array)
 {
-    return matrix_from_array(array, 1, array.len);
+    return matrix_from_array(1, array.len, array);
 }
 
 Matrix row_matrix_from_array_(int64_t len, double array[])
 {
     NumArray narray = new_num_array_(len, array);
-    return matrix_from_array(narray, 1, len);
+    return matrix_from_array(1, len, narray);
 }
 
 NumArray array_from_matrix(Matrix matrix)
@@ -1991,7 +1991,7 @@ Matrix transpose(Matrix matrix)
 Matrix reshape(Matrix matrix, int64_t rows, int64_t cols)
 {
     if (!is_null(matrix) && (rows * cols) == (matrix.rows * matrix.cols))
-        return matrix_from_array(array_from_matrix(matrix), rows, cols);
+        return matrix_from_array(rows, cols, array_from_matrix(matrix));
     return matrix;
 }
 
@@ -2265,389 +2265,6 @@ Matrix get_column_matrix(Matrix base_matrix, int64_t index_of_col)
         return m;
     }
     return new_matrix(0, 0);
-}
-
-void print_pair(Pair pair)
-{
-    printf("(%lld, %lld)", pair.first, pair.second);
-}
-
-void print_pair_(Pair pair)
-{
-    print_pair(pair);
-    newline(1);
-}
-
-void print_polar2D(Polar2D point)
-{
-    if (point.r == 0.0 && point.theta == 0.0)
-        printf("(0, 0)");
-    else if (point.r != 0.0 && point.theta == 0.0)
-        printf("(%0.10lf, 0)", point.r);
-    else if (point.r == 0.0 && point.theta != 0.0)
-        printf("(0, %0.10lf)", point.theta);
-    else
-        printf("(%0.10lf, %0.10lf)", point.r, point.theta);
-}
-
-void print_polar2D_(Polar2D point)
-{
-    print_polar2D(point);
-    newline(1);
-}
-
-void print_polar(Polar point)
-{
-    if (point.r == 0.0 && point.theta_x == 0.0 && point.theta_z == 0.0)
-        printf("(0, 0, 0)");
-    else if (point.r != 0.0 && point.theta_x == 0.0 && point.theta_z == 0.0)
-        printf("(%0.10lf, 0, 0)", point.r);
-    else if (point.r == 0.0 && point.theta_x != 0.0 && point.theta_z == 0.0)
-        printf("(0, %0.10lf, 0)", point.theta_x);
-    else if (point.r != 0.0 && point.theta_x != 0.0 && point.theta_z == 0.0)
-        printf("(%0.10lf, %0.10lf, 0)", point.r, point.theta_x);
-    else if (point.r == 0.0 && point.theta_x == 0.0 && point.theta_z != 0.0)
-        printf("(0, 0, %0.10lf)", point.theta_z);
-    else if (point.r == 0.0 && point.theta_x != 0.0 && point.theta_z != 0.0)
-        printf("(0, %0.10lf, %0.10lf)", point.theta_x, point.theta_z);
-    else if (point.r != 0.0 && point.theta_x == 0.0 && point.theta_z != 0.0)
-        printf("(%0.10lf, 0, %0.10lf)", point.r, point.theta_z);
-    else
-        printf("(%0.10lf, %0.10lf, %0.10lf)", point.r, point.theta_x, point.theta_z);
-}
-
-void print_polar_(Polar point)
-{
-    print_polar(point);
-    newline(1);
-}
-
-void print_point2D(Point2D point)
-{
-    if (point.X == 0.0 && point.Y == 0.0)
-        printf("(0, 0)");
-    else if (point.X != 0.0 && point.Y == 0.0)
-        printf("(%0.10lf, 0)", point.X);
-    else if (point.X == 0.0 && point.Y != 0.0)
-        printf("(0, %0.10lf)", point.Y);
-    else
-        printf("(%0.10lf, %0.10lf)", point.X, point.Y);
-}
-
-void print_point2D_(Point2D point)
-{
-    print_point2D(point);
-    newline(1);
-}
-
-void print_point(Point point)
-{
-    if (point.X == 0.0 && point.Y == 0.0 && point.Z == 0.0)
-        printf("(0, 0, 0)");
-    else if (point.X != 0.0 && point.Y == 0.0 && point.Z == 0.0)
-        printf("(%0.10lf, 0, 0)", point.X);
-    else if (point.X == 0.0 && point.Y != 0.0 && point.Z == 0.0)
-        printf("(0, %0.10lf, 0)", point.Y);
-    else if (point.X == 0.0 && point.Y == 0.0 && point.Z != 0.0)
-        printf("(0, 0, %0.10lf)", point.Z);
-    else if (point.X != 0.0 && point.Y != 0.0 && point.Z == 0.0)
-        printf("(%0.10lf, %0.10lf, 0)", point.X, point.Y);
-    else if (point.X != 0.0 && point.Y == 0.0 && point.Z != 0.0)
-        printf("(%0.10lf, 0, %0.10lf)", point.X, point.Z);
-    else if (point.X == 0.0 && point.Y != 0.0 && point.Z != 0.0)
-        printf("(0, %0.10lf, %0.10lf)", point.Y, point.Z);
-    else
-        printf("(%0.10lf, %0.10lf, %0.10lf)", point.X, point.Y, point.Z);
-}
-
-void print_point_(Point point)
-{
-    print_point(point);
-    newline(1);
-}
-
-void print_complex(Complex number)
-{
-    if (number.real == 0.0 && number.imaginary == 0.0)
-        printf("(0)");
-    else if (number.real != 0.0 && number.imaginary == 0.0)
-        printf("(%0.10lf)", number.real);
-    else if (number.real == 0.0 && number.imaginary != 0.0)
-        printf("(%0.10lfi)", number.imaginary);
-    else
-    {
-        if (number.imaginary < 0.0)
-            printf("(%0.10lf - %0.10lfi)", number.real, abs_double(number.imaginary));
-        else
-            printf("(%0.10lf + %0.10lfi)", number.real, number.imaginary);
-    }
-}
-
-void print_complex_(Complex number)
-{
-    print_complex(number);
-    newline(1);
-}
-
-void print_complex_array(Complex_Array complex_array)
-{
-    if (complex_array.length == 1)
-    {
-        printf("[");
-        print_complex(complex_array.complex_numbers[0]);
-        printf("]\n");
-    }
-    else if (complex_array.length > 1)
-    {
-        printf("[");
-        print_complex(complex_array.complex_numbers[0]);
-        for (int64_t i = 1; i < complex_array.length; i++)
-        {
-            printf(", ");
-            print_complex(complex_array.complex_numbers[i]);
-        }
-        printf("]\n");
-    }
-}
-
-void print_complex_array_(Complex_Array complex_array)
-{
-    print_complex_array(complex_array);
-    newline(1);
-}
-
-void print_vector2D(Vector2D vector)
-{
-    if (vector.X == 0.0 && vector.Y == 0.0)
-        printf("<0>");
-    else if (vector.X != 0.0 && vector.Y == 0.0)
-        printf("<%0.10lfi>", vector.X);
-    else if (vector.X == 0.0 && vector.Y != 0.0)
-        printf("<%0.10lfj>", vector.Y);
-    else
-    {
-        if (vector.Y < 0.0)
-            printf("<%0.10lfi - %0.10lfj>", vector.X, abs_double(vector.Y));
-        else
-            printf("<%0.10lfi + %0.10lfj>", vector.X, vector.Y);
-    }
-}
-
-void print_vector2D_(Vector2D vector)
-{
-    print_vector2D(vector);
-    newline(1);
-}
-
-void print_vector(Vector vector)
-{
-    if (vector.X == 0.0 && vector.Y == 0.0 && vector.Z == 0.0)
-        printf("<0>");
-    else if (vector.X != 0.0 && vector.Y == 0.0 && vector.Z == 0.0)
-        printf("<%0.10lfi>", vector.X);
-    else if (vector.X == 0.0 && vector.Y != 0.0 && vector.Z == 0.0)
-        printf("<%0.10lfj>", vector.Y);
-    else if (vector.X == 0.0 && vector.Y == 0.0 && vector.Z != 0.0)
-        printf("<%0.10lfk>", vector.Z);
-    else if (vector.X != 0.0 && vector.Y != 0.0 && vector.Z == 0.0)
-    {
-        if (vector.Y < 0.0)
-            printf("<%0.10lfi - %0.10lfj>", vector.X, abs_double(vector.Y));
-        else
-            printf("<%0.10lfi + %0.10lfj>", vector.X, vector.Y);
-    }
-    else if (vector.X != 0.0 && vector.Y == 0.0 && vector.Z != 0.0)
-    {
-        if (vector.Z < 0.0)
-            printf("<%0.10lfi - %0.10lfk>", vector.X, abs_double(vector.Z));
-        else
-            printf("<%0.10lfi + %0.10lfk>", vector.X, vector.Z);
-    }
-    else if (vector.X == 0.0 && vector.Y != 0.0 && vector.Z != 0.0)
-    {
-        if (vector.Z < 0.0)
-            printf("<%0.10lfj - %0.10lfk>", vector.Y, abs_double(vector.Z));
-        else
-            printf("<%0.10lfj + %0.10lfk>", vector.Y, vector.Z);
-    }
-    else
-    {
-        if (vector.Y < 0.0 && vector.Z < 0.0)
-            printf("<%0.10lfi - %0.10lfj - %0.10lfk>", vector.X, sqrt(vector.Y * vector.Y), sqrt(vector.Z * vector.Z));
-        else if (vector.Y < 0.0 && vector.Z > 0.0)
-            printf("<%0.10lfi - %0.10lfj + %0.10lfk>", vector.X, sqrt(vector.Y * vector.Y), vector.Z);
-        else if (vector.Y > 0.0 && vector.Z < 0.0)
-            printf("<%0.10lfi + %0.10lfj - %0.10lfk>", vector.X, vector.Y, sqrt(vector.Z * vector.Z));
-        else
-            printf("<%0.10lfi + %0.10lfj + %0.10lfk>", vector.X, vector.Y, vector.Z);
-    }
-}
-
-void print_vector_(Vector vector)
-{
-    print_vector(vector);
-    newline(1);
-}
-
-void print_num_array(NumArray num_array)
-{
-    printf("{");
-    for (int64_t i = 0; i < num_array.len; i++)
-    {
-        printf("%0.10lf", num_array.nums[i]);
-        if ((i + 1) != num_array.len)
-            printf(", ");
-    }
-    printf("}");
-}
-
-void print_num_array_(NumArray num_array)
-{
-    print_num_array(num_array);
-    newline(1);
-}
-
-uint64_t num_len(double number, uint64_t number_of_digits_after_the_radix_dot) // number --> 123.000000 (length = 10), -56789.101010 (length = 13), ...
-{
-    uint64_t length = (number < 0.0) ? 2 : 1;
-    length += number_of_digits_after_the_radix_dot;
-    uint64_t abs_int_num = (uint64_t)abs_double(number);
-    uint64_t count = 0;
-    if (abs_int_num < 1)
-    {
-        count = 1;
-    }
-    while (abs_int_num != 0)
-    {
-        abs_int_num /= 10;
-        count++;
-    }
-    length += count;
-    return length;
-}
-
-uint64_t min_num_len(NumArray numbers, uint64_t number_of_digits_after_the_radix_dot)
-{
-    double min_num = numbers.nums[0];
-    for (uint64_t i = 1; i < numbers.len; i++)
-    {
-        if (abs_double(numbers.nums[i]) < abs_double(min_num))
-            min_num = numbers.nums[i];
-    }
-    return num_len(min_num, number_of_digits_after_the_radix_dot);
-}
-
-uint64_t max_num_len(NumArray numbers, uint64_t number_of_digits_after_the_radix_dot)
-{
-    double max_num = numbers.nums[0];
-    for (uint64_t i = 1; i < numbers.len; i++)
-    {
-        if (abs_double(numbers.nums[i]) > abs_double(max_num))
-            max_num = numbers.nums[i];
-    }
-    return num_len(max_num, number_of_digits_after_the_radix_dot);
-}
-
-char *pre_space(double number, uint64_t max_number_length, uint64_t number_of_digits_after_the_radix_dot)
-{
-    uint64_t extra_space_number = max_number_length - num_len(number, number_of_digits_after_the_radix_dot);
-    char *spaces = (char *)calloc(extra_space_number, sizeof(char));
-    for (uint64_t i = 0; i < extra_space_number; i++)
-    {
-        spaces[i] = ' ';
-    }
-    return spaces;
-}
-
-uint64_t *max_num_len_array(Matrix matrix, uint64_t number_of_digits_after_the_radix_dot)
-{
-    uint64_t *max_number_length_array = (uint64_t *)malloc(matrix.cols * sizeof(uint64_t));
-    for (uint64_t c = 0; c < matrix.cols; c++)
-    {
-        NumArray matrix_column_data = nth_column_data(matrix, c);
-        max_number_length_array[c] = max_num_len(matrix_column_data, number_of_digits_after_the_radix_dot);
-    }
-    return max_number_length_array;
-}
-
-void print_matrix(Matrix matrix)
-{
-    uint64_t number_of_digits_after_the_radix_dot = 10;
-    uint64_t *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
-    printf("[[");
-    for (int64_t r = 0; r < matrix.rows; r++)
-    {
-        if (r > 0)
-            printf(" [");
-        for (int64_t c = 0; c < matrix.cols; c++)
-            printf(" %s%0.10lf ", pre_space(matrix.data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), matrix.data[r][c]);
-        if (r < (matrix.rows - 1))
-            printf("]\n");
-        else
-            printf("]]");
-    }
-}
-
-void print_matrix_(Matrix matrix)
-{
-    print_matrix(matrix);
-    newline(1);
-}
-
-void print_tensor(Tensor tensor)
-{
-    uint64_t number_of_digits_after_the_radix_dot = 10;
-    printf("[[[");
-    for (int64_t n = 0; n < tensor.n; n++)
-    {
-        if (n > 0)
-            printf(" [[");
-
-        uint64_t *max_number_length_array = max_num_len_array(tensor.mat[n], number_of_digits_after_the_radix_dot);
-        for (int64_t r = 0; r < tensor.mat[n].rows; r++)
-        {
-            if (r > 0)
-                printf("  [");
-            for (int64_t c = 0; c < tensor.mat[n].cols; c++)
-                printf(" %s%0.10lf ", pre_space(tensor.mat[n].data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), tensor.mat[n].data[r][c]);
-            if (r < (tensor.mat[n].rows - 1))
-                printf("]\n");
-            else
-                printf("]");
-        }
-
-        if (n < (tensor.n - 1))
-            printf("]\n\n");
-        else
-            printf("]]");
-    }
-}
-
-void print_tensor_(Tensor tensor)
-{
-    print_tensor(tensor);
-    newline(1);
-}
-
-void print_matrix_types(Matrix matrix)
-{
-    char **types = types_of_matrix(matrix);
-    int64_t count = 0;
-    while (types[count][0])
-        count++;
-    if (count == 0)
-        return;
-    printf("[");
-    printf("'%s'", types[0]);
-    for (int64_t i = 1; i < count; i++)
-        printf(", '%s'", types[i]);
-    printf("]");
-}
-
-void print_matrix_types_(Matrix matrix)
-{
-    print_matrix_types(matrix);
-    newline(1);
 }
 
 Pair matrix_shape(Matrix matrix)
@@ -4279,6 +3896,389 @@ char **types_of_matrix(Matrix matrix, text_style text_style)
     }
 
     return list_of_types;
+}
+
+void print_pair(Pair pair)
+{
+    printf("(%lld, %lld)", pair.first, pair.second);
+}
+
+void print_pair_(Pair pair)
+{
+    print_pair(pair);
+    newline(1);
+}
+
+void print_polar2D(Polar2D point)
+{
+    if (point.r == 0.0 && point.theta == 0.0)
+        printf("(0, 0)");
+    else if (point.r != 0.0 && point.theta == 0.0)
+        printf("(%0.10lf, 0)", point.r);
+    else if (point.r == 0.0 && point.theta != 0.0)
+        printf("(0, %0.10lf)", point.theta);
+    else
+        printf("(%0.10lf, %0.10lf)", point.r, point.theta);
+}
+
+void print_polar2D_(Polar2D point)
+{
+    print_polar2D(point);
+    newline(1);
+}
+
+void print_polar(Polar point)
+{
+    if (point.r == 0.0 && point.theta_x == 0.0 && point.theta_z == 0.0)
+        printf("(0, 0, 0)");
+    else if (point.r != 0.0 && point.theta_x == 0.0 && point.theta_z == 0.0)
+        printf("(%0.10lf, 0, 0)", point.r);
+    else if (point.r == 0.0 && point.theta_x != 0.0 && point.theta_z == 0.0)
+        printf("(0, %0.10lf, 0)", point.theta_x);
+    else if (point.r != 0.0 && point.theta_x != 0.0 && point.theta_z == 0.0)
+        printf("(%0.10lf, %0.10lf, 0)", point.r, point.theta_x);
+    else if (point.r == 0.0 && point.theta_x == 0.0 && point.theta_z != 0.0)
+        printf("(0, 0, %0.10lf)", point.theta_z);
+    else if (point.r == 0.0 && point.theta_x != 0.0 && point.theta_z != 0.0)
+        printf("(0, %0.10lf, %0.10lf)", point.theta_x, point.theta_z);
+    else if (point.r != 0.0 && point.theta_x == 0.0 && point.theta_z != 0.0)
+        printf("(%0.10lf, 0, %0.10lf)", point.r, point.theta_z);
+    else
+        printf("(%0.10lf, %0.10lf, %0.10lf)", point.r, point.theta_x, point.theta_z);
+}
+
+void print_polar_(Polar point)
+{
+    print_polar(point);
+    newline(1);
+}
+
+void print_point2D(Point2D point)
+{
+    if (point.X == 0.0 && point.Y == 0.0)
+        printf("(0, 0)");
+    else if (point.X != 0.0 && point.Y == 0.0)
+        printf("(%0.10lf, 0)", point.X);
+    else if (point.X == 0.0 && point.Y != 0.0)
+        printf("(0, %0.10lf)", point.Y);
+    else
+        printf("(%0.10lf, %0.10lf)", point.X, point.Y);
+}
+
+void print_point2D_(Point2D point)
+{
+    print_point2D(point);
+    newline(1);
+}
+
+void print_point(Point point)
+{
+    if (point.X == 0.0 && point.Y == 0.0 && point.Z == 0.0)
+        printf("(0, 0, 0)");
+    else if (point.X != 0.0 && point.Y == 0.0 && point.Z == 0.0)
+        printf("(%0.10lf, 0, 0)", point.X);
+    else if (point.X == 0.0 && point.Y != 0.0 && point.Z == 0.0)
+        printf("(0, %0.10lf, 0)", point.Y);
+    else if (point.X == 0.0 && point.Y == 0.0 && point.Z != 0.0)
+        printf("(0, 0, %0.10lf)", point.Z);
+    else if (point.X != 0.0 && point.Y != 0.0 && point.Z == 0.0)
+        printf("(%0.10lf, %0.10lf, 0)", point.X, point.Y);
+    else if (point.X != 0.0 && point.Y == 0.0 && point.Z != 0.0)
+        printf("(%0.10lf, 0, %0.10lf)", point.X, point.Z);
+    else if (point.X == 0.0 && point.Y != 0.0 && point.Z != 0.0)
+        printf("(0, %0.10lf, %0.10lf)", point.Y, point.Z);
+    else
+        printf("(%0.10lf, %0.10lf, %0.10lf)", point.X, point.Y, point.Z);
+}
+
+void print_point_(Point point)
+{
+    print_point(point);
+    newline(1);
+}
+
+void print_complex(Complex number)
+{
+    if (number.real == 0.0 && number.imaginary == 0.0)
+        printf("(0)");
+    else if (number.real != 0.0 && number.imaginary == 0.0)
+        printf("(%0.10lf)", number.real);
+    else if (number.real == 0.0 && number.imaginary != 0.0)
+        printf("(%0.10lfi)", number.imaginary);
+    else
+    {
+        if (number.imaginary < 0.0)
+            printf("(%0.10lf - %0.10lfi)", number.real, abs_double(number.imaginary));
+        else
+            printf("(%0.10lf + %0.10lfi)", number.real, number.imaginary);
+    }
+}
+
+void print_complex_(Complex number)
+{
+    print_complex(number);
+    newline(1);
+}
+
+void print_complex_array(Complex_Array complex_array)
+{
+    if (complex_array.length == 1)
+    {
+        printf("[");
+        print_complex(complex_array.complex_numbers[0]);
+        printf("]\n");
+    }
+    else if (complex_array.length > 1)
+    {
+        printf("[");
+        print_complex(complex_array.complex_numbers[0]);
+        for (int64_t i = 1; i < complex_array.length; i++)
+        {
+            printf(", ");
+            print_complex(complex_array.complex_numbers[i]);
+        }
+        printf("]\n");
+    }
+}
+
+void print_complex_array_(Complex_Array complex_array)
+{
+    print_complex_array(complex_array);
+    newline(1);
+}
+
+void print_vector2D(Vector2D vector)
+{
+    if (vector.X == 0.0 && vector.Y == 0.0)
+        printf("<0>");
+    else if (vector.X != 0.0 && vector.Y == 0.0)
+        printf("<%0.10lfi>", vector.X);
+    else if (vector.X == 0.0 && vector.Y != 0.0)
+        printf("<%0.10lfj>", vector.Y);
+    else
+    {
+        if (vector.Y < 0.0)
+            printf("<%0.10lfi - %0.10lfj>", vector.X, abs_double(vector.Y));
+        else
+            printf("<%0.10lfi + %0.10lfj>", vector.X, vector.Y);
+    }
+}
+
+void print_vector2D_(Vector2D vector)
+{
+    print_vector2D(vector);
+    newline(1);
+}
+
+void print_vector(Vector vector)
+{
+    if (vector.X == 0.0 && vector.Y == 0.0 && vector.Z == 0.0)
+        printf("<0>");
+    else if (vector.X != 0.0 && vector.Y == 0.0 && vector.Z == 0.0)
+        printf("<%0.10lfi>", vector.X);
+    else if (vector.X == 0.0 && vector.Y != 0.0 && vector.Z == 0.0)
+        printf("<%0.10lfj>", vector.Y);
+    else if (vector.X == 0.0 && vector.Y == 0.0 && vector.Z != 0.0)
+        printf("<%0.10lfk>", vector.Z);
+    else if (vector.X != 0.0 && vector.Y != 0.0 && vector.Z == 0.0)
+    {
+        if (vector.Y < 0.0)
+            printf("<%0.10lfi - %0.10lfj>", vector.X, abs_double(vector.Y));
+        else
+            printf("<%0.10lfi + %0.10lfj>", vector.X, vector.Y);
+    }
+    else if (vector.X != 0.0 && vector.Y == 0.0 && vector.Z != 0.0)
+    {
+        if (vector.Z < 0.0)
+            printf("<%0.10lfi - %0.10lfk>", vector.X, abs_double(vector.Z));
+        else
+            printf("<%0.10lfi + %0.10lfk>", vector.X, vector.Z);
+    }
+    else if (vector.X == 0.0 && vector.Y != 0.0 && vector.Z != 0.0)
+    {
+        if (vector.Z < 0.0)
+            printf("<%0.10lfj - %0.10lfk>", vector.Y, abs_double(vector.Z));
+        else
+            printf("<%0.10lfj + %0.10lfk>", vector.Y, vector.Z);
+    }
+    else
+    {
+        if (vector.Y < 0.0 && vector.Z < 0.0)
+            printf("<%0.10lfi - %0.10lfj - %0.10lfk>", vector.X, sqrt(vector.Y * vector.Y), sqrt(vector.Z * vector.Z));
+        else if (vector.Y < 0.0 && vector.Z > 0.0)
+            printf("<%0.10lfi - %0.10lfj + %0.10lfk>", vector.X, sqrt(vector.Y * vector.Y), vector.Z);
+        else if (vector.Y > 0.0 && vector.Z < 0.0)
+            printf("<%0.10lfi + %0.10lfj - %0.10lfk>", vector.X, vector.Y, sqrt(vector.Z * vector.Z));
+        else
+            printf("<%0.10lfi + %0.10lfj + %0.10lfk>", vector.X, vector.Y, vector.Z);
+    }
+}
+
+void print_vector_(Vector vector)
+{
+    print_vector(vector);
+    newline(1);
+}
+
+void print_num_array(NumArray num_array)
+{
+    printf("{");
+    for (int64_t i = 0; i < num_array.len; i++)
+    {
+        printf("%0.10lf", num_array.nums[i]);
+        if ((i + 1) != num_array.len)
+            printf(", ");
+    }
+    printf("}");
+}
+
+void print_num_array_(NumArray num_array)
+{
+    print_num_array(num_array);
+    newline(1);
+}
+
+uint64_t num_len(double number, uint64_t number_of_digits_after_the_radix_dot) // number --> 123.000000 (length = 10), -56789.101010 (length = 13), ...
+{
+    uint64_t length = (number < 0.0) ? 2 : 1;
+    length += number_of_digits_after_the_radix_dot;
+    uint64_t abs_int_num = (uint64_t)abs_double(number);
+    uint64_t count = 0;
+    if (abs_int_num < 1)
+    {
+        count = 1;
+    }
+    while (abs_int_num != 0)
+    {
+        abs_int_num /= 10;
+        count++;
+    }
+    length += count;
+    return length;
+}
+
+uint64_t min_num_len(NumArray numbers, uint64_t number_of_digits_after_the_radix_dot)
+{
+    double min_num = numbers.nums[0];
+    for (uint64_t i = 1; i < numbers.len; i++)
+    {
+        if (abs_double(numbers.nums[i]) < abs_double(min_num))
+            min_num = numbers.nums[i];
+    }
+    return num_len(min_num, number_of_digits_after_the_radix_dot);
+}
+
+uint64_t max_num_len(NumArray numbers, uint64_t number_of_digits_after_the_radix_dot)
+{
+    double max_num = numbers.nums[0];
+    for (uint64_t i = 1; i < numbers.len; i++)
+    {
+        if (abs_double(numbers.nums[i]) > abs_double(max_num))
+            max_num = numbers.nums[i];
+    }
+    return num_len(max_num, number_of_digits_after_the_radix_dot);
+}
+
+char *pre_space(double number, uint64_t max_number_length, uint64_t number_of_digits_after_the_radix_dot)
+{
+    uint64_t extra_space_number = max_number_length - num_len(number, number_of_digits_after_the_radix_dot);
+    char *spaces = (char *)calloc(extra_space_number, sizeof(char));
+    for (uint64_t i = 0; i < extra_space_number; i++)
+    {
+        spaces[i] = ' ';
+    }
+    return spaces;
+}
+
+uint64_t *max_num_len_array(Matrix matrix, uint64_t number_of_digits_after_the_radix_dot)
+{
+    uint64_t *max_number_length_array = (uint64_t *)malloc(matrix.cols * sizeof(uint64_t));
+    for (uint64_t c = 0; c < matrix.cols; c++)
+    {
+        NumArray matrix_column_data = nth_column_data(matrix, c);
+        max_number_length_array[c] = max_num_len(matrix_column_data, number_of_digits_after_the_radix_dot);
+    }
+    return max_number_length_array;
+}
+
+void print_matrix(Matrix matrix)
+{
+    uint64_t number_of_digits_after_the_radix_dot = 10;
+    uint64_t *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
+    printf("[[");
+    for (int64_t r = 0; r < matrix.rows; r++)
+    {
+        if (r > 0)
+            printf(" [");
+        for (int64_t c = 0; c < matrix.cols; c++)
+            printf(" %s%0.10lf ", pre_space(matrix.data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), matrix.data[r][c]);
+        if (r < (matrix.rows - 1))
+            printf("]\n");
+        else
+            printf("]]");
+    }
+}
+
+void print_matrix_(Matrix matrix)
+{
+    print_matrix(matrix);
+    newline(1);
+}
+
+void print_tensor(Tensor tensor)
+{
+    uint64_t number_of_digits_after_the_radix_dot = 10;
+    printf("[[[");
+    for (int64_t n = 0; n < tensor.n; n++)
+    {
+        if (n > 0)
+            printf(" [[");
+
+        uint64_t *max_number_length_array = max_num_len_array(tensor.mat[n], number_of_digits_after_the_radix_dot);
+        for (int64_t r = 0; r < tensor.mat[n].rows; r++)
+        {
+            if (r > 0)
+                printf("  [");
+            for (int64_t c = 0; c < tensor.mat[n].cols; c++)
+                printf(" %s%0.10lf ", pre_space(tensor.mat[n].data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), tensor.mat[n].data[r][c]);
+            if (r < (tensor.mat[n].rows - 1))
+                printf("]\n");
+            else
+                printf("]");
+        }
+
+        if (n < (tensor.n - 1))
+            printf("]\n\n");
+        else
+            printf("]]");
+    }
+}
+
+void print_tensor_(Tensor tensor)
+{
+    print_tensor(tensor);
+    newline(1);
+}
+
+void print_matrix_types(Matrix matrix, text_style text_style)
+{
+    char **types = types_of_matrix(matrix, text_style);
+    int64_t count = 0;
+    while (types[count][0])
+        count++;
+    if (count == 0)
+        return;
+    printf("[");
+    printf("'%s'", types[0]);
+    for (int64_t i = 1; i < count; i++)
+        printf(", '%s'", types[i]);
+    printf("]");
+}
+
+void print_matrix_types_(Matrix matrix, text_style text_style)
+{
+    print_matrix_types(matrix, text_style);
+    newline(1);
 }
 
 #endif // _CMATHLIB__ARITHMOS_
