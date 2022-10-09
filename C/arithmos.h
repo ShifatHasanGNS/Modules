@@ -2629,8 +2629,9 @@ void print_tensor_(Tensor tensor)
     newline(1);
 }
 
-void print_matrix_types(char **types)
+void print_matrix_types(Matrix matrix)
 {
+    char **types = types_of_matrix(matrix);
     int64_t count = 0;
     while (types[count][0])
         count++;
@@ -2643,9 +2644,9 @@ void print_matrix_types(char **types)
     printf("]");
 }
 
-void print_matrix_types_(char **types)
+void print_matrix_types_(Matrix matrix)
 {
-    print_matrix_types(types);
+    print_matrix_types(matrix);
     newline(1);
 }
 
