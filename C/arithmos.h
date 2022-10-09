@@ -1055,7 +1055,7 @@ NumArray new_num_array(uint64_t number_of_elements)
     return na;
 }
 
-NumArray new_num_array_(int64_t number_of_elements, double nums[])
+NumArray new_num_array_(uint64_t number_of_elements, double nums[])
 {
     NumArray na;
     na.len = number_of_elements;
@@ -3019,7 +3019,8 @@ double determinant(Matrix matrix)
         if (matrix.rows == 1 && matrix.cols == 1)
             return matrix.data[0][0];
         Matrix temp_minor_matrix = new_matrix(matrix.rows - 1, matrix.cols - 1);
-        int64_t sign = 1, det = 0;
+        int64_t sign = 1;
+        double det = 0;
         for (int64_t c = 0; c < matrix.rows; c++)
         {
             temp_minor_matrix = minor_matrix(matrix, 0, c);
