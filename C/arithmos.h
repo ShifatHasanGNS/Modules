@@ -1651,14 +1651,14 @@ Matrix input_square_matrix(int64_t order)
     return input_matrix(order, order);
 }
 
-Matrix matrix_from_array(NumArray array, int64_t rows, int64_t cols)
+Matrix matrix_from_array(uint64_t rows, uint64_t cols, NumArray array)
 {
     if ((rows * cols) == array.len)
     {
         Matrix matrix = new_matrix(rows, cols);
-        for (int64_t r = 0; r < rows; r++)
+        for (uint64_t r = 0; r < rows; r++)
         {
-            for (int64_t c = 0; c < cols; c++)
+            for (uint64_t c = 0; c < cols; c++)
                 matrix.data[r][c] = array.nums[cols * r + c];
         }
         return matrix;
@@ -1666,7 +1666,7 @@ Matrix matrix_from_array(NumArray array, int64_t rows, int64_t cols)
     return new_matrix(0, 0);
 }
 
-Matrix matrix_from_array_(double nums[], int64_t rows, int64_t cols)
+Matrix matrix_from_array_(uint64_t rows, uint64_t cols, double nums[])
 {
     return matrix_from_array(new_num_array_(rows * cols, nums), rows, cols);
 }
