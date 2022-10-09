@@ -4207,11 +4207,11 @@ void print_matrix(Matrix matrix)
     uint64_t number_of_digits_after_the_radix_dot = 10;
     uint64_t *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
     printf("[[");
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (uint64_t r = 0; r < matrix.rows; r++)
     {
         if (r > 0)
             printf(" [");
-        for (int64_t c = 0; c < matrix.cols; c++)
+        for (uint64_t c = 0; c < matrix.cols; c++)
             printf(" %s%0.10lf ", pre_space(matrix.data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), matrix.data[r][c]);
         if (r < (matrix.rows - 1))
             printf("]\n");
