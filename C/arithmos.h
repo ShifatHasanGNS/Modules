@@ -951,7 +951,7 @@ double integrate(char *integrand, char *interval)
 
 _Bool is_null(Matrix matrix)
 {
-    return (matrix.rows == 0 && matrix.cols == 0) ? 1 : 0;
+    return (matrix.rows == 0 && matrix.cols == 0);
 }
 
 _Bool is_square_matrix(Matrix matrix)
@@ -1551,7 +1551,7 @@ _Bool is_number(char *string)
                 return 0;
             break;
         }
-        string++;
+        string++; // Point to the next character...
     }
     // If it's a number then return True...
     return 1;
@@ -1560,7 +1560,6 @@ _Bool is_number(char *string)
 char *remove_char(char *str, char c)
 {
     char *new_str = (char *)calloc(strlen(str), sizeof(char));
-    strcpy(new_str, str);
     int64_t count = 0;
     for (int64_t i = 0; new_str[i]; i++)
         if (new_str[i] != c)
@@ -1572,9 +1571,9 @@ char *remove_char(char *str, char c)
 char **split(char *str, int64_t str_len, char c)
 {
     // Initialize...
-    char *string = (char *)calloc((str_len + 3), sizeof(char));
+    char *string = (char *)calloc((str_len + 2), sizeof(char));
     sprintf(string, "%s ", str);
-    int64_t len = strlen(string), count_c = 0, number_of_tokens = 0;
+    int64_t len = strlen(string), number_of_tokens = 0, count_c = 0;
     char str_c[2], **list_of_tokens = (char **)malloc(sizeof(char *) * (len - count_c - 2) + sizeof(char) * (len - count_c));
     sprintf(str_c, "%c", c);
     // Split...
@@ -1589,13 +1588,13 @@ char **split(char *str, int64_t str_len, char c)
     return list_of_tokens;
 }
 
-double *parse_number(char *string, int64_t string_len, int64_t num)
+double *parse_number(char *string, int64_t number_of_numbers)
 {
-    int64_t count = 0, c = 0, i;
+    int64_t count = 0, c = 0, i, string_len = number_of_numbers << 6;
     double temp_num;
     // Get the splitted_String as a 2D_Character_Array...
     char **splitted_string = split(string, string_len, ' ');
-    // Initialize the Number_Array...
+    // Initialize the 1D_Number_Array...
     while (splitted_string[count])
         count++;
     double *list_of_nums = (double *)calloc(count, sizeof(double));
@@ -1606,21 +1605,20 @@ double *parse_number(char *string, int64_t string_len, int64_t num)
         {
             sscanf(splitted_string[i], "%lf", &temp_num);
             list_of_nums[c++] = temp_num;
-            if (num != -1 && c == num)
+            if (number_of_numbers != -1 && c == number_of_numbers)
                 break;
         }
     }
-    // Return the list as a double type Number_Array...
+    // Return the list as a double type 1D_Number_Array...
     return list_of_nums;
 }
 
 Matrix input_matrix(int64_t rows, int64_t cols)
 {
-    int64_t r, c;
+    int64_t r, c, len = 64 * cols;
     // Temporary Variables...
     double *temp_row = (double *)calloc(cols, sizeof(double));
-    char *temp_str = (char *)calloc((100 * cols), sizeof(char));
-    int64_t len = 100 * cols;
+    char *temp_str = (char *)calloc(len, sizeof(char));
     // Creating the Matrix...
     Matrix matrix = new_matrix(rows, cols);
     // Getting the Matrix_Input...
@@ -1628,11 +1626,12 @@ Matrix input_matrix(int64_t rows, int64_t cols)
     {
         *temp_str = '\0';
         gets(temp_str);
+        temp_row = parse_number(temp_str, cols);
         for (c = 0; c < cols; c++)
-            temp_row[c] = 0;
-        temp_row = parse_number(temp_str, len, cols);
-        for (c = 0; c < cols; c++)
+        {
             matrix.data[r][c] = temp_row[c];
+            temp_row[c] = 0;
+        }
     }
     return matrix;
 }
@@ -2275,12 +2274,12 @@ Pair matrix_shape(Matrix matrix)
 
 _Bool are_similar_num_array(NumArray array_1, NumArray array_2)
 {
-    return (array_1.len == array_2.len) ? 1 : 0;
+    return (array_1.len == array_2.len);
 }
 
 _Bool are_similar_matrix(Matrix matrix_1, Matrix matrix_2)
 {
-    return (matrix_1.rows == matrix_2.rows && matrix_1.cols == matrix_2.cols) ? 1 : 0;
+    return (matrix_1.rows == matrix_2.rows && matrix_1.cols == matrix_2.cols);
 }
 
 double clip_double(double number, double min, double max)
@@ -2597,37 +2596,37 @@ NumArray compare_num_array_elements(NumArray array_1, char *comparator, NumArray
         if (strcmp(comparator, "==") == 0)
         {
             for (int64_t i = 0; i < array_1.len; i++)
-                new_array.nums[i] = (array_1.nums[i] == array_2.nums[i]) ? 1 : 0;
+                new_array.nums[i] = (array_1.nums[i] == array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "!=") == 0)
         {
             for (int64_t i = 0; i < array_1.len; i++)
-                new_array.nums[i] = (array_1.nums[i] != array_2.nums[i]) ? 1 : 0;
+                new_array.nums[i] = (array_1.nums[i] != array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "<") == 0)
         {
             for (int64_t i = 0; i < array_1.len; i++)
-                new_array.nums[i] = (array_1.nums[i] < array_2.nums[i]) ? 1 : 0;
+                new_array.nums[i] = (array_1.nums[i] < array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "<=") == 0)
         {
             for (int64_t i = 0; i < array_1.len; i++)
-                new_array.nums[i] = (array_1.nums[i] <= array_2.nums[i]) ? 1 : 0;
+                new_array.nums[i] = (array_1.nums[i] <= array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, ">") == 0)
         {
             for (int64_t i = 0; i < array_1.len; i++)
-                new_array.nums[i] = (array_1.nums[i] > array_2.nums[i]) ? 1 : 0;
+                new_array.nums[i] = (array_1.nums[i] > array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, ">=") == 0)
         {
             for (int64_t i = 0; i < array_1.len; i++)
-                new_array.nums[i] = (array_1.nums[i] >= array_2.nums[i]) ? 1 : 0;
+                new_array.nums[i] = (array_1.nums[i] >= array_2.nums[i]);
             return new_array;
         }
         return new_array;
@@ -2645,7 +2644,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             for (int64_t r = 0; r < matrix_1.rows; r++)
             {
                 for (int64_t c = 0; c < matrix_1.cols; c++)
-                    new_mat.data[r][c] = (matrix_1.data[r][c] == matrix_2.data[r][c]) ? 1 : 0;
+                    new_mat.data[r][c] = (matrix_1.data[r][c] == matrix_2.data[r][c]);
             }
             return new_mat;
         }
@@ -2654,7 +2653,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             for (int64_t r = 0; r < matrix_1.rows; r++)
             {
                 for (int64_t c = 0; c < matrix_1.cols; c++)
-                    new_mat.data[r][c] = (matrix_1.data[r][c] != matrix_2.data[r][c]) ? 1 : 0;
+                    new_mat.data[r][c] = (matrix_1.data[r][c] != matrix_2.data[r][c]);
             }
             return new_mat;
         }
@@ -2663,7 +2662,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             for (int64_t r = 0; r < matrix_1.rows; r++)
             {
                 for (int64_t c = 0; c < matrix_1.cols; c++)
-                    new_mat.data[r][c] = (matrix_1.data[r][c] < matrix_2.data[r][c]) ? 1 : 0;
+                    new_mat.data[r][c] = (matrix_1.data[r][c] < matrix_2.data[r][c]);
             }
             return new_mat;
         }
@@ -2672,7 +2671,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             for (int64_t r = 0; r < matrix_1.rows; r++)
             {
                 for (int64_t c = 0; c < matrix_1.cols; c++)
-                    new_mat.data[r][c] = (matrix_1.data[r][c] <= matrix_2.data[r][c]) ? 1 : 0;
+                    new_mat.data[r][c] = (matrix_1.data[r][c] <= matrix_2.data[r][c]);
             }
             return new_mat;
         }
@@ -2681,7 +2680,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             for (int64_t r = 0; r < matrix_1.rows; r++)
             {
                 for (int64_t c = 0; c < matrix_1.cols; c++)
-                    new_mat.data[r][c] = (matrix_1.data[r][c] > matrix_2.data[r][c]) ? 1 : 0;
+                    new_mat.data[r][c] = (matrix_1.data[r][c] > matrix_2.data[r][c]);
             }
             return new_mat;
         }
@@ -2690,7 +2689,7 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
             for (int64_t r = 0; r < matrix_1.rows; r++)
             {
                 for (int64_t c = 0; c < matrix_1.cols; c++)
-                    new_mat.data[r][c] = (matrix_1.data[r][c] >= matrix_2.data[r][c]) ? 1 : 0;
+                    new_mat.data[r][c] = (matrix_1.data[r][c] >= matrix_2.data[r][c]);
             }
             return new_mat;
         }
@@ -4142,7 +4141,7 @@ void print_num_array_(NumArray num_array)
 
 int64_t num_len(double number, int64_t number_of_digits_after_the_radix_dot)
 {
-    int64_t length = (number < 0.0) ? 1 : 0;
+    int64_t length = (number < 0.0);
     length += (number_of_digits_after_the_radix_dot == 0) ? 0 : (number_of_digits_after_the_radix_dot + 1);
     int64_t abs_int_num = (int64_t)abs_double(number);
     int64_t count = 0;
