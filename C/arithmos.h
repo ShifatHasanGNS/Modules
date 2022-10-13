@@ -101,7 +101,7 @@ typedef enum // operation
 {
     addition,       //  +
     subtraction,    //  -
-    multiplication, //  x or, *
+    multiplication, //  *
 } operation;
 
 typedef enum // matrix_type
@@ -480,7 +480,7 @@ double power_double(double base, double n)
     }
 }
 
-uint64_t last_digit_int(uint64_t number, uint64_t power) // number, power >= 0
+uint64_t last_digit_int(uint64_t number, uint64_t power)
 {
     if (power == 0)
         return 1;
@@ -512,7 +512,7 @@ uint64_t last_digit_int(uint64_t number, uint64_t power) // number, power >= 0
     return -1;
 }
 
-uint64_t last_digit_uint(uint64_t number, uint64_t power) // number, power >= 0
+uint64_t last_digit_uint(uint64_t number, uint64_t power)
 {
     if (power == 0)
         return 1;
