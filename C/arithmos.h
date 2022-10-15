@@ -36,7 +36,7 @@
     _pointer_ = NULL
 
 #define newline(number_of_new_lines)                                  \
-    for (uint64_t temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
+    for (int64_t temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
     printf("\n")
 
 #define PHI_0 (double)1.61803398874989484820458683436563811772030917980576    // [1 + sqrt(5)] / 2
@@ -140,11 +140,11 @@ typedef char *String;
 
 typedef struct timespec TimeStamp;
 
-typedef struct _Pair_
+typedef struct _Matrix_Index_
 {
-    uint64_t first;
-    uint64_t second;
-} Pair;
+    int64_t first;
+    int64_t second;
+} Matrix_Index;
 
 typedef struct _Polar2D_
 {
@@ -169,7 +169,7 @@ typedef struct _Complex_
 
 typedef struct _Complex_Array_
 {
-    uint64_t length;
+    int64_t length;
     Complex *complex_numbers;
 } Complex_Array;
 
@@ -188,20 +188,20 @@ typedef struct _Vector_
 
 typedef struct _NumArray_
 {
-    uint64_t len;
+    int64_t len;
     double *nums;
 } NumArray;
 
 typedef struct _Matrix_
 {
-    uint64_t rows;
-    uint64_t cols;
+    int64_t rows;
+    int64_t cols;
     double **data;
 } Matrix;
 
 typedef struct _Tensor_
 {
-    uint64_t n;
+    int64_t n;
     Matrix *mat;
 } Tensor;
 
@@ -278,12 +278,12 @@ _Bool is_positive(double number)
     return (number >= 0);
 }
 
-_Bool is_odd(uint64_t number)
+_Bool is_odd(int64_t number)
 {
     return (number & 1);
 }
 
-_Bool is_even(uint64_t number)
+_Bool is_even(int64_t number)
 {
     return (!(number & 1));
 }
@@ -298,7 +298,7 @@ double to_degree(double angle_in_radian)
     return ((angle_in_radian * 180) / PI);
 }
 
-uint64_t abs_int(int64_t number)
+int64_t abs_int(int64_t number)
 {
     return (sign_int(number) * number);
 }
@@ -328,7 +328,7 @@ double min_double(double number_1, double number_2)
     return (number_1 < number_2) ? number_1 : number_2;
 }
 
-double trim_double(double num, uint64_t number_of_digits_after_the_radix_dot)
+double trim_double(double num, int64_t number_of_digits_after_the_radix_dot)
 {
     int64_t number = (int64_t)(num * pow(10, number_of_digits_after_the_radix_dot + 1));
     int64_t last_digit = number - (int64_t)(number / 10);
@@ -338,7 +338,7 @@ double trim_double(double num, uint64_t number_of_digits_after_the_radix_dot)
     return (number / pow(10, number_of_digits_after_the_radix_dot));
 }
 
-uint64_t mod(uint64_t a, uint64_t m)
+int64_t mod(int64_t a, int64_t m)
 {
     if (a < m)
         return a;
@@ -348,36 +348,36 @@ uint64_t mod(uint64_t a, uint64_t m)
         return a % m;
 }
 
-uint64_t bigmod(uint64_t a, uint64_t b, uint64_t m)
+int64_t bigmod(int64_t a, int64_t b, int64_t m)
 {
     if (b == 0)
         return mod(1, m);
-    uint64_t result = bigmod(a, b / 2, m);
+    int64_t result = bigmod(a, b / 2, m);
     result = mod(result * result, m);
     if (b & 1)
         result = mod(result * a, m);
     return result;
 }
 
-uint64_t bigmod_str(char *num, uint64_t m)
+int64_t bigmod_str(char *num, int64_t m)
 {
-    uint64_t result = 0, len = strlen(num);
-    for (uint64_t i = 0; i < len; i++)
-        result = (result * 10 + (uint64_t)num[i] - '0') % m;
+    int64_t result = 0, len = strlen(num);
+    for (int64_t i = 0; i < len; i++)
+        result = (result * 10 + (int64_t)num[i] - '0') % m;
     return result;
 }
 
-uint64_t gcd(uint64_t a, uint64_t b)
+int64_t gcd(int64_t a, int64_t b)
 {
-    uint64_t min = (a < b) ? a : b;
-    uint64_t max = (a > b) ? a : b;
-    uint64_t r = mod(max, min);
+    int64_t min = (a < b) ? a : b;
+    int64_t max = (a > b) ? a : b;
+    int64_t r = mod(max, min);
     if (r == 0)
         return min;
     return gcd(min, r);
 }
 
-uint64_t lcm(uint64_t a, uint64_t b)
+int64_t lcm(int64_t a, int64_t b)
 {
     return ((a * b) / gcd(a, b));
 }
@@ -389,23 +389,6 @@ int64_t power_int(int64_t base, int64_t n)
     else if (n == 1)
         return base;
     int64_t result = 1;
-    while (n > 0)
-    {
-        if (n & 1)
-            result *= base;
-        base *= base;
-        n /= 2;
-    }
-    return result;
-}
-
-uint64_t power_uint(uint64_t base, uint64_t n)
-{
-    if (n == 0)
-        return 1;
-    else if (n == 1)
-        return base;
-    uint64_t result = 1;
     while (n > 0)
     {
         if (n & 1)
@@ -432,7 +415,7 @@ double power_double(double base, double n)
         base = abs_double(base);
         n = abs_double(n);
         double remaining_power = trim_double(n - floor(n), 15), result = 1;
-        uint64_t p = floor(n);
+        int64_t p = floor(n);
         if (sign_of_n == -1)
             base = 1 / base;
         double b = base;
@@ -442,9 +425,9 @@ double power_double(double base, double n)
                 r = -1;
             else
             {
-                uint64_t lower_part = pow(10, 15);
-                uint64_t upper_part = remaining_power * lower_part;
-                uint64_t h = gcd(upper_part, lower_part);
+                int64_t lower_part = pow(10, 15);
+                int64_t upper_part = remaining_power * lower_part;
+                int64_t h = gcd(upper_part, lower_part);
                 upper_part /= h;
                 lower_part /= h;
                 if (!(lower_part & 1))
@@ -480,7 +463,7 @@ double power_double(double base, double n)
     }
 }
 
-uint64_t last_digit_int(uint64_t number, uint64_t power)
+int64_t last_digit_int(int64_t number, int64_t power)
 {
     if (power == 0)
         return 1;
@@ -488,7 +471,7 @@ uint64_t last_digit_int(uint64_t number, uint64_t power)
         return 0;
     if (number < 1 || power < 1)
         return -1;
-    uint64_t n = number - floor(number / 10) * 10;
+    int64_t n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
     if (n == 0 || n == 1 || n == 5 || n == 6)
@@ -499,7 +482,7 @@ uint64_t last_digit_int(uint64_t number, uint64_t power)
     }
     else
     {
-        uint64_t m = mod(power, 4);
+        int64_t m = mod(power, 4);
         if (m == 1)
             return n;
         else if (m == 2)
@@ -512,7 +495,7 @@ uint64_t last_digit_int(uint64_t number, uint64_t power)
     return -1;
 }
 
-uint64_t last_digit_uint(uint64_t number, uint64_t power)
+int64_t last_digit_uint(int64_t number, int64_t power)
 {
     if (power == 0)
         return 1;
@@ -520,7 +503,7 @@ uint64_t last_digit_uint(uint64_t number, uint64_t power)
         return 0;
     number = abs_double(number);
     power = abs_double(power);
-    uint64_t n = number - floor(number / 10) * 10;
+    int64_t n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
     if (n == 0 || n == 1 || n == 5 || n == 6)
@@ -533,7 +516,7 @@ uint64_t last_digit_uint(uint64_t number, uint64_t power)
     {
         char *str = (char *)calloc(floor(log10(power) + 1), sizeof(char));
         sprintf(str, "%lld", power);
-        uint64_t m = bigmod_str(str, 4);
+        int64_t m = bigmod_str(str, 4);
         FREE_PTR(str);
         if (m == 1)
             return n;
@@ -561,27 +544,27 @@ double log_double(double base, double x)
     return -INFINITY;
 }
 
-uint64_t fibonacci(uint64_t n_th)
+int64_t fibonacci(int64_t n_th)
 {
     return (One_over_SquareRootOf5 * (power_double(PHI_0, n_th) - power_double(PHI_1, n_th)));
 }
 
-uint64_t factorial(uint64_t n) // MAX --> n = 12
+int64_t factorial(int64_t n) // MAX --> n = 12
 {
     if (n < 0)
         return 0;
     else if (n == 0)
         return 1;
-    uint64_t N = 1;
-    for (uint64_t i = 1; i <= n; i++)
+    int64_t N = 1;
+    for (int64_t i = 1; i <= n; i++)
         N *= i;
     return N;
 }
 
-char *factorial_str(uint64_t n)
+char *factorial_str(int64_t n)
 {
     char *N = (char *)calloc(1024, sizeof(char));
-    uint64_t a[200], counter, temp, i;
+    int64_t a[200], counter, temp, i;
     a[0] = 1;
     counter = 0;
     for (; n >= 2; n--)
@@ -605,12 +588,12 @@ char *factorial_str(uint64_t n)
 }
 
 /*
-uint64_t multiply_for_factorial_str(uint64_t x, uint64_t res[], uint64_t res_size)
+int64_t multiply_for_factorial_str(int64_t x, int64_t res[], int64_t res_size)
 {
-    uint64_t carry = 0;
-    for (uint64_t i = 0; i < res_size; i++)
+    int64_t carry = 0;
+    for (int64_t i = 0; i < res_size; i++)
     {
-        uint64_t prod = res[i] * x + carry;
+        int64_t prod = res[i] * x + carry;
         res[i] = prod % 10;
         carry = prod / 10;
     }
@@ -623,16 +606,16 @@ uint64_t multiply_for_factorial_str(uint64_t x, uint64_t res[], uint64_t res_siz
     return res_size;
 }
 
-char *factorial_str(uint64_t n)
+char *factorial_str(int64_t n)
 {
-    uint64_t res[1024];
+    int64_t res[1024];
     char *N = (char *)calloc(1024, sizeof(char));
     res[0] = 1;
-    uint64_t res_size = 1;
-    for (uint64_t x = 2; x <= n; x++)
+    int64_t res_size = 1;
+    for (int64_t x = 2; x <= n; x++)
         res_size = multiply_for_factorial_str(x, res, res_size);
     sprintf(N, "%lld", res[res_size - 1]);
-    for (uint64_t i = res_size - 2; i >= 0; i--)
+    for (int64_t i = res_size - 2; i >= 0; i--)
         sprintf(N, "%s%lld", N, res[i]);
     return N;
 }
@@ -645,7 +628,7 @@ double sum(char *expression, char *interval)
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
     char *format = "%0.15lf";
-    uint64_t a, b; // MAX = 2147483647
+    int64_t a, b; // MAX = 2147483647
     double answer = 0;
 
     if (strcmp(lower_bound, "-inf") == 0)
@@ -676,7 +659,7 @@ double sum(char *expression, char *interval)
     fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", expression);
     fprintf(fp, "void main()\n{\n");
     fprintf(fp, "\tdouble sum = 0;\n");
-    fprintf(fp, "\tfor (uint64_t x = %lld; x <= %lld; x++)\n", a, b);
+    fprintf(fp, "\tfor (int64_t x = %lld; x <= %lld; x++)\n", a, b);
     fprintf(fp, "\t\tsum += f(x);\n");
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer_sum.txt\", \"w\");\n");
@@ -709,7 +692,7 @@ double product(char *expression, char *interval)
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
     char *format = "%0.15lf";
-    uint64_t a, b; // MAX = 2147483647
+    int64_t a, b; // MAX = 2147483647
     double answer = 0;
 
     if (strcmp(lower_bound, "-inf") == 0)
@@ -740,7 +723,7 @@ double product(char *expression, char *interval)
     fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", expression);
     fprintf(fp, "void main()\n{\n");
     fprintf(fp, "\tdouble sum = 1;\n");
-    fprintf(fp, "\tfor (uint64_t x = %lld; x <= %lld; x++)\n", a, b);
+    fprintf(fp, "\tfor (int64_t x = %lld; x <= %lld; x++)\n", a, b);
     fprintf(fp, "\t\tsum *= f(x);\n");
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer_product.txt\", \"w\");\n");
@@ -815,7 +798,7 @@ double integrate(char *integrand, char *interval)
 
     double a, b, A, B, C, dx = 0.0000001, answer = 0;
     char *format = "%0.15lf";
-    uint64_t sign = 1;
+    int64_t sign = 1;
     _Bool m = 0;
 
     if (strcmp(lower_bound, "-inf") == 0)
@@ -888,7 +871,7 @@ double integrate(char *integrand, char *interval)
     fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", integrand);
     fprintf(fp, "void main()\n{\n");
     fprintf(fp, "\tdouble sum = 0, x = 0, t = 0, result = 0;\n");
-    fprintf(fp, "\tfor (uint64_t i = 1; i <= 10000000; i++)\n");
+    fprintf(fp, "\tfor (int64_t i = 1; i <= 10000000; i++)\n");
     fprintf(fp, "\t{\n");
     fprintf(fp, "\t\tx = %0.15lf + (%0.15lf * (i - 0.5) * %0.15lf);\n", A, C, dx);
     if (m)
@@ -947,10 +930,10 @@ _Bool are_identical(Matrix matrix_1, Matrix matrix_2)
 {
     if (matrix_1.rows == matrix_2.rows && matrix_1.cols == matrix_2.cols)
     {
-        uint64_t count = 0;
-        for (uint64_t r = 0; r < matrix_1.rows; r++)
+        int64_t count = 0;
+        for (int64_t r = 0; r < matrix_1.rows; r++)
         {
-            for (uint64_t c = 0; c < matrix_1.cols; c++)
+            for (int64_t c = 0; c < matrix_1.cols; c++)
                 if (matrix_1.data[r][c] == matrix_2.data[r][c])
                     count++;
         }
@@ -961,9 +944,9 @@ _Bool are_identical(Matrix matrix_1, Matrix matrix_2)
     return 0;
 }
 
-Pair new_pair(uint64_t first, uint64_t second)
+Matrix_Index new_matrix_index(int64_t first, int64_t second)
 {
-    Pair p;
+    Matrix_Index p;
     p.first = first;
     p.first = second;
     return p;
@@ -1022,7 +1005,7 @@ Vector new_vector(double X, double Y, double Z)
     return v;
 }
 
-NumArray new_num_array(uint64_t number_of_elements)
+NumArray new_num_array(int64_t number_of_elements)
 {
     NumArray na;
     na.len = number_of_elements;
@@ -1031,7 +1014,7 @@ NumArray new_num_array(uint64_t number_of_elements)
     return na;
 }
 
-NumArray new_num_array_(uint64_t number_of_elements, double nums[])
+NumArray new_num_array_(int64_t number_of_elements, double nums[])
 {
     NumArray na;
     na.len = number_of_elements;
@@ -1039,67 +1022,67 @@ NumArray new_num_array_(uint64_t number_of_elements, double nums[])
     return na;
 }
 
-Matrix new_matrix(uint64_t rows, uint64_t cols)
+Matrix new_matrix(int64_t rows, int64_t cols)
 {
     Matrix matrix;
     matrix.rows = rows;
     matrix.cols = cols;
     double **data = (double **)calloc(rows, sizeof(double *));
-    for (uint64_t x = 0; x < rows; x++)
+    for (int64_t x = 0; x < rows; x++)
         data[x] = (double *)calloc(cols, sizeof(double));
     matrix.data = data;
     return matrix;
 }
 
-Tensor new_tensor(uint64_t number_of_mats, uint64_t rows, uint64_t cols)
+Tensor new_tensor(int64_t number_of_mats, int64_t rows, int64_t cols)
 {
     Tensor tensor;
     tensor.n = number_of_mats;
     Matrix *mat = (Matrix *)calloc(number_of_mats, sizeof(Matrix));
-    for (uint64_t x = 0; x < number_of_mats; x++)
+    for (int64_t x = 0; x < number_of_mats; x++)
         mat[x] = new_matrix(rows, cols);
     tensor.mat = mat;
     return tensor;
 }
 
-Matrix new_column_matrix(uint64_t rows)
+Matrix new_column_matrix(int64_t rows)
 {
     return new_matrix(rows, 1);
 }
 
-Matrix new_row_matrix(uint64_t cols)
+Matrix new_row_matrix(int64_t cols)
 {
     return new_matrix(1, cols);
 }
 
-Matrix new_identity_matrix(uint64_t order)
+Matrix new_identity_matrix(int64_t order)
 {
     Matrix matrix = new_matrix(order, order);
-    for (uint64_t r = 0; r < order; r++)
+    for (int64_t r = 0; r < order; r++)
         matrix.data[r][r] = 1;
     return matrix;
 }
 
-Matrix new_scalar_matrix(uint64_t order, double scalar_number)
+Matrix new_scalar_matrix(int64_t order, double scalar_number)
 {
     Matrix matrix = new_matrix(order, order);
-    for (uint64_t r = 0; r < order; r++)
+    for (int64_t r = 0; r < order; r++)
         matrix.data[r][r] = scalar_number;
     return matrix;
 }
 
-Matrix new_primary_diagonal_matrix(uint64_t order, Matrix row_matrix)
+Matrix new_primary_diagonal_matrix(int64_t order, Matrix row_matrix)
 {
     Matrix matrix = new_matrix(order, order);
-    for (uint64_t r = 0; r < order; r++)
+    for (int64_t r = 0; r < order; r++)
         matrix.data[r][r] = row_matrix.data[0][r];
     return matrix;
 }
 
-Matrix new_secondary_diagonal_matrix(uint64_t order, Matrix row_matrix)
+Matrix new_secondary_diagonal_matrix(int64_t order, Matrix row_matrix)
 {
     Matrix matrix = new_matrix(order, order);
-    for (uint64_t r = 0; r < order; r++)
+    for (int64_t r = 0; r < order; r++)
         matrix.data[r][order - r - 1] = row_matrix.data[0][r];
     return matrix;
 }
@@ -1112,7 +1095,7 @@ Complex new_complex(double real_part, double imaginary_part)
     return complex_number;
 }
 
-Complex_Array new_complex_array(uint64_t length)
+Complex_Array new_complex_array(int64_t length)
 {
     Complex_Array complex_array;
     complex_array.length = length;
@@ -1120,20 +1103,20 @@ Complex_Array new_complex_array(uint64_t length)
     return complex_array;
 }
 
-NumArray random_num_array(uint64_t number_of_elements, uint64_t rounding_number, double scalar)
+NumArray random_num_array(int64_t number_of_elements, int64_t rounding_number, double scalar)
 {
     srand(time(0));
     NumArray na = new_num_array(number_of_elements);
-    for (uint64_t i = 0; i < number_of_elements; i++)
+    for (int64_t i = 0; i < number_of_elements; i++)
         na.nums[i] = scalar * ((rand() % rounding_number) + 1);
     return na;
 }
 
-NumArray random_num_array_(uint64_t number_of_elements, uint64_t rounding_number, double scalar, double seed)
+NumArray random_num_array_(int64_t number_of_elements, int64_t rounding_number, double scalar, double seed)
 {
     srand(seed);
     NumArray na = new_num_array(number_of_elements);
-    for (uint64_t i = 0; i < number_of_elements; i++)
+    for (int64_t i = 0; i < number_of_elements; i++)
         na.nums[i] = scalar * ((rand() % rounding_number) + 1);
     return na;
 }
@@ -1141,7 +1124,7 @@ NumArray random_num_array_(uint64_t number_of_elements, uint64_t rounding_number
 NumArray scale_num_array(NumArray array, double scalar)
 {
     NumArray na = new_num_array(array.len);
-    for (uint64_t i = 0; i < array.len; i++)
+    for (int64_t i = 0; i < array.len; i++)
         na.nums[i] = scalar * array.nums[i];
     return na;
 }
@@ -1151,9 +1134,9 @@ NumArray copy_num_array(NumArray array)
     return new_num_array_(array.len, array.nums);
 }
 
-Pair copy_pair(Pair p)
+Matrix_Index copy_matrix_index(Matrix_Index p)
 {
-    return new_pair(p.first, p.second);
+    return new_matrix_index(p.first, p.second);
 }
 
 Polar2D copy_polar2D(Polar2D p)
@@ -1173,9 +1156,9 @@ Complex copy_complex(Complex z)
 
 Complex_Array copy_complex_array(Complex_Array complex_array)
 {
-    uint64_t len = complex_array.length;
+    int64_t len = complex_array.length;
     Complex_Array copy_of_complex_array = new_complex_array(len);
-    for (uint64_t i = 0; i < len; i++)
+    for (int64_t i = 0; i < len; i++)
         copy_of_complex_array.complex_numbers[i] = complex_array.complex_numbers[i];
     return copy_of_complex_array;
 }
@@ -1263,7 +1246,7 @@ Complex scale_complex(Complex z, double scalar)
     return new_complex(scalar * z.real, scalar * z.imaginary);
 }
 
-uint64_t quadrent_for_complex(Complex z)
+int64_t quadrent_for_complex(Complex z)
 {
     double real = z.real;
     double imaginary = z.imaginary;
@@ -1399,10 +1382,10 @@ double angle_for_complex(Complex z, angle_mode angle_mode)
     return NAN;
 }
 
-uint64_t quadrent_for_angle(double angle, angle_mode angle_mode)
+int64_t quadrent_for_angle(double angle, angle_mode angle_mode)
 {
     double theta = remainder(abs_double(angle), TAU), pi_1 = PI / 2, pi_2 = (3 * PI) / 2;
-    uint64_t quadrent = -1;
+    int64_t quadrent = -1;
     if (angle_mode == radian)
     {
         if (theta >= 0 && theta <= pi_1)
@@ -1502,7 +1485,7 @@ _Bool is_number(char *string)
 {
     if (string == NULL || *string == '\0')
         return 0;                                            // Checking if the string is Empty...
-    uint64_t count_dot = 0, count_plus = 0, count_minus = 0; // Initializing...
+    int64_t count_dot = 0, count_plus = 0, count_minus = 0; // Initializing...
     // Checking if the string is a number...
     while (*string)
     {
@@ -1535,20 +1518,20 @@ _Bool is_number(char *string)
 char *remove_char(char *str, char c)
 {
     char *new_str = (char *)calloc(strlen(str), sizeof(char));
-    uint64_t count = 0;
-    for (uint64_t i = 0; new_str[i]; i++)
+    int64_t count = 0;
+    for (int64_t i = 0; new_str[i]; i++)
         if (new_str[i] != c)
             new_str[count++] = new_str[i];
     new_str[count] = '\0';
     return new_str;
 }
 
-char **split(char *str, uint64_t str_len, char c)
+char **split(char *str, int64_t str_len, char c)
 {
     // Initialize...
     char *string = (char *)calloc((str_len + 2), sizeof(char));
     sprintf(string, "%s ", str);
-    uint64_t len = strlen(string), number_of_tokens = 0, count_c = 0;
+    int64_t len = strlen(string), number_of_tokens = 0, count_c = 0;
     char str_c[2], **list_of_tokens = (char **)malloc(sizeof(char *) * (len - count_c - 2) + sizeof(char) * (len - count_c));
     sprintf(str_c, "%c", c);
     // Split...
@@ -1563,9 +1546,9 @@ char **split(char *str, uint64_t str_len, char c)
     return list_of_tokens;
 }
 
-double *parse_number(char *string, uint64_t number_of_numbers)
+double *parse_number(char *string, int64_t number_of_numbers)
 {
-    uint64_t count = 0, c = 0, i, string_len = number_of_numbers << 6;
+    int64_t count = 0, c = 0, i, string_len = number_of_numbers << 6;
     double temp_num;
     // Get the splitted_String as a 2D_Character_Array...
     char **splitted_string = split(string, string_len, ' ');
@@ -1588,9 +1571,9 @@ double *parse_number(char *string, uint64_t number_of_numbers)
     return list_of_nums;
 }
 
-Matrix input_matrix(uint64_t rows, uint64_t cols)
+Matrix input_matrix(int64_t rows, int64_t cols)
 {
-    uint64_t r, c, len = 64 * cols;
+    int64_t r, c, len = 64 * cols;
     // Temporary Variables...
     double *temp_row = (double *)calloc(cols, sizeof(double));
     char *temp_str = (char *)calloc(len, sizeof(char));
@@ -1611,29 +1594,29 @@ Matrix input_matrix(uint64_t rows, uint64_t cols)
     return matrix;
 }
 
-Matrix input_row_matrix(uint64_t cols)
+Matrix input_row_matrix(int64_t cols)
 {
     return input_matrix(1, cols);
 }
 
-Matrix input_column_matrix(uint64_t rows)
+Matrix input_column_matrix(int64_t rows)
 {
     return input_matrix(rows, 1);
 }
 
-Matrix input_square_matrix(uint64_t order)
+Matrix input_square_matrix(int64_t order)
 {
     return input_matrix(order, order);
 }
 
-Matrix matrix_from_array(uint64_t rows, uint64_t cols, NumArray array)
+Matrix matrix_from_array(int64_t rows, int64_t cols, NumArray array)
 {
     if ((rows * cols) == array.len)
     {
         Matrix matrix = new_matrix(rows, cols);
-        for (uint64_t r = 0; r < rows; r++)
+        for (int64_t r = 0; r < rows; r++)
         {
-            for (uint64_t c = 0; c < cols; c++)
+            for (int64_t c = 0; c < cols; c++)
                 matrix.data[r][c] = array.nums[cols * r + c];
         }
         return matrix;
@@ -1641,7 +1624,7 @@ Matrix matrix_from_array(uint64_t rows, uint64_t cols, NumArray array)
     return new_matrix(0, 0);
 }
 
-Matrix matrix_from_array_(uint64_t rows, uint64_t cols, double nums[])
+Matrix matrix_from_array_(int64_t rows, int64_t cols, double nums[])
 {
     return matrix_from_array(rows, cols, new_num_array_(rows * cols, nums));
 }
@@ -1651,7 +1634,7 @@ Matrix column_matrix_from_array(NumArray array)
     return matrix_from_array(array.len, 1, array);
 }
 
-Matrix column_matrix_from_array_(uint64_t len, double array[])
+Matrix column_matrix_from_array_(int64_t len, double array[])
 {
     NumArray narray = new_num_array_(len, array);
     return matrix_from_array(len, 1, narray);
@@ -1662,7 +1645,7 @@ Matrix row_matrix_from_array(NumArray array)
     return matrix_from_array(1, array.len, array);
 }
 
-Matrix row_matrix_from_array_(uint64_t len, double array[])
+Matrix row_matrix_from_array_(int64_t len, double array[])
 {
     NumArray narray = new_num_array_(len, array);
     return matrix_from_array(1, len, narray);
@@ -1673,10 +1656,10 @@ NumArray array_from_matrix(Matrix matrix)
     if (!is_null(matrix))
     {
         NumArray array = new_num_array(matrix.rows * matrix.cols);
-        uint64_t i = 0;
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        int64_t i = 0;
+        for (int64_t r = 0; r < matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < matrix.cols; c++)
+            for (int64_t c = 0; c < matrix.cols; c++)
                 array.nums[i++] = matrix.data[r][c];
         }
         return array;
@@ -1684,25 +1667,25 @@ NumArray array_from_matrix(Matrix matrix)
     return new_num_array(0);
 }
 
-Matrix random_matrix(uint64_t rows, uint64_t cols, uint64_t rounding_number, double scalar)
+Matrix random_matrix(int64_t rows, int64_t cols, int64_t rounding_number, double scalar)
 {
     srand(time(0));
     Matrix r_matrix = new_matrix(rows, cols);
-    for (uint64_t r = 0; r < rows; r++)
+    for (int64_t r = 0; r < rows; r++)
     {
-        for (uint64_t c = 0; c < cols; c++)
+        for (int64_t c = 0; c < cols; c++)
             r_matrix.data[r][c] = scalar * ((rand() % rounding_number) + 1);
     }
     return r_matrix;
 }
 
-Matrix random_matrix_(uint64_t rows, uint64_t cols, uint64_t rounding_number, double scalar, double seed)
+Matrix random_matrix_(int64_t rows, int64_t cols, int64_t rounding_number, double scalar, double seed)
 {
     srand(seed);
     Matrix r_matrix = new_matrix(rows, cols);
-    for (uint64_t r = 0; r < rows; r++)
+    for (int64_t r = 0; r < rows; r++)
     {
-        for (uint64_t c = 0; c < cols; c++)
+        for (int64_t c = 0; c < cols; c++)
             r_matrix.data[r][c] = scalar * ((rand() % rounding_number) + 1);
     }
     return r_matrix;
@@ -1711,9 +1694,9 @@ Matrix random_matrix_(uint64_t rows, uint64_t cols, uint64_t rounding_number, do
 Matrix copy_matrix(Matrix matrix)
 {
     Matrix c_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
-        for (uint64_t c = 0; c < matrix.cols; c++)
+        for (int64_t c = 0; c < matrix.cols; c++)
             c_matrix.data[r][c] = matrix.data[r][c];
     }
     return c_matrix;
@@ -1955,44 +1938,44 @@ Vector input_vector()
 Matrix transpose(Matrix matrix)
 {
     Matrix transposed_matrix = new_matrix(matrix.cols, matrix.rows);
-    for (uint64_t r = 0; r < matrix.cols; r++)
+    for (int64_t r = 0; r < matrix.cols; r++)
     {
-        for (uint64_t c = 0; c < matrix.rows; c++)
+        for (int64_t c = 0; c < matrix.rows; c++)
             transposed_matrix.data[r][c] = matrix.data[c][r];
     }
     return transposed_matrix;
 }
 
-Matrix reshape(Matrix matrix, uint64_t rows, uint64_t cols)
+Matrix reshape(Matrix matrix, int64_t rows, int64_t cols)
 {
     if (!is_null(matrix) && (rows * cols) == (matrix.rows * matrix.cols))
         return matrix_from_array(rows, cols, array_from_matrix(matrix));
     return matrix;
 }
 
-Matrix resize(Matrix matrix, uint64_t rows, uint64_t cols)
+Matrix resize(Matrix matrix, int64_t rows, int64_t cols)
 {
     Matrix m = new_matrix(rows, cols);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
-        for (uint64_t c = 0; c < matrix.rows; c++)
+        for (int64_t c = 0; c < matrix.rows; c++)
             m.data[r][c] = matrix.data[r][c];
     }
     return m;
 }
 
-NumArray nth_row_data(Matrix matrix, uint64_t nth_row) // First Column = 0
+NumArray nth_row_data(Matrix matrix, int64_t nth_row) // First Column = 0
 {
     NumArray row_data = new_num_array(matrix.cols);
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    for (int64_t c = 0; c < matrix.cols; c++)
         row_data.nums[c] = matrix.data[nth_row][c];
     return row_data;
 }
 
-NumArray nth_column_data(Matrix matrix, uint64_t nth_column) // First Row = 0
+NumArray nth_column_data(Matrix matrix, int64_t nth_column) // First Row = 0
 {
     NumArray col_data = new_num_array(matrix.rows);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
         col_data.nums[r] = matrix.data[r][nth_column];
     return col_data;
 }
@@ -2002,7 +1985,7 @@ Matrix append_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (row_matrix.rows == 1)
     {
         Matrix new_matrix = resize(base_matrix, base_matrix.rows + 1, base_matrix.cols);
-        for (uint64_t c = 0; c < base_matrix.cols; c++)
+        for (int64_t c = 0; c < base_matrix.cols; c++)
             new_matrix.data[base_matrix.rows][c] = row_matrix.data[0][c];
         return new_matrix;
     }
@@ -2014,23 +1997,23 @@ Matrix append_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (column_matrix.cols == 1)
     {
         Matrix new_matrix = resize(base_matrix, base_matrix.rows, base_matrix.cols + 1);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
             new_matrix.data[r][base_matrix.cols] = column_matrix.data[r][0];
         return new_matrix;
     }
     return base_matrix;
 }
 
-Matrix insert_row_matrix(Matrix base_matrix, uint64_t index_of_row, Matrix row_matrix)
+Matrix insert_row_matrix(Matrix base_matrix, int64_t index_of_row, Matrix row_matrix)
 {
     if (row_matrix.rows == 1)
     {
         if (index_of_row >= 0 && index_of_row < base_matrix.rows)
         {
             Matrix m = new_matrix(base_matrix.rows + 1, base_matrix.cols);
-            for (uint64_t r = 0; r < base_matrix.rows + 1; r++)
+            for (int64_t r = 0; r < base_matrix.rows + 1; r++)
             {
-                for (uint64_t c = 0; c < base_matrix.cols; c++)
+                for (int64_t c = 0; c < base_matrix.cols; c++)
                 {
                     if (r < index_of_row)
                         m.data[r][c] = base_matrix.data[r][c];
@@ -2050,16 +2033,16 @@ Matrix insert_row_matrix(Matrix base_matrix, uint64_t index_of_row, Matrix row_m
     return base_matrix;
 }
 
-Matrix insert_column_matrix(Matrix base_matrix, uint64_t index_of_col, Matrix column_matrix)
+Matrix insert_column_matrix(Matrix base_matrix, int64_t index_of_col, Matrix column_matrix)
 {
     if (column_matrix.cols == 1)
     {
         if (index_of_col >= 0 && index_of_col < base_matrix.cols)
         {
             Matrix m = new_matrix(base_matrix.rows, base_matrix.cols + 1);
-            for (uint64_t r = 0; r < base_matrix.rows; r++)
+            for (int64_t r = 0; r < base_matrix.rows; r++)
             {
-                for (uint64_t c = 0; c < base_matrix.cols + 1; c++)
+                for (int64_t c = 0; c < base_matrix.cols + 1; c++)
                 {
                     if (c < index_of_col)
                         m.data[r][c] = base_matrix.data[r][c];
@@ -2078,16 +2061,16 @@ Matrix insert_column_matrix(Matrix base_matrix, uint64_t index_of_col, Matrix co
     return base_matrix;
 }
 
-Matrix del_row_matrix(Matrix base_matrix, uint64_t index_of_row)
+Matrix del_row_matrix(Matrix base_matrix, int64_t index_of_row)
 {
     if (index_of_row >= 0 && index_of_row < base_matrix.rows)
     {
         Matrix m = new_matrix(base_matrix.rows - 1, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
             if (r == index_of_row)
                 continue;
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
             {
                 if (r < index_of_row)
                     m.data[r][c] = base_matrix.data[r][c];
@@ -2100,14 +2083,14 @@ Matrix del_row_matrix(Matrix base_matrix, uint64_t index_of_row)
     return base_matrix;
 }
 
-Matrix del_column_matrix(Matrix base_matrix, uint64_t index_of_col)
+Matrix del_column_matrix(Matrix base_matrix, int64_t index_of_col)
 {
     if (index_of_col >= 0 && index_of_col < base_matrix.cols)
     {
         Matrix m = new_matrix(base_matrix.rows, base_matrix.cols - 1);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
             {
                 if (c < index_of_col)
                     m.data[r][c] = base_matrix.data[r][c];
@@ -2122,14 +2105,14 @@ Matrix del_column_matrix(Matrix base_matrix, uint64_t index_of_col)
     return base_matrix;
 }
 
-Matrix replace_row_matrix(Matrix base_matrix, uint64_t index_of_row, Matrix row_matrix)
+Matrix replace_row_matrix(Matrix base_matrix, int64_t index_of_row, Matrix row_matrix)
 {
     if (row_matrix.rows == 1 && index_of_row >= 0 && index_of_row < base_matrix.rows)
     {
         Matrix m = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
             {
                 if (r == index_of_row)
                     m.data[r][c] = row_matrix.data[0][c];
@@ -2142,14 +2125,14 @@ Matrix replace_row_matrix(Matrix base_matrix, uint64_t index_of_row, Matrix row_
     return base_matrix;
 }
 
-Matrix replace_column_matrix(Matrix base_matrix, uint64_t index_of_col, Matrix column_matrix)
+Matrix replace_column_matrix(Matrix base_matrix, int64_t index_of_col, Matrix column_matrix)
 {
     if (column_matrix.cols == 1 && index_of_col >= 0 && index_of_col < base_matrix.cols)
     {
         Matrix m = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
             {
                 if (c == index_of_col)
                     m.data[r][c] = column_matrix.data[r][0];
@@ -2176,7 +2159,7 @@ Matrix pop_column_matrix(Matrix base_matrix)
     return base_matrix;
 }
 
-Matrix swap_index(Matrix base_matrix, Pair first_index, Pair second_index)
+Matrix swap_index(Matrix base_matrix, Matrix_Index first_index, Matrix_Index second_index)
 {
     if (first_index.first < base_matrix.rows && first_index.second < base_matrix.cols && second_index.first < base_matrix.rows && second_index.second < base_matrix.cols && first_index.first != second_index.first && first_index.second != second_index.second)
     {
@@ -2188,12 +2171,12 @@ Matrix swap_index(Matrix base_matrix, Pair first_index, Pair second_index)
     return base_matrix;
 }
 
-Matrix swap_row(Matrix base_matrix, uint64_t first_row, uint64_t second_row)
+Matrix swap_row(Matrix base_matrix, int64_t first_row, int64_t second_row)
 {
     if (first_row < base_matrix.rows && second_row < base_matrix.rows && first_row != second_row)
     {
         Matrix mat = copy_matrix(base_matrix);
-        for (uint64_t c = 0; c < base_matrix.cols; c++)
+        for (int64_t c = 0; c < base_matrix.cols; c++)
         {
             mat.data[first_row][c] = base_matrix.data[second_row][c];
             mat.data[second_row][c] = base_matrix.data[first_row][c];
@@ -2203,12 +2186,12 @@ Matrix swap_row(Matrix base_matrix, uint64_t first_row, uint64_t second_row)
     return base_matrix;
 }
 
-Matrix swap_column(Matrix base_matrix, uint64_t first_col, uint64_t second_col)
+Matrix swap_column(Matrix base_matrix, int64_t first_col, int64_t second_col)
 {
     if (first_col < base_matrix.cols && second_col < base_matrix.cols && first_col != second_col)
     {
         Matrix mat = copy_matrix(base_matrix);
-        for (uint64_t r = 0; r < base_matrix.cols; r++)
+        for (int64_t r = 0; r < base_matrix.cols; r++)
         {
             mat.data[r][first_col] = base_matrix.data[r][second_col];
             mat.data[r][second_col] = base_matrix.data[r][first_col];
@@ -2218,33 +2201,33 @@ Matrix swap_column(Matrix base_matrix, uint64_t first_col, uint64_t second_col)
     return base_matrix;
 }
 
-Matrix get_row_matrix(Matrix base_matrix, uint64_t index_of_row)
+Matrix get_row_matrix(Matrix base_matrix, int64_t index_of_row)
 {
     if (index_of_row >= 0 && index_of_row < base_matrix.rows)
     {
         Matrix m = new_matrix(1, base_matrix.cols);
-        for (uint64_t c = 0; c < base_matrix.cols; c++)
+        for (int64_t c = 0; c < base_matrix.cols; c++)
             m.data[0][c] = base_matrix.data[index_of_row][c];
         return m;
     }
     return new_matrix(0, 0);
 }
 
-Matrix get_column_matrix(Matrix base_matrix, uint64_t index_of_col)
+Matrix get_column_matrix(Matrix base_matrix, int64_t index_of_col)
 {
     if (index_of_col >= 0 && index_of_col < base_matrix.rows)
     {
         Matrix m = new_matrix(base_matrix.rows, 1);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
             m.data[r][0] = base_matrix.data[r][index_of_col];
         return m;
     }
     return new_matrix(0, 0);
 }
 
-Pair matrix_shape(Matrix matrix)
+Matrix_Index matrix_shape(Matrix matrix)
 {
-    return new_pair(matrix.rows, matrix.cols);
+    return new_matrix_index(matrix.rows, matrix.cols);
 }
 
 _Bool are_similar_num_array(NumArray array_1, NumArray array_2)
@@ -2269,7 +2252,7 @@ double clip_double(double number, double min, double max)
 NumArray clip_number_array(NumArray array, double min, double max)
 {
     NumArray clipped_array = new_num_array(array.len);
-    for (uint64_t i = 0; i < array.len; i++)
+    for (int64_t i = 0; i < array.len; i++)
     {
         if (array.nums[i] >= min && array.nums[i] <= max)
             clipped_array.nums[i] = array.nums[i];
@@ -2284,9 +2267,9 @@ NumArray clip_number_array(NumArray array, double min, double max)
 Matrix clip_matrix(Matrix matrix, double min, double max)
 {
     Matrix clipped_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
-        for (uint64_t c = 0; c < matrix.cols; c++)
+        for (int64_t c = 0; c < matrix.cols; c++)
         {
             if (matrix.data[r][c] >= min && matrix.data[r][c] <= max)
                 clipped_matrix.data[r][c] = matrix.data[r][c];
@@ -2299,18 +2282,18 @@ Matrix clip_matrix(Matrix matrix, double min, double max)
     return clipped_matrix;
 }
 
-uint64_t argmax_num_array_index(NumArray array)
+int64_t argmax_num_array_index(NumArray array)
 {
-    uint64_t arg = 0;
-    for (uint64_t i = 1; i < array.len; i++)
+    int64_t arg = 0;
+    for (int64_t i = 1; i < array.len; i++)
         arg = (array.nums[arg] > array.nums[i]) ? arg : i;
     return arg;
 }
 
-uint64_t argmin_num_array_index(NumArray array)
+int64_t argmin_num_array_index(NumArray array)
 {
-    uint64_t arg = 0;
-    for (uint64_t i = 1; i < array.len; i++)
+    int64_t arg = 0;
+    for (int64_t i = 1; i < array.len; i++)
         arg = (array.nums[arg] < array.nums[i]) ? arg : i;
     return arg;
 }
@@ -2318,10 +2301,10 @@ uint64_t argmin_num_array_index(NumArray array)
 NumArray argmax_matrix_row_indices(Matrix matrix)
 {
     NumArray arg_array = new_num_array(matrix.rows * matrix.cols);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
-        uint64_t arg_c = 0;
-        for (uint64_t c = 1; c < matrix.cols; c++)
+        int64_t arg_c = 0;
+        for (int64_t c = 1; c < matrix.cols; c++)
             arg_c = (matrix.data[r][arg_c] > matrix.data[r][c]) ? arg_c : c;
         arg_array.nums[r] = arg_c;
     }
@@ -2331,10 +2314,10 @@ NumArray argmax_matrix_row_indices(Matrix matrix)
 NumArray argmax_matrix_column_indices(Matrix matrix)
 {
     NumArray arg_array = new_num_array(matrix.rows * matrix.cols);
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    for (int64_t c = 0; c < matrix.cols; c++)
     {
-        uint64_t arg_r = 0;
-        for (uint64_t r = 1; r < matrix.rows; r++)
+        int64_t arg_r = 0;
+        for (int64_t r = 1; r < matrix.rows; r++)
             arg_r = (matrix.data[arg_r][c] > matrix.data[r][c]) ? arg_r : r;
         arg_array.nums[c] = arg_r;
     }
@@ -2344,10 +2327,10 @@ NumArray argmax_matrix_column_indices(Matrix matrix)
 NumArray argmin_matrix_row_indices(Matrix matrix)
 {
     NumArray arg_array = new_num_array(matrix.rows * matrix.cols);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
-        uint64_t arg_c = 0;
-        for (uint64_t c = 1; c < matrix.cols; c++)
+        int64_t arg_c = 0;
+        for (int64_t c = 1; c < matrix.cols; c++)
             arg_c = (matrix.data[r][arg_c] < matrix.data[r][c]) ? arg_c : c;
         arg_array.nums[r] = arg_c;
     }
@@ -2357,10 +2340,10 @@ NumArray argmin_matrix_row_indices(Matrix matrix)
 NumArray argmin_matrix_column_indices(Matrix matrix)
 {
     NumArray arg_array = new_num_array(matrix.rows * matrix.cols);
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    for (int64_t c = 0; c < matrix.cols; c++)
     {
-        uint64_t arg_r = 0;
-        for (uint64_t r = 1; r < matrix.rows; r++)
+        int64_t arg_r = 0;
+        for (int64_t r = 1; r < matrix.rows; r++)
             arg_r = (matrix.data[arg_r][c] < matrix.data[r][c]) ? arg_r : r;
         arg_array.nums[c] = arg_r;
     }
@@ -2370,7 +2353,7 @@ NumArray argmin_matrix_column_indices(Matrix matrix)
 double sum_num_array(NumArray array)
 {
     double sum = 0;
-    for (uint64_t i = 0; i < array.len; i++)
+    for (int64_t i = 0; i < array.len; i++)
         sum += array.nums[i];
     return sum;
 }
@@ -2383,7 +2366,7 @@ double mean_num_array(NumArray array)
 double product_num_array(NumArray array)
 {
     double product = 0;
-    for (uint64_t i = 0; i < array.len; i++)
+    for (int64_t i = 0; i < array.len; i++)
         product *= array.nums[i];
     return product;
 }
@@ -2391,7 +2374,7 @@ double product_num_array(NumArray array)
 double max_num_array_element(NumArray array)
 {
     double max = array.nums[0];
-    for (uint64_t i = 1; i < array.len; i++)
+    for (int64_t i = 1; i < array.len; i++)
         max = (max > array.nums[i]) ? max : array.nums[i];
     return max;
 }
@@ -2399,7 +2382,7 @@ double max_num_array_element(NumArray array)
 double min_num_array_element(NumArray array)
 {
     double min = array.nums[0];
-    for (uint64_t i = 1; i < array.len; i++)
+    for (int64_t i = 1; i < array.len; i++)
         min = (min < array.nums[i]) ? min : array.nums[i];
     return min;
 }
@@ -2407,10 +2390,10 @@ double min_num_array_element(NumArray array)
 Matrix sum_matrix_row_elements(Matrix matrix)
 {
     Matrix sum_matrix = new_matrix(matrix.rows, 1);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
         double sum = 0;
-        for (uint64_t c = 0; c < matrix.cols; c++)
+        for (int64_t c = 0; c < matrix.cols; c++)
             sum += matrix.data[r][c];
         sum_matrix.data[r][0] = sum;
     }
@@ -2420,10 +2403,10 @@ Matrix sum_matrix_row_elements(Matrix matrix)
 Matrix sum_matrix_column_elements(Matrix matrix)
 {
     Matrix sum_matrix = new_matrix(1, matrix.cols);
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    for (int64_t c = 0; c < matrix.cols; c++)
     {
         double sum = 0;
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        for (int64_t r = 0; r < matrix.rows; r++)
             sum += matrix.data[r][c];
         sum_matrix.data[0][c] = sum;
     }
@@ -2433,10 +2416,10 @@ Matrix sum_matrix_column_elements(Matrix matrix)
 Matrix product_matrix_row_elements(Matrix matrix)
 {
     Matrix product_matrix = new_matrix(matrix.rows, 1);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
         double product = 0;
-        for (uint64_t c = 0; c < matrix.cols; c++)
+        for (int64_t c = 0; c < matrix.cols; c++)
             product *= matrix.data[r][c];
         product_matrix.data[r][0] = product;
     }
@@ -2446,10 +2429,10 @@ Matrix product_matrix_row_elements(Matrix matrix)
 Matrix product_matrix_column_elements(Matrix matrix)
 {
     Matrix product_matrix = new_matrix(1, matrix.cols);
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    for (int64_t c = 0; c < matrix.cols; c++)
     {
         double product = 0;
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        for (int64_t r = 0; r < matrix.rows; r++)
             product *= matrix.data[r][c];
         product_matrix.data[0][c] = product;
     }
@@ -2459,10 +2442,10 @@ Matrix product_matrix_column_elements(Matrix matrix)
 Matrix max_matrix_row_elements(Matrix matrix)
 {
     Matrix max_matrix = new_matrix(matrix.rows, 1);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
         double max = matrix.data[r][0];
-        for (uint64_t c = 1; c < matrix.cols; c++)
+        for (int64_t c = 1; c < matrix.cols; c++)
             max = (max > matrix.data[r][c]) ? max : matrix.data[r][c];
         max_matrix.data[r][0] = max;
     }
@@ -2472,10 +2455,10 @@ Matrix max_matrix_row_elements(Matrix matrix)
 Matrix max_matrix_column_elements(Matrix matrix)
 {
     Matrix max_matrix = new_matrix(1, matrix.cols);
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    for (int64_t c = 0; c < matrix.cols; c++)
     {
         double max = matrix.data[0][c];
-        for (uint64_t r = 1; r < matrix.rows; r++)
+        for (int64_t r = 1; r < matrix.rows; r++)
             max = (max > matrix.data[r][c]) ? max : matrix.data[r][c];
         max_matrix.data[0][c] = max;
     }
@@ -2485,10 +2468,10 @@ Matrix max_matrix_column_elements(Matrix matrix)
 Matrix min_matrix_row_elements(Matrix matrix)
 {
     Matrix min_matrix = new_matrix(matrix.rows, 1);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
         double min = matrix.data[r][0];
-        for (uint64_t c = 1; c < matrix.cols; c++)
+        for (int64_t c = 1; c < matrix.cols; c++)
             min = (min < matrix.data[r][c]) ? min : matrix.data[r][c];
         min_matrix.data[r][0] = min;
     }
@@ -2498,10 +2481,10 @@ Matrix min_matrix_row_elements(Matrix matrix)
 Matrix min_matrix_column_elements(Matrix matrix)
 {
     Matrix min_matrix = new_matrix(1, matrix.cols);
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    for (int64_t c = 0; c < matrix.cols; c++)
     {
         double min = matrix.data[0][c];
-        for (uint64_t r = 1; r < matrix.rows; r++)
+        for (int64_t r = 1; r < matrix.rows; r++)
             min = (min < matrix.data[r][c]) ? min : matrix.data[r][c];
         min_matrix.data[0][c] = min;
     }
@@ -2513,9 +2496,9 @@ Matrix max_matrix_elements(Matrix matrix_1, Matrix matrix_2)
     if (are_similar_matrix(matrix_1, matrix_2))
     {
         Matrix max_matrix = new_matrix(matrix_1.rows, matrix_1.cols);
-        for (uint64_t r = 0; r < matrix_1.rows; r++)
+        for (int64_t r = 0; r < matrix_1.rows; r++)
         {
-            for (uint64_t c = 0; c < matrix_1.cols; c++)
+            for (int64_t c = 0; c < matrix_1.cols; c++)
                 max_matrix.data[r][c] = max_double(matrix_1.data[r][c], matrix_2.data[r][c]);
         }
         return max_matrix;
@@ -2529,9 +2512,9 @@ Matrix min_matrix_elements(Matrix matrix_1, Matrix matrix_2)
     if (are_similar_matrix(matrix_1, matrix_2))
     {
         Matrix min_matrix = new_matrix(matrix_1.rows, matrix_1.cols);
-        for (uint64_t r = 0; r < matrix_1.rows; r++)
+        for (int64_t r = 0; r < matrix_1.rows; r++)
         {
-            for (uint64_t c = 0; c < matrix_1.cols; c++)
+            for (int64_t c = 0; c < matrix_1.cols; c++)
                 min_matrix.data[r][c] = min_double(matrix_1.data[r][c], matrix_2.data[r][c]);
         }
         return min_matrix;
@@ -2543,9 +2526,9 @@ Matrix min_matrix_elements(Matrix matrix_1, Matrix matrix_2)
 Matrix exp_matrix(Matrix matrix)
 {
     Matrix exped_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
-        for (uint64_t c = 0; c < matrix.cols; c++)
+        for (int64_t c = 0; c < matrix.cols; c++)
             exped_matrix.data[r][c] = exp(matrix.data[r][c]);
     }
     return exped_matrix;
@@ -2554,9 +2537,9 @@ Matrix exp_matrix(Matrix matrix)
 Matrix exp_matrix_(Matrix matrix, double base)
 {
     Matrix exped_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
-        for (uint64_t c = 0; c < matrix.cols; c++)
+        for (int64_t c = 0; c < matrix.cols; c++)
             exped_matrix.data[r][c] = power_double(base, matrix.data[r][c]);
     }
     return exped_matrix;
@@ -2570,37 +2553,37 @@ NumArray compare_num_array_elements(NumArray array_1, char *comparator, NumArray
 
         if (strcmp(comparator, "==") == 0)
         {
-            for (uint64_t i = 0; i < array_1.len; i++)
+            for (int64_t i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] == array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "!=") == 0)
         {
-            for (uint64_t i = 0; i < array_1.len; i++)
+            for (int64_t i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] != array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "<") == 0)
         {
-            for (uint64_t i = 0; i < array_1.len; i++)
+            for (int64_t i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] < array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "<=") == 0)
         {
-            for (uint64_t i = 0; i < array_1.len; i++)
+            for (int64_t i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] <= array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, ">") == 0)
         {
-            for (uint64_t i = 0; i < array_1.len; i++)
+            for (int64_t i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] > array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, ">=") == 0)
         {
-            for (uint64_t i = 0; i < array_1.len; i++)
+            for (int64_t i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] >= array_2.nums[i]);
             return new_array;
         }
@@ -2616,54 +2599,54 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
         Matrix new_mat = new_matrix(matrix_1.rows, matrix_1.cols);
         if (strcmp(comparator, "==") == 0)
         {
-            for (uint64_t r = 0; r < matrix_1.rows; r++)
+            for (int64_t r = 0; r < matrix_1.rows; r++)
             {
-                for (uint64_t c = 0; c < matrix_1.cols; c++)
+                for (int64_t c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] == matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, "!=") == 0)
         {
-            for (uint64_t r = 0; r < matrix_1.rows; r++)
+            for (int64_t r = 0; r < matrix_1.rows; r++)
             {
-                for (uint64_t c = 0; c < matrix_1.cols; c++)
+                for (int64_t c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] != matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, "<") == 0)
         {
-            for (uint64_t r = 0; r < matrix_1.rows; r++)
+            for (int64_t r = 0; r < matrix_1.rows; r++)
             {
-                for (uint64_t c = 0; c < matrix_1.cols; c++)
+                for (int64_t c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] < matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, "<=") == 0)
         {
-            for (uint64_t r = 0; r < matrix_1.rows; r++)
+            for (int64_t r = 0; r < matrix_1.rows; r++)
             {
-                for (uint64_t c = 0; c < matrix_1.cols; c++)
+                for (int64_t c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] <= matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, ">") == 0)
         {
-            for (uint64_t r = 0; r < matrix_1.rows; r++)
+            for (int64_t r = 0; r < matrix_1.rows; r++)
             {
-                for (uint64_t c = 0; c < matrix_1.cols; c++)
+                for (int64_t c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] > matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, ">=") == 0)
         {
-            for (uint64_t r = 0; r < matrix_1.rows; r++)
+            for (int64_t r = 0; r < matrix_1.rows; r++)
             {
-                for (uint64_t c = 0; c < matrix_1.cols; c++)
+                for (int64_t c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] >= matrix_2.data[r][c]);
             }
             return new_mat;
@@ -2679,7 +2662,7 @@ Matrix principal_diagonal(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         Matrix diagonal_matrix = new_matrix(1, matrix.cols);
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        for (int64_t r = 0; r < matrix.rows; r++)
             diagonal_matrix.data[0][r] = matrix.data[r][r];
         return diagonal_matrix;
     }
@@ -2691,7 +2674,7 @@ Matrix principal_diagonal_matrix(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         Matrix diagonal_matrix = new_matrix(matrix.rows, matrix.cols);
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        for (int64_t r = 0; r < matrix.rows; r++)
             diagonal_matrix.data[r][r] = matrix.data[r][r];
         return diagonal_matrix;
     }
@@ -2703,7 +2686,7 @@ double trace(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         double sum = 0;
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        for (int64_t r = 0; r < matrix.rows; r++)
             sum += matrix.data[r][r];
         return sum;
     }
@@ -2715,7 +2698,7 @@ Matrix secondary_diagonal(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         Matrix diagonal_matrix = new_matrix(1, matrix.cols);
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        for (int64_t r = 0; r < matrix.rows; r++)
             diagonal_matrix.data[0][r] = matrix.data[r][matrix.cols - r - 1];
         return diagonal_matrix;
     }
@@ -2727,7 +2710,7 @@ Matrix secondary_diagonal_matrix(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         Matrix diagonal_matrix = new_matrix(matrix.rows, matrix.cols);
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        for (int64_t r = 0; r < matrix.rows; r++)
             diagonal_matrix.data[r][matrix.cols - r - 1] = matrix.data[r][matrix.cols - r - 1];
         return diagonal_matrix;
     }
@@ -2739,7 +2722,7 @@ double secondary_trace(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         double sum = 0;
-        for (uint64_t r = 0; r < matrix.rows; r++)
+        for (int64_t r = 0; r < matrix.rows; r++)
             sum += matrix.data[r][matrix.cols - r - 1];
         return sum;
     }
@@ -2749,9 +2732,9 @@ double secondary_trace(Matrix matrix)
 Matrix scale_matrix(Matrix matrix, double scalar_number)
 {
     Matrix scaled_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
-        for (uint64_t c = 0; c < matrix.cols; c++)
+        for (int64_t c = 0; c < matrix.cols; c++)
             scaled_matrix.data[r][c] = scalar_number * matrix.data[r][c];
     }
     return scaled_matrix;
@@ -2772,9 +2755,9 @@ Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
     if (are_perfect(matrix_1, matrix_2, addition))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_1.cols);
-        for (uint64_t r = 0; r < matrix_1.rows; r++)
+        for (int64_t r = 0; r < matrix_1.rows; r++)
         {
-            for (uint64_t c = 0; c < matrix_1.cols; c++)
+            for (int64_t c = 0; c < matrix_1.cols; c++)
                 result.data[r][c] = matrix_1.data[r][c] + matrix_2.data[r][c];
         }
         return result;
@@ -2787,9 +2770,9 @@ Matrix subtract_matrix(Matrix matrix_1, Matrix matrix_2)
     if (are_perfect(matrix_1, matrix_2, subtraction))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_1.cols);
-        for (uint64_t r = 0; r < matrix_1.rows; r++)
+        for (int64_t r = 0; r < matrix_1.rows; r++)
         {
-            for (uint64_t c = 0; c < matrix_1.cols; c++)
+            for (int64_t c = 0; c < matrix_1.cols; c++)
                 result.data[r][c] = matrix_1.data[r][c] - matrix_2.data[r][c];
         }
         return result;
@@ -2802,9 +2785,9 @@ Matrix add_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (base_matrix.cols == row_matrix.cols)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] + row_matrix.data[0][c];
         }
         return result;
@@ -2817,9 +2800,9 @@ Matrix add_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (base_matrix.rows == column_matrix.rows)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] + column_matrix.data[r][0];
         }
         return result;
@@ -2832,9 +2815,9 @@ Matrix subtract_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (base_matrix.cols == row_matrix.cols)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] - row_matrix.data[0][c];
         }
         return result;
@@ -2847,9 +2830,9 @@ Matrix subtract_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (base_matrix.rows == column_matrix.rows)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] - column_matrix.data[r][0];
         }
         return result;
@@ -2862,9 +2845,9 @@ Matrix divide_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (base_matrix.cols == row_matrix.cols)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] / row_matrix.data[0][c];
         }
         return result;
@@ -2877,9 +2860,9 @@ Matrix divide_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (base_matrix.rows == column_matrix.rows)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
+            for (int64_t c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] / column_matrix.data[r][0];
         }
         return result;
@@ -2892,10 +2875,10 @@ Matrix mod_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (base_matrix.cols == row_matrix.cols)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
-                result.data[r][c] = (uint64_t)base_matrix.data[r][c] % (uint64_t)row_matrix.data[0][c];
+            for (int64_t c = 0; c < base_matrix.cols; c++)
+                result.data[r][c] = (int64_t)base_matrix.data[r][c] % (int64_t)row_matrix.data[0][c];
         }
         return result;
     }
@@ -2907,10 +2890,10 @@ Matrix mod_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (base_matrix.rows == column_matrix.rows)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (uint64_t r = 0; r < base_matrix.rows; r++)
+        for (int64_t r = 0; r < base_matrix.rows; r++)
         {
-            for (uint64_t c = 0; c < base_matrix.cols; c++)
-                result.data[r][c] = (uint64_t)base_matrix.data[r][c] % (uint64_t)column_matrix.data[r][0];
+            for (int64_t c = 0; c < base_matrix.cols; c++)
+                result.data[r][c] = (int64_t)base_matrix.data[r][c] % (int64_t)column_matrix.data[r][0];
         }
         return result;
     }
@@ -2922,12 +2905,12 @@ Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
     if (are_perfect(matrix_1, matrix_2, multiplication))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_2.cols);
-        for (uint64_t i = 0; i < matrix_1.rows; i++)
+        for (int64_t i = 0; i < matrix_1.rows; i++)
         {
-            for (uint64_t j = 0; j < matrix_2.cols; j++)
+            for (int64_t j = 0; j < matrix_2.cols; j++)
             {
                 result.data[i][j] = 0;
-                for (uint64_t k = 0; k < matrix_2.rows; k++)
+                for (int64_t k = 0; k < matrix_2.rows; k++)
                     result.data[i][j] += matrix_1.data[i][k] * matrix_2.data[k][j];
             }
         }
@@ -2936,7 +2919,7 @@ Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
     return new_matrix(0, 0);
 }
 
-Matrix power_matrix(Matrix matrix, uint64_t n)
+Matrix power_matrix(Matrix matrix, int64_t n)
 {
     if (matrix.rows == matrix.cols)
     {
@@ -2963,17 +2946,17 @@ Matrix power_matrix(Matrix matrix, uint64_t n)
     return matrix;
 }
 
-Matrix minor_matrix(Matrix matrix, uint64_t index_row, uint64_t index_col)
+Matrix minor_matrix(Matrix matrix, int64_t index_row, int64_t index_col)
 {
     if (is_square_matrix(matrix))
     {
         Matrix minor = new_matrix(matrix.rows - 1, matrix.cols - 1);
-        uint64_t r = 0, c = 0;
-        for (uint64_t row = 0; row < matrix.rows; row++)
+        int64_t r = 0, c = 0;
+        for (int64_t row = 0; row < matrix.rows; row++)
         {
             if (row != index_row)
             {
-                for (uint64_t col = 0; col < matrix.rows; col++)
+                for (int64_t col = 0; col < matrix.rows; col++)
                 {
                     if (col != index_col)
                         minor.data[r][c++] = matrix.data[row][col];
@@ -2994,9 +2977,9 @@ double determinant(Matrix matrix)
         if (matrix.rows == 1 && matrix.cols == 1)
             return matrix.data[0][0];
         Matrix temp_minor_matrix = new_matrix(matrix.rows - 1, matrix.cols - 1);
-        uint64_t sign = 1;
+        int64_t sign = 1;
         double det = 0;
-        for (uint64_t c = 0; c < matrix.rows; c++)
+        for (int64_t c = 0; c < matrix.rows; c++)
         {
             temp_minor_matrix = minor_matrix(matrix, 0, c);
             det += sign * matrix.data[0][c] * determinant(temp_minor_matrix);
@@ -3007,18 +2990,18 @@ double determinant(Matrix matrix)
     return 0;
 }
 
-double minor(Matrix matrix, uint64_t index_row, uint64_t index_col)
+double minor(Matrix matrix, int64_t index_row, int64_t index_col)
 {
     if (is_square_matrix(matrix))
         return determinant(minor_matrix(matrix, index_row, index_col));
     return 0;
 }
 
-double co_factor(Matrix matrix, uint64_t index_row, uint64_t index_col)
+double co_factor(Matrix matrix, int64_t index_row, int64_t index_col)
 {
     if (is_square_matrix(matrix))
     {
-        uint64_t sign = (index_row + index_col) % 2 == 0 ? 1 : -1;
+        int64_t sign = (index_row + index_col) % 2 == 0 ? 1 : -1;
         return (double)sign * determinant(minor_matrix(matrix, index_row, index_col));
     }
     return 0;
@@ -3029,9 +3012,9 @@ Matrix adjoint(Matrix matrix)
     if (is_square_matrix(matrix))
     {
         Matrix adjoint_matrix = new_matrix(matrix.rows, matrix.cols);
-        for (uint64_t r = 0; r < matrix.cols; r++)
+        for (int64_t r = 0; r < matrix.cols; r++)
         {
-            for (uint64_t c = 0; c < matrix.rows; c++)
+            for (int64_t c = 0; c < matrix.rows; c++)
                 adjoint_matrix.data[r][c] = co_factor(matrix, r, c);
         }
         return transpose(adjoint_matrix);
@@ -3042,7 +3025,7 @@ Matrix adjoint(Matrix matrix)
 Matrix inverse(Matrix matrix)
 {
     if (is_square_matrix(matrix))
-        return scale_matrix(adjoint(matrix), 1 / determinant(matrix));
+        return scale_matrix(adjoint(matrix), 1.0 / determinant(matrix));
     return new_matrix(0, 0);
 }
 
@@ -3269,7 +3252,7 @@ Matrix solve_xy(Matrix coefficients_square_matrix, Matrix constants_column_matri
     if (is_square_matrix(coefficients_square_matrix) && constants_column_matrix.rows == coefficients_square_matrix.cols && constants_column_matrix.cols == 1)
     {
         double scaling_factor = 1 / determinant(coefficients_square_matrix);
-        for (uint64_t i = 0; i < coefficients_square_matrix.cols; i++)
+        for (int64_t i = 0; i < coefficients_square_matrix.cols; i++)
             result_column_matrix.data[i][0] = scaling_factor * determinant(replace_column_matrix(coefficients_square_matrix, i, constants_column_matrix));
     }
     return result_column_matrix;
@@ -3410,10 +3393,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            uint64_t n = matrix.rows, count_zeros = 0, count_non_zeros = 0;
-            for (uint64_t r = 0; r < n; r++)
+            int64_t n = matrix.rows, count_zeros = 0, count_non_zeros = 0;
+            for (int64_t r = 0; r < n; r++)
             {
-                for (uint64_t c = 0; c < n; c++)
+                for (int64_t c = 0; c < n; c++)
                 {
                     if (c != r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3432,10 +3415,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            uint64_t n = matrix.rows, constant = matrix.data[0][0], count_zeros = 0, count_consts = 0;
-            for (uint64_t r = 0; r < n; r++)
+            int64_t n = matrix.rows, constant = matrix.data[0][0], count_zeros = 0, count_consts = 0;
+            for (int64_t r = 0; r < n; r++)
             {
-                for (uint64_t c = 0; c < n; c++)
+                for (int64_t c = 0; c < n; c++)
                 {
                     if (c != r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3454,10 +3437,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            uint64_t n = matrix.rows, count_zeros = 0, count_unit = 0;
-            for (uint64_t r = 0; r < n; r++)
+            int64_t n = matrix.rows, count_zeros = 0, count_unit = 0;
+            for (int64_t r = 0; r < n; r++)
             {
-                for (uint64_t c = 0; c < n; c++)
+                for (int64_t c = 0; c < n; c++)
                 {
                     if (c != r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3476,10 +3459,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            uint64_t n = matrix.rows, count_zeros = 0;
-            for (uint64_t r = 0; r < n; r++)
+            int64_t n = matrix.rows, count_zeros = 0;
+            for (int64_t r = 0; r < n; r++)
             {
-                for (uint64_t c = 0; c < n; c++)
+                for (int64_t c = 0; c < n; c++)
                 {
                     if (matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3496,10 +3479,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            uint64_t n = matrix.rows, m = (n * (n - 1)) / 2, count_zeros = 0;
-            for (uint64_t r = 0; r < n; r++)
+            int64_t n = matrix.rows, m = (n * (n - 1)) / 2, count_zeros = 0;
+            for (int64_t r = 0; r < n; r++)
             {
-                for (uint64_t c = 0; c < n; c++)
+                for (int64_t c = 0; c < n; c++)
                 {
                     if (c < r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3516,10 +3499,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            uint64_t n = matrix.rows, m = (n * (n - 1)) / 2, count_zeros = 0;
-            for (uint64_t r = 0; r < n; r++)
+            int64_t n = matrix.rows, m = (n * (n - 1)) / 2, count_zeros = 0;
+            for (int64_t r = 0; r < n; r++)
             {
-                for (uint64_t c = 0; c < n; c++)
+                for (int64_t c = 0; c < n; c++)
                 {
                     if (c > r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3582,7 +3565,7 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
                 return 1;
             else if (is_type_of(matrix, identity_matrix))
                 return 1;
-            uint64_t trial = 0;
+            int64_t trial = 0;
             Matrix temp_matrix = new_matrix(matrix.rows, matrix.cols);
             temp_matrix = copy_matrix(matrix);
             while (trial != 1024)
@@ -3603,7 +3586,7 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
         {
             if (is_type_of(matrix, null_matrix))
                 return 1;
-            uint64_t trial = 0;
+            int64_t trial = 0;
             Matrix temp_matrix = new_matrix(matrix.rows, matrix.cols);
             temp_matrix = copy_matrix(matrix);
             while (trial != 1024)
@@ -3625,10 +3608,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
 char **types_of_matrix(Matrix matrix, text_style text_style)
 {
     char **list_of_types = (char **)calloc(22, sizeof(char *));
-    for (uint64_t i = 0; i < 22; i++)
+    for (int64_t i = 0; i < 22; i++)
         list_of_types[i] = (char *)calloc(32, sizeof(char));
 
-    uint64_t count = 0;
+    int64_t count = 0;
 
     if (is_type_of(matrix, row_matrix))
     {
@@ -3874,14 +3857,14 @@ char **types_of_matrix(Matrix matrix, text_style text_style)
     return list_of_types;
 }
 
-void print_pair(Pair pair)
+void print_matrix_index(Matrix_Index index)
 {
-    printf("(%lld, %lld)", pair.first, pair.second);
+    printf("(%lld, %lld)", index.first, index.second);
 }
 
-void print_pair_(Pair pair)
+void print_matrix_index_(Matrix_Index index)
 {
-    print_pair(pair);
+    print_matrix_index(index);
     newline(1);
 }
 
@@ -4008,7 +3991,7 @@ void print_complex_array(Complex_Array complex_array)
     {
         printf("[");
         print_complex(complex_array.complex_numbers[0]);
-        for (uint64_t i = 1; i < complex_array.length; i++)
+        for (int64_t i = 1; i < complex_array.length; i++)
         {
             printf(", ");
             print_complex(complex_array.complex_numbers[i]);
@@ -4099,7 +4082,7 @@ void print_vector_(Vector vector)
 void print_num_array(NumArray num_array)
 {
     printf("{");
-    for (uint64_t i = 0; i < num_array.len; i++)
+    for (int64_t i = 0; i < num_array.len; i++)
     {
         printf("%0.10lf", num_array.nums[i]);
         if ((i + 1) != num_array.len)
@@ -4114,12 +4097,12 @@ void print_num_array_(NumArray num_array)
     newline(1);
 }
 
-uint64_t num_len(double number, uint64_t number_of_digits_after_the_radix_dot)
+int64_t num_len(double number, int64_t number_of_digits_after_the_radix_dot)
 {
-    uint64_t length = (number < 0.0);
+    int64_t length = (number < 0.0);
     length += (number_of_digits_after_the_radix_dot == 0) ? 0 : (number_of_digits_after_the_radix_dot + 1);
-    uint64_t abs_int_num = (uint64_t)abs_double(number);
-    uint64_t count = 0;
+    int64_t abs_int_num = (int64_t)abs_double(number);
+    int64_t count = 0;
     if (abs_int_num == 0)
         return (length + 1);
     while (abs_int_num != 0)
@@ -4131,15 +4114,15 @@ uint64_t num_len(double number, uint64_t number_of_digits_after_the_radix_dot)
     return length;
 }
 
-uint64_t max_num_len(NumArray numbers, uint64_t number_of_digits_after_the_radix_dot)
+int64_t max_num_len(NumArray numbers, int64_t number_of_digits_after_the_radix_dot)
 {
     if (numbers.len == 0)
         return 0;
-    uint64_t max_len = num_len(numbers.nums[0], number_of_digits_after_the_radix_dot);
-    uint64_t next_num_len = 0;
+    int64_t max_len = num_len(numbers.nums[0], number_of_digits_after_the_radix_dot);
+    int64_t next_num_len = 0;
     if (numbers.len == 1)
         return max_len;
-    for (uint64_t i = 1; i < numbers.len; i++)
+    for (int64_t i = 1; i < numbers.len; i++)
     {
         next_num_len = num_len(numbers.nums[i], number_of_digits_after_the_radix_dot);
         if (next_num_len > max_len)
@@ -4148,10 +4131,10 @@ uint64_t max_num_len(NumArray numbers, uint64_t number_of_digits_after_the_radix
     return max_len;
 }
 
-uint64_t *max_num_len_array(Matrix matrix, uint64_t number_of_digits_after_the_radix_dot)
+int64_t *max_num_len_array(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
 {
-    uint64_t *max_number_length_array = (uint64_t *)calloc(matrix.cols, sizeof(uint64_t));
-    for (uint64_t c = 0; c < matrix.cols; c++)
+    int64_t *max_number_length_array = (int64_t *)calloc(matrix.cols, sizeof(int64_t));
+    for (int64_t c = 0; c < matrix.cols; c++)
     {
         NumArray matrix_column_data = nth_column_data(matrix, c);
         max_number_length_array[c] = max_num_len(matrix_column_data, number_of_digits_after_the_radix_dot);
@@ -4159,27 +4142,27 @@ uint64_t *max_num_len_array(Matrix matrix, uint64_t number_of_digits_after_the_r
     return max_number_length_array;
 }
 
-char *pre_space(double number, uint64_t max_number_length, uint64_t number_of_digits_after_the_radix_dot)
+char *pre_space(double number, int64_t max_number_length, int64_t number_of_digits_after_the_radix_dot)
 {
-    uint64_t extra_space_number = max_number_length - num_len(number, number_of_digits_after_the_radix_dot);
+    int64_t extra_space_number = max_number_length - num_len(number, number_of_digits_after_the_radix_dot);
     char *spaces = (char *)calloc(extra_space_number, sizeof(char));
-    for (uint64_t i = 0; i < extra_space_number; i++)
+    for (int64_t i = 0; i < extra_space_number; i++)
         spaces[i] = ' ';
     return spaces;
 }
 
-void print_matrix(Matrix matrix, uint64_t number_of_digits_after_the_radix_dot)
+void print_matrix(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
 {
     char *format = (char *)calloc(128, sizeof(char));
     sprintf(format, " %%s%%0.%lldlf ", number_of_digits_after_the_radix_dot);
-    uint64_t *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
+    int64_t *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
 
     printf("[[");
-    for (uint64_t r = 0; r < matrix.rows; r++)
+    for (int64_t r = 0; r < matrix.rows; r++)
     {
         if (r > 0)
             printf(" [");
-        for (uint64_t c = 0; c < matrix.cols; c++)
+        for (int64_t c = 0; c < matrix.cols; c++)
             printf((const char *)format, pre_space(matrix.data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), matrix.data[r][c]);
         if (r < (matrix.rows - 1))
             printf("]\n");
@@ -4188,28 +4171,28 @@ void print_matrix(Matrix matrix, uint64_t number_of_digits_after_the_radix_dot)
     }
 }
 
-void print_matrix_(Matrix matrix, uint64_t number_of_digits_after_the_radix_dot)
+void print_matrix_(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
 {
     print_matrix(matrix, number_of_digits_after_the_radix_dot);
     newline(1);
 }
 
-void print_tensor(Tensor tensor, uint64_t number_of_digits_after_the_radix_dot)
+void print_tensor(Tensor tensor, int64_t number_of_digits_after_the_radix_dot)
 {
     char *format = (char *)calloc(128, sizeof(char));
     sprintf(format, " %%s%%0.%lldlf ", number_of_digits_after_the_radix_dot);
     printf("[[[");
-    for (uint64_t n = 0; n < tensor.n; n++)
+    for (int64_t n = 0; n < tensor.n; n++)
     {
         if (n > 0)
             printf(" [[");
 
-        uint64_t *max_number_length_array = max_num_len_array(tensor.mat[n], number_of_digits_after_the_radix_dot);
-        for (uint64_t r = 0; r < tensor.mat[n].rows; r++)
+        int64_t *max_number_length_array = max_num_len_array(tensor.mat[n], number_of_digits_after_the_radix_dot);
+        for (int64_t r = 0; r < tensor.mat[n].rows; r++)
         {
             if (r > 0)
                 printf("  [");
-            for (uint64_t c = 0; c < tensor.mat[n].cols; c++)
+            for (int64_t c = 0; c < tensor.mat[n].cols; c++)
                 printf(format, pre_space(tensor.mat[n].data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), tensor.mat[n].data[r][c]);
             if (r < (tensor.mat[n].rows - 1))
                 printf("]\n");
@@ -4224,7 +4207,7 @@ void print_tensor(Tensor tensor, uint64_t number_of_digits_after_the_radix_dot)
     }
 }
 
-void print_tensor_(Tensor tensor, uint64_t number_of_digits_after_the_radix_dot)
+void print_tensor_(Tensor tensor, int64_t number_of_digits_after_the_radix_dot)
 {
     print_tensor(tensor, number_of_digits_after_the_radix_dot);
     newline(1);
@@ -4233,14 +4216,14 @@ void print_tensor_(Tensor tensor, uint64_t number_of_digits_after_the_radix_dot)
 void print_matrix_types(Matrix matrix, text_style text_style)
 {
     char **types = types_of_matrix(matrix, text_style);
-    uint64_t count = 0;
+    int64_t count = 0;
     while (types[count][0])
         count++;
     if (count == 0)
         return;
     printf("[");
     printf("'%s'", types[0]);
-    for (uint64_t i = 1; i < count; i++)
+    for (int64_t i = 1; i < count; i++)
         printf(", '%s'", types[i]);
     printf("]");
 }
