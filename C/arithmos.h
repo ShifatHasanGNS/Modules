@@ -4110,14 +4110,14 @@ void print_vector_(Vector vector)
 
 void print_num_array(NumArray num_array)
 {
-    printf("{");
+    printf("[");
     for (int64_t i = 0; i < num_array.len; i++)
     {
         printf("%0.15lf", num_array.nums[i]);
         if ((i + 1) != num_array.len)
             printf(", ");
     }
-    printf("}");
+    printf("]");
 }
 
 void print_num_array_(NumArray num_array)
