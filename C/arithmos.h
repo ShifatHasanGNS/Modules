@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------- //
 
 #define DONE printf("Done...\n")
-#define $ (double)
+#define $(_real_, _img_) new_number(_real_, _img_)
 #define $$ (double[])
 
 // Time Stamp for Stop-Watch:
@@ -35,7 +35,7 @@
     free(_pointer_);        \
     _pointer_ = NULL
 
-#define newline(number_of_new_lines)                                  \
+#define newline(number_of_new_lines)                                 \
     for (int64_t temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
     printf("\n")
 
@@ -140,20 +140,20 @@ typedef char *String;
 
 typedef struct timespec TimeStamp;
 
-typedef struct _Matrix_Index_
+typedef struct
 {
     int64_t first;
     int64_t second;
 } Matrix_Index;
 
-typedef struct _Polar2D_
+typedef struct
 {
     double r;
     double theta;
     angle_mode angle_mode;
 } Polar2D;
 
-typedef struct _Polar_
+typedef struct
 {
     double r;
     double theta_x;
@@ -161,49 +161,62 @@ typedef struct _Polar_
     angle_mode angle_mode;
 } Polar;
 
-typedef struct _Complex_
+typedef struct
 {
     double real;
-    double imaginary;
+    double img;
 } Complex;
 
-typedef struct _Complex_Array_
+typedef struct
 {
     int64_t length;
     Complex *complex_numbers;
 } Complex_Array;
 
-typedef struct _Vector2D_
+typedef struct
 {
     double X;
     double Y;
 } Point2D, Vector2D;
 
-typedef struct _Vector_
+typedef struct
 {
     double X;
     double Y;
     double Z;
 } Point, Vector;
 
-typedef struct _NumArray_
+typedef struct
 {
     int64_t len;
     double *nums;
 } NumArray;
 
-typedef struct _Matrix_
+typedef struct
 {
     int64_t rows;
     int64_t cols;
     double **data;
 } Matrix;
 
-typedef struct _Tensor_
+typedef struct
 {
     int64_t n;
     Matrix *mat;
 } Tensor;
+
+typedef struct
+{
+    Complex z;
+    double real;
+    double img;
+    double r;
+    int64_t r_i;
+    double r_f;
+    short sign_real;
+    short sign_img;
+    short sign_r;
+} Number;
 
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
@@ -401,31 +414,31 @@ int64_t power_int(int64_t base, int64_t n)
 
 double power_double(double base, double n)
 {
-    if (n == 0)
+    if (n == 0.0)
         return 1;
-    else if (n == 1)
+    else if (n == 1.0)
         return base;
-    else if (n == 0.5 || n == 1 / 2)
+    else if (n == 0.5 || n == 1.0 / 2.0)
         return sqrt(base);
-    else if (n == 0.3333333333333333 || n == 1 / 3)
+    else if (n == 0.3333333333333333 || n == 1.0 / 3.0)
         return cbrt(base);
     else
     {
         int64_t r = 1, sign_of_base = sign_double(base), sign_of_n = sign_double(n);
         base = abs_double(base);
         n = abs_double(n);
-        double remaining_power = trim_double(n - floor(n), 15), result = 1;
+        double remaining_power = trim_double(n - floor(n), 15), result = 1.0;
         int64_t p = floor(n);
         if (sign_of_n == -1)
-            base = 1 / base;
+            base = 1.0 / base;
         double b = base;
-        if (remaining_power == 0 && sign_of_base == -1)
+        if (remaining_power == 0.0 && sign_of_base == -1)
         {
             if (p & 1)
                 r = -1;
             else
             {
-                int64_t lower_part = pow(10, 15);
+                int64_t lower_part = pow(10.0, 15.0);
                 int64_t upper_part = remaining_power * lower_part;
                 int64_t h = gcd(upper_part, lower_part);
                 upper_part /= h;
@@ -448,13 +461,13 @@ double power_double(double base, double n)
             base *= base;
             p /= 2;
         }
-        if (remaining_power != 0)
+        if (remaining_power != 0.0)
         {
-            if (remaining_power == 1)
+            if (remaining_power == 1.0)
                 result *= 1;
-            else if (remaining_power == 0.5 || remaining_power == 1 / 2)
+            else if (remaining_power == 0.5 || remaining_power == 1.0 / 2.0)
                 result *= sqrt(b);
-            else if (remaining_power == 0.3333333333333333 || remaining_power == 1 / 3)
+            else if (remaining_power == 0.3333333333333333 || remaining_power == 1.0 / 3.0)
                 result *= cbrt(b);
             else
                 result *= pow(b, remaining_power);
@@ -907,7 +920,7 @@ double integrate(char *integrand, char *interval)
     return answer;
 }
 
-_Bool is_null(Matrix matrix)
+_Bool is_null_matrix(Matrix matrix)
 {
     return (matrix.rows == 0 && matrix.cols == 0);
 }
@@ -917,7 +930,7 @@ _Bool is_square_matrix(Matrix matrix)
     return (matrix.rows == matrix.cols);
 }
 
-_Bool are_perfect(Matrix matrix_1, Matrix matrix_2, operation operation)
+_Bool are_perfect_matrix(Matrix matrix_1, Matrix matrix_2, operation operation)
 {
     if (operation == addition || operation == subtraction)
         return ((matrix_1.rows == matrix_2.rows) && (matrix_1.cols == matrix_2.cols));
@@ -926,7 +939,7 @@ _Bool are_perfect(Matrix matrix_1, Matrix matrix_2, operation operation)
     return 0;
 }
 
-_Bool are_identical(Matrix matrix_1, Matrix matrix_2)
+_Bool are_identical_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if (matrix_1.rows == matrix_2.rows && matrix_1.cols == matrix_2.cols)
     {
@@ -1091,7 +1104,7 @@ Complex new_complex(double real_part, double imaginary_part)
 {
     Complex complex_number;
     complex_number.real = real_part;
-    complex_number.imaginary = imaginary_part;
+    complex_number.img = imaginary_part;
     return complex_number;
 }
 
@@ -1101,6 +1114,22 @@ Complex_Array new_complex_array(int64_t length)
     complex_array.length = length;
     complex_array.complex_numbers = (Complex *)calloc(length, sizeof(Complex));
     return complex_array;
+}
+
+Number new_number(double real_part, double imaginary_part)
+{
+    Number n;
+    n.z = new_complex(real_part, imaginary_part);
+    n.real = real_part;
+    n.img = imaginary_part;
+    double R = (real_part * real_part) + (imaginary_part * imaginary_part);
+    n.r = sqrt(R);
+    n.r_i = (int64_t)n.r;
+    n.r_f = (double)(n.r - n.r_i);
+    n.sign_real = (real_part < 0.0) ? -1 : 1;
+    n.sign_img = (imaginary_part < 0.0) ? -1 : 1;
+    n.sign_r = (n.r < 0.0) ? -1 : 1;
+    return n;
 }
 
 NumArray random_num_array(int64_t number_of_elements, int64_t rounding_number, double scalar)
@@ -1151,7 +1180,7 @@ Polar copy_polar(Polar p)
 
 Complex copy_complex(Complex z)
 {
-    return new_complex(z.real, z.imaginary);
+    return new_complex(z.real, z.img);
 }
 
 Complex_Array copy_complex_array(Complex_Array complex_array)
@@ -1225,31 +1254,31 @@ double real_part(Complex z)
 
 double imaginary_part(Complex z)
 {
-    return z.imaginary;
+    return z.img;
 }
 
 Complex conjugate(Complex z)
 {
     Complex c_number;
     c_number.real = z.real;
-    c_number.imaginary = -z.imaginary;
+    c_number.img = -z.img;
     return c_number;
 }
 
 double value_of_complex(Complex z)
 {
-    return sqrt((z.real * z.real) + (z.imaginary * z.imaginary));
+    return sqrt((z.real * z.real) + (z.img * z.img));
 }
 
 Complex scale_complex(Complex z, double scalar)
 {
-    return new_complex(scalar * z.real, scalar * z.imaginary);
+    return new_complex(scalar * z.real, scalar * z.img);
 }
 
 int64_t quadrent_for_complex(Complex z)
 {
     double real = z.real;
-    double imaginary = z.imaginary;
+    double imaginary = z.img;
     if (real >= 0 && imaginary >= 0)
         return 1;
     if (real < 0 && imaginary >= 0)
@@ -1264,7 +1293,7 @@ int64_t quadrent_for_complex(Complex z)
 double argument(Complex z, angle_mode angle_mode)
 {
     double real = z.real;
-    double imaginary = z.imaginary;
+    double imaginary = z.img;
 
     if (real == 0)
     {
@@ -1324,7 +1353,7 @@ double argument(Complex z, angle_mode angle_mode)
 double angle_for_complex(Complex z, angle_mode angle_mode)
 {
     double real = z.real;
-    double imaginary = z.imaginary;
+    double imaginary = z.img;
 
     if (real == 0)
     {
@@ -1424,17 +1453,17 @@ int64_t quadrent_for_angle(double angle, angle_mode angle_mode)
 
 Complex add_complex(Complex z1, Complex z2)
 {
-    return new_complex((z1.real + z2.real), (z1.imaginary + z2.imaginary));
+    return new_complex((z1.real + z2.real), (z1.img + z2.img));
 }
 
 Complex subtract_complex(Complex z1, Complex z2)
 {
-    return new_complex((z1.real - z2.real), (z1.imaginary - z2.imaginary));
+    return new_complex((z1.real - z2.real), (z1.img - z2.img));
 }
 
 Complex multiply_complex(Complex z1, Complex z2) // (x1 + iy1) * (x2 + iy2) = (x1*x2 - y1*y2) + i(x1*y2 + x2*y1)
 {
-    return new_complex(((z1.real * z2.real) - (z1.imaginary * z2.imaginary)), ((z1.real * z2.imaginary) + (z2.real * z1.imaginary)));
+    return new_complex(((z1.real * z2.real) - (z1.img * z2.img)), ((z1.real * z2.img) + (z2.real * z1.img)));
 }
 
 Complex divide_complex(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1 + iy1) * (x2 - iy2)) / (x2*x2 + y2*y2)
@@ -1446,7 +1475,7 @@ Complex power_complex(Complex base, Complex n)
 {
     double r = value_of_complex(base);
     double t = argument(base, radian);
-    double x = n.real, y = n.imaginary;
+    double x = n.real, y = n.img;
     double p = (x * log(r)) - (y * t);
     double R = power_double(E, p);
     double T = (y * log(r)) + (x * t);
@@ -1484,7 +1513,7 @@ Complex complex_log(Complex base, Complex z)
 _Bool is_number(char *string)
 {
     if (string == NULL || *string == '\0')
-        return 0;                                            // Checking if the string is Empty...
+        return 0;                                           // Checking if the string is Empty...
     int64_t count_dot = 0, count_plus = 0, count_minus = 0; // Initializing...
     // Checking if the string is a number...
     while (*string)
@@ -1653,7 +1682,7 @@ Matrix row_matrix_from_array_(int64_t len, double array[])
 
 NumArray array_from_matrix(Matrix matrix)
 {
-    if (!is_null(matrix))
+    if (!is_null_matrix(matrix))
     {
         NumArray array = new_num_array(matrix.rows * matrix.cols);
         int64_t i = 0;
@@ -1809,7 +1838,7 @@ Polar2D polar2D_from_point2D(Point2D point, angle_mode angle_mode)
 
 Point2D point2D_from_complex(Complex z)
 {
-    return new_point2D(z.real, z.imaginary);
+    return new_point2D(z.real, z.img);
 }
 
 Point2D point2D_from_polar2D(Polar2D point)
@@ -1852,7 +1881,7 @@ Complex complex_from_vector2D(Vector2D vector)
 
 Vector2D vector2D_from_complex(Complex z)
 {
-    return new_vector2D(z.real, z.imaginary);
+    return new_vector2D(z.real, z.img);
 }
 
 Vector vector_from_vector2D(Vector2D vector)
@@ -1948,7 +1977,7 @@ Matrix transpose(Matrix matrix)
 
 Matrix reshape(Matrix matrix, int64_t rows, int64_t cols)
 {
-    if (!is_null(matrix) && (rows * cols) == (matrix.rows * matrix.cols))
+    if (!is_null_matrix(matrix) && (rows * cols) == (matrix.rows * matrix.cols))
         return matrix_from_array(rows, cols, array_from_matrix(matrix));
     return matrix;
 }
@@ -2752,7 +2781,7 @@ Matrix mean_matrix_column_elements(Matrix matrix)
 
 Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
 {
-    if (are_perfect(matrix_1, matrix_2, addition))
+    if (are_perfect_matrix(matrix_1, matrix_2, addition))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_1.cols);
         for (int64_t r = 0; r < matrix_1.rows; r++)
@@ -2767,7 +2796,7 @@ Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
 
 Matrix subtract_matrix(Matrix matrix_1, Matrix matrix_2)
 {
-    if (are_perfect(matrix_1, matrix_2, subtraction))
+    if (are_perfect_matrix(matrix_1, matrix_2, subtraction))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_1.cols);
         for (int64_t r = 0; r < matrix_1.rows; r++)
@@ -2902,7 +2931,7 @@ Matrix mod_column_matrix(Matrix base_matrix, Matrix column_matrix)
 
 Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
 {
-    if (are_perfect(matrix_1, matrix_2, multiplication))
+    if (are_perfect_matrix(matrix_1, matrix_2, multiplication))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_2.cols);
         for (int64_t i = 0; i < matrix_1.rows; i++)
@@ -3121,14 +3150,14 @@ double angle_between_vectors(Vector vector_1, Vector vector_2, angle_mode angle_
 
 Matrix translate_row_vector_matrix(Matrix matrix, Matrix translate_by_row_matrix)
 {
-    if (!is_null(matrix))
+    if (!is_null_matrix(matrix))
         return add_row_matrix(matrix, translate_by_row_matrix);
     return matrix;
 }
 
 Matrix translate_column_vector_matrix(Matrix matrix, Matrix translate_by_column_matrix)
 {
-    if (!is_null(matrix))
+    if (!is_null_matrix(matrix))
         return add_column_matrix(matrix, translate_by_column_matrix);
     return matrix;
 }
@@ -3276,7 +3305,7 @@ Complex_Array solve_x2(double a, double b, double c)
     }
     Complex csqrt_m = power_complex(new_complex(m, 0), new_complex(0.5, 0));
     csqrt_m.real /= 2;
-    csqrt_m.imaginary /= 2;
+    csqrt_m.img /= 2;
     Complex cb = new_complex(-b / 2, 0);
     complex_array.complex_numbers[0] = add_complex(cb, csqrt_m);
     complex_array.complex_numbers[1] = subtract_complex(cb, csqrt_m);
@@ -3532,28 +3561,28 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     else if (type == symmetric_matrix)
     {
         if (matrix.rows == matrix.cols)
-            return are_identical(matrix, transpose(matrix));
+            return are_identical_matrix(matrix, transpose(matrix));
         return 0;
     }
 
     else if (type == skew_symmetric_matrix)
     {
         if (matrix.rows == matrix.cols)
-            return are_identical(scale_matrix(matrix, -1), transpose(matrix));
+            return are_identical_matrix(scale_matrix(matrix, -1), transpose(matrix));
         return 0;
     }
 
     else if (type == orthogonal_matrix)
     {
         if (matrix.rows == matrix.cols)
-            return are_identical(multiply_matrix(matrix, transpose(matrix)), new_identity_matrix(matrix.rows));
+            return are_identical_matrix(multiply_matrix(matrix, transpose(matrix)), new_identity_matrix(matrix.rows));
         return 0;
     }
 
     else if (type == idempotent_matrix)
     {
         if (matrix.rows == matrix.cols)
-            return are_identical(matrix, multiply_matrix(matrix, matrix));
+            return are_identical_matrix(matrix, multiply_matrix(matrix, matrix));
         return 0;
     }
 
@@ -3571,7 +3600,7 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
             while (trial != 1024)
             {
                 temp_matrix = multiply_matrix(temp_matrix, matrix);
-                if (are_identical(matrix, temp_matrix))
+                if (are_identical_matrix(matrix, temp_matrix))
                     return 1;
                 trial++;
             }
@@ -3873,11 +3902,11 @@ void print_polar2D(Polar2D point)
     if (point.r == 0.0 && point.theta == 0.0)
         printf("(0, 0)");
     else if (point.r != 0.0 && point.theta == 0.0)
-        printf("(%0.10lf, 0)", point.r);
+        printf("(%0.15lf, 0)", point.r);
     else if (point.r == 0.0 && point.theta != 0.0)
-        printf("(0, %0.10lf)", point.theta);
+        printf("(0, %0.15lf)", point.theta);
     else
-        printf("(%0.10lf, %0.10lf)", point.r, point.theta);
+        printf("(%0.15lf, %0.15lf)", point.r, point.theta);
 }
 
 void print_polar2D_(Polar2D point)
@@ -3891,19 +3920,19 @@ void print_polar(Polar point)
     if (point.r == 0.0 && point.theta_x == 0.0 && point.theta_z == 0.0)
         printf("(0, 0, 0)");
     else if (point.r != 0.0 && point.theta_x == 0.0 && point.theta_z == 0.0)
-        printf("(%0.10lf, 0, 0)", point.r);
+        printf("(%0.15lf, 0, 0)", point.r);
     else if (point.r == 0.0 && point.theta_x != 0.0 && point.theta_z == 0.0)
-        printf("(0, %0.10lf, 0)", point.theta_x);
+        printf("(0, %0.15lf, 0)", point.theta_x);
     else if (point.r != 0.0 && point.theta_x != 0.0 && point.theta_z == 0.0)
-        printf("(%0.10lf, %0.10lf, 0)", point.r, point.theta_x);
+        printf("(%0.15lf, %0.15lf, 0)", point.r, point.theta_x);
     else if (point.r == 0.0 && point.theta_x == 0.0 && point.theta_z != 0.0)
-        printf("(0, 0, %0.10lf)", point.theta_z);
+        printf("(0, 0, %0.15lf)", point.theta_z);
     else if (point.r == 0.0 && point.theta_x != 0.0 && point.theta_z != 0.0)
-        printf("(0, %0.10lf, %0.10lf)", point.theta_x, point.theta_z);
+        printf("(0, %0.15lf, %0.15lf)", point.theta_x, point.theta_z);
     else if (point.r != 0.0 && point.theta_x == 0.0 && point.theta_z != 0.0)
-        printf("(%0.10lf, 0, %0.10lf)", point.r, point.theta_z);
+        printf("(%0.15lf, 0, %0.15lf)", point.r, point.theta_z);
     else
-        printf("(%0.10lf, %0.10lf, %0.10lf)", point.r, point.theta_x, point.theta_z);
+        printf("(%0.15lf, %0.15lf, %0.15lf)", point.r, point.theta_x, point.theta_z);
 }
 
 void print_polar_(Polar point)
@@ -3917,11 +3946,11 @@ void print_point2D(Point2D point)
     if (point.X == 0.0 && point.Y == 0.0)
         printf("(0, 0)");
     else if (point.X != 0.0 && point.Y == 0.0)
-        printf("(%0.10lf, 0)", point.X);
+        printf("(%0.15lf, 0)", point.X);
     else if (point.X == 0.0 && point.Y != 0.0)
-        printf("(0, %0.10lf)", point.Y);
+        printf("(0, %0.15lf)", point.Y);
     else
-        printf("(%0.10lf, %0.10lf)", point.X, point.Y);
+        printf("(%0.15lf, %0.15lf)", point.X, point.Y);
 }
 
 void print_point2D_(Point2D point)
@@ -3935,19 +3964,19 @@ void print_point(Point point)
     if (point.X == 0.0 && point.Y == 0.0 && point.Z == 0.0)
         printf("(0, 0, 0)");
     else if (point.X != 0.0 && point.Y == 0.0 && point.Z == 0.0)
-        printf("(%0.10lf, 0, 0)", point.X);
+        printf("(%0.15lf, 0, 0)", point.X);
     else if (point.X == 0.0 && point.Y != 0.0 && point.Z == 0.0)
-        printf("(0, %0.10lf, 0)", point.Y);
+        printf("(0, %0.15lf, 0)", point.Y);
     else if (point.X == 0.0 && point.Y == 0.0 && point.Z != 0.0)
-        printf("(0, 0, %0.10lf)", point.Z);
+        printf("(0, 0, %0.15lf)", point.Z);
     else if (point.X != 0.0 && point.Y != 0.0 && point.Z == 0.0)
-        printf("(%0.10lf, %0.10lf, 0)", point.X, point.Y);
+        printf("(%0.15lf, %0.15lf, 0)", point.X, point.Y);
     else if (point.X != 0.0 && point.Y == 0.0 && point.Z != 0.0)
-        printf("(%0.10lf, 0, %0.10lf)", point.X, point.Z);
+        printf("(%0.15lf, 0, %0.15lf)", point.X, point.Z);
     else if (point.X == 0.0 && point.Y != 0.0 && point.Z != 0.0)
-        printf("(0, %0.10lf, %0.10lf)", point.Y, point.Z);
+        printf("(0, %0.15lf, %0.15lf)", point.Y, point.Z);
     else
-        printf("(%0.10lf, %0.10lf, %0.10lf)", point.X, point.Y, point.Z);
+        printf("(%0.15lf, %0.15lf, %0.15lf)", point.X, point.Y, point.Z);
 }
 
 void print_point_(Point point)
@@ -3958,18 +3987,18 @@ void print_point_(Point point)
 
 void print_complex(Complex number)
 {
-    if (number.real == 0.0 && number.imaginary == 0.0)
+    if (number.real == 0.0 && number.img == 0.0)
         printf("(0)");
-    else if (number.real != 0.0 && number.imaginary == 0.0)
-        printf("(%0.10lf)", number.real);
-    else if (number.real == 0.0 && number.imaginary != 0.0)
-        printf("(%0.10lfi)", number.imaginary);
+    else if (number.real != 0.0 && number.img == 0.0)
+        printf("(%0.15lf)", number.real);
+    else if (number.real == 0.0 && number.img != 0.0)
+        printf("(%0.15lfi)", number.img);
     else
     {
-        if (number.imaginary < 0.0)
-            printf("(%0.10lf - %0.10lfi)", number.real, abs_double(number.imaginary));
+        if (number.img < 0.0)
+            printf("(%0.15lf - %0.15lfi)", number.real, abs_double(number.img));
         else
-            printf("(%0.10lf + %0.10lfi)", number.real, number.imaginary);
+            printf("(%0.15lf + %0.15lfi)", number.real, number.img);
     }
 }
 
@@ -4011,15 +4040,15 @@ void print_vector2D(Vector2D vector)
     if (vector.X == 0.0 && vector.Y == 0.0)
         printf("<0>");
     else if (vector.X != 0.0 && vector.Y == 0.0)
-        printf("<%0.10lfi>", vector.X);
+        printf("<%0.15lfi>", vector.X);
     else if (vector.X == 0.0 && vector.Y != 0.0)
-        printf("<%0.10lfj>", vector.Y);
+        printf("<%0.15lfj>", vector.Y);
     else
     {
         if (vector.Y < 0.0)
-            printf("<%0.10lfi - %0.10lfj>", vector.X, abs_double(vector.Y));
+            printf("<%0.15lfi - %0.15lfj>", vector.X, abs_double(vector.Y));
         else
-            printf("<%0.10lfi + %0.10lfj>", vector.X, vector.Y);
+            printf("<%0.15lfi + %0.15lfj>", vector.X, vector.Y);
     }
 }
 
@@ -4034,42 +4063,42 @@ void print_vector(Vector vector)
     if (vector.X == 0.0 && vector.Y == 0.0 && vector.Z == 0.0)
         printf("<0>");
     else if (vector.X != 0.0 && vector.Y == 0.0 && vector.Z == 0.0)
-        printf("<%0.10lfi>", vector.X);
+        printf("<%0.15lfi>", vector.X);
     else if (vector.X == 0.0 && vector.Y != 0.0 && vector.Z == 0.0)
-        printf("<%0.10lfj>", vector.Y);
+        printf("<%0.15lfj>", vector.Y);
     else if (vector.X == 0.0 && vector.Y == 0.0 && vector.Z != 0.0)
-        printf("<%0.10lfk>", vector.Z);
+        printf("<%0.15lfk>", vector.Z);
     else if (vector.X != 0.0 && vector.Y != 0.0 && vector.Z == 0.0)
     {
         if (vector.Y < 0.0)
-            printf("<%0.10lfi - %0.10lfj>", vector.X, abs_double(vector.Y));
+            printf("<%0.15lfi - %0.15lfj>", vector.X, abs_double(vector.Y));
         else
-            printf("<%0.10lfi + %0.10lfj>", vector.X, vector.Y);
+            printf("<%0.15lfi + %0.15lfj>", vector.X, vector.Y);
     }
     else if (vector.X != 0.0 && vector.Y == 0.0 && vector.Z != 0.0)
     {
         if (vector.Z < 0.0)
-            printf("<%0.10lfi - %0.10lfk>", vector.X, abs_double(vector.Z));
+            printf("<%0.15lfi - %0.15lfk>", vector.X, abs_double(vector.Z));
         else
-            printf("<%0.10lfi + %0.10lfk>", vector.X, vector.Z);
+            printf("<%0.15lfi + %0.15lfk>", vector.X, vector.Z);
     }
     else if (vector.X == 0.0 && vector.Y != 0.0 && vector.Z != 0.0)
     {
         if (vector.Z < 0.0)
-            printf("<%0.10lfj - %0.10lfk>", vector.Y, abs_double(vector.Z));
+            printf("<%0.15lfj - %0.15lfk>", vector.Y, abs_double(vector.Z));
         else
-            printf("<%0.10lfj + %0.10lfk>", vector.Y, vector.Z);
+            printf("<%0.15lfj + %0.15lfk>", vector.Y, vector.Z);
     }
     else
     {
         if (vector.Y < 0.0 && vector.Z < 0.0)
-            printf("<%0.10lfi - %0.10lfj - %0.10lfk>", vector.X, sqrt(vector.Y * vector.Y), sqrt(vector.Z * vector.Z));
+            printf("<%0.15lfi - %0.15lfj - %0.15lfk>", vector.X, sqrt(vector.Y * vector.Y), sqrt(vector.Z * vector.Z));
         else if (vector.Y < 0.0 && vector.Z > 0.0)
-            printf("<%0.10lfi - %0.10lfj + %0.10lfk>", vector.X, sqrt(vector.Y * vector.Y), vector.Z);
+            printf("<%0.15lfi - %0.15lfj + %0.15lfk>", vector.X, sqrt(vector.Y * vector.Y), vector.Z);
         else if (vector.Y > 0.0 && vector.Z < 0.0)
-            printf("<%0.10lfi + %0.10lfj - %0.10lfk>", vector.X, vector.Y, sqrt(vector.Z * vector.Z));
+            printf("<%0.15lfi + %0.15lfj - %0.15lfk>", vector.X, vector.Y, sqrt(vector.Z * vector.Z));
         else
-            printf("<%0.10lfi + %0.10lfj + %0.10lfk>", vector.X, vector.Y, vector.Z);
+            printf("<%0.15lfi + %0.15lfj + %0.15lfk>", vector.X, vector.Y, vector.Z);
     }
 }
 
@@ -4084,7 +4113,7 @@ void print_num_array(NumArray num_array)
     printf("{");
     for (int64_t i = 0; i < num_array.len; i++)
     {
-        printf("%0.10lf", num_array.nums[i]);
+        printf("%0.15lf", num_array.nums[i]);
         if ((i + 1) != num_array.len)
             printf(", ");
     }
