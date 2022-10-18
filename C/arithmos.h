@@ -127,6 +127,7 @@ typedef enum // matrix_type
     symmetric_matrix,          //  a square-matrix that is equal to its transpose;  A = transpose(A)
     skew_symmetric_matrix,     //  a square-matrix whose transpose equals its negative;  transpose(A) = -A
     orthogonal_matrix,         //  A * transpose(A) = identity matrix = transpose(A) * A
+    normal_matrix,             //  A * transpose(A) = transpose(A) * A
     idempotent_matrix,         //  a square-matrix which, when multiplied by itself, yields itself;  A x A = A
     periodic_matrix,           //  a matrix --> if A^(k+1) = A, then A has period of k, else k = 0
     nilpotent_matrix           //  a square-matrix N such that N^{k}=0, for some positive integer k. The smallest such k is called the index of N, sometimes the degree of N
@@ -3579,6 +3580,13 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
         return 0;
     }
 
+    else if (type == normal_matrix)
+    {
+        if (matrix.rows == matrix.cols)
+            return are_identical_matrix(multiply_matrix(matrix, transpose(matrix)), multiply_matrix(transpose(matrix), matrix));
+        return 0;
+    }
+
     else if (type == idempotent_matrix)
     {
         if (matrix.rows == matrix.cols)
@@ -3636,7 +3644,7 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
 
 char **types_of_matrix(Matrix matrix, text_style text_style)
 {
-    char **list_of_types = (char **)calloc(22, sizeof(char *));
+    char **list_of_types = (char **)calloc(23, sizeof(char *));
     for (int64_t i = 0; i < 22; i++)
         list_of_types[i] = (char *)calloc(32, sizeof(char));
 
@@ -3848,6 +3856,17 @@ char **types_of_matrix(Matrix matrix, text_style text_style)
             list_of_types[count] = "orthogonal-matrix";
         else
             list_of_types[count] = "Orthogonal-Matrix";
+        count++;
+    }
+
+    if (is_type_of(matrix, normal_matrix))
+    {
+        if (text_style == upper)
+            list_of_types[count] = "NORMAL-MATRIX";
+        else if (text_style == lower)
+            list_of_types[count] = "normal-matrix";
+        else
+            list_of_types[count] = "Normal-Matrix";
         count++;
     }
 
