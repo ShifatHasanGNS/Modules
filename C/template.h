@@ -26,7 +26,7 @@ typedef long double float80; // %Lf
 #define not !
 
 // start = main(),  stop = return 0
-#define _start_ void main(int argc, char const *argv[])
+#define _start_ int main(int argc, char const *argv[])
 #define start int main(int argc, char const *argv[])
 #define Exit return 0
 #define exit_success return 0
