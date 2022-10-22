@@ -2046,14 +2046,6 @@ NumArray nth_row_data(Matrix matrix, int64_t nth_row) // First Column = 0
     return row_data;
 }
 
-NumArray nth_column_data(Matrix matrix, int64_t nth_column) // First Row = 0
-{
-    NumArray col_data = new_num_array(matrix.rows);
-    for (int64_t r = 0; r < matrix.rows; r++)
-        col_data.nums[r] = matrix.data[r][nth_column];
-    return col_data;
-}
-
 Matrix append_row_matrix(Matrix base_matrix, Matrix row_matrix)
 {
     if (row_matrix.rows == 1)
@@ -4221,6 +4213,14 @@ int64_t max_num_len(NumArray numbers, int64_t number_of_digits_after_the_radix_d
             max_len = next_num_len;
     }
     return max_len;
+}
+
+NumArray nth_column_data(Matrix matrix, int64_t nth_column) // First Row = 0
+{
+    NumArray col_data = new_num_array(matrix.rows);
+    for (int64_t r = 0; r < matrix.rows; r++)
+        col_data.nums[r] = matrix.data[r][nth_column];
+    return col_data;
 }
 
 int64_t *max_num_len_array(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
