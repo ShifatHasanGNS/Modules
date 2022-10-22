@@ -7,7 +7,7 @@ def generate_magic_square(n):
 	
 	count = 1
 	
-	for i in range(n*n-1):
+	for _ in range(n*n-1):
 		count += 1
 		
 		if r==0 and c>=0 and c<(n-1):
@@ -28,3 +28,8 @@ def generate_magic_square(n):
 
 def show_matrix(matrix):
 	print('\n'.join(['\t'.join([str(c) for c in r]) for r in matrix]))
+
+
+if __name__ == '__main__':
+	s = generate_magic_square(4)
+	show_matrix(s)

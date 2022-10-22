@@ -1965,6 +1965,52 @@ Vector input_vector()
     return vector_from_matrix(input_matrix(1, 3));
 }
 
+Matrix generate_magic_square(int64_t n)
+{
+    n = n - !(n & 1);
+    Matrix magic_square = new_matrix(n, n);
+
+    int64_t r = 0, c = n >> 1;
+    // printf("\n n = %lld  |  r = %lld  |  c = %lld \n\n", n, r, c);
+    magic_square.data[r][c] = 1;
+
+    for (int64_t count = 2; count <= (n * n); count++)
+    {
+        if (r == 0 && c < (n - 1)) // x . | . x .
+        {                          // . . | . . .
+            r = n - 1;
+            c = c + 1;
+        }
+        else if (r > 0 && c == (n - 1)) // . .
+        {                               // . x
+            r = r - 1;                  // . .
+            c = 0;
+        }
+        else if (r == 0 && c == (n - 1)) // . x
+        {                                // . .
+            r = 1;
+        }
+        else if (r == (n - 1) && c < (n - 1)) // . . | . . .
+        {                                     // x . | . x .
+            r = n - 2;
+            c = c + 1;
+        }
+        else if (r > 0 && r < (n - 1) && c < (n - 1))
+        {
+            if (magic_square.data[r - 1][c + 1] == 0)
+            {
+                r = r - 1;
+                c = c + 1;
+            }
+            else
+                r = r + 1;
+        }
+        magic_square.data[r][c] = count;
+    }
+
+    return magic_square;
+}
+
 Matrix transpose(Matrix matrix)
 {
     Matrix transposed_matrix = new_matrix(matrix.cols, matrix.rows);
