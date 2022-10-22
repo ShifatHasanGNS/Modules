@@ -1968,10 +1968,9 @@ Vector input_vector()
 Matrix generate_magic_square(int64_t n)
 {
     n = n - !(n & 1);
-    Matrix magic_square = new_matrix(n, n);
-
     int64_t r = 0, c = n >> 1;
-    // printf("\n n = %lld  |  r = %lld  |  c = %lld \n\n", n, r, c);
+
+    Matrix magic_square = new_matrix(n, n);
     magic_square.data[r][c] = 1;
 
     for (int64_t count = 2; count <= (n * n); count++)
@@ -2007,7 +2006,6 @@ Matrix generate_magic_square(int64_t n)
         }
         magic_square.data[r][c] = count;
     }
-
     return magic_square;
 }
 
