@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 #include <math.h>
 #include <time.h>
@@ -71,6 +72,27 @@
 #define CubeRootOf2_over_Three (double)0.41997368329829105492240353575940945019008382156717         // 2^(1 / 3) / 3
 
 #define angle_mode(polar) polar.angle_mode // angle-mode of polar, where variable 'polar' is of type 'Polar2D/Polar'
+
+#define Month_1 "January"
+#define Month_2 "February"
+#define Month_3 "March"
+#define Month_4 "April"
+#define Month_5 "May"
+#define Month_6 "June"
+#define Month_7 "July"
+#define Month_8 "August"
+#define Month_9 "September"
+#define Month_10 "October"
+#define Month_11 "November"
+#define Month_12 "December"
+
+#define W_DAY_1 "Saturday"
+#define W_DAY_2 "Sunday"
+#define W_DAY_3 "Monday"
+#define W_DAY_4 "Tuesday"
+#define W_DAY_5 "Wednesday"
+#define W_DAY_6 "Thursday"
+#define W_DAY_7 "Friday"
 
 // ---------------------------------------------------------------- //
 //                       E N U M E R A T O R s                      //
@@ -219,6 +241,21 @@ typedef struct
     short sign_r;
 } Number;
 
+typedef struct
+{
+    _Bool is_bc;
+    _Bool is_leapyear;
+    char *date_str;
+    char *month_fullname;
+    char *month_shortname;
+    char *w_day_fullname;
+    char *w_day_shortname;
+    int64_t year;
+    int64_t month;
+    int64_t m_day; // monthly day
+    int64_t w_day; // weekly day
+} Date;
+
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
 // --------------------------------------------------------------- //
@@ -272,6 +309,62 @@ void print_elapsed_time(TimeStamp before, TimeStamp after, time_unit unit)
     printf("[ Time Elapsed : %lf %s ]\n", time_elapsed(before, after, unit), unit_str);
 }
 
+char *slice_str(char *str, int64_t start, int64_t end)
+{
+    int64_t len = end - start, r = 0;
+    char *slice = (char *)calloc(len, sizeof(char));
+    for (int64_t i = start; i < end; i++)
+        slice[r++] = str[i];
+    return slice;
+}
+
+char *to_title(char *str)
+{
+    int64_t len = strlen(str);
+    char *str_title = (char *)calloc(len, sizeof(char));
+    char x, c = str[0];
+    if (c >= 'a' && c <= 'z')
+        str_title[0] = c - 32;
+    for (int64_t i = 1; i < len; i++)
+    {
+        x = str[i - 1];
+        c = str[i];
+        if (x == ' ' && c >= 'a' && c <= 'z')
+            str_title[i] = c - 32;
+        else if (c >= 'A' && c <= 'Z')
+            str_title[i] = c + 32;
+    }
+    return str_title;
+}
+
+char *to_upper(char *str)
+{
+    int64_t len = strlen(str);
+    char *str_upper = (char *)calloc(len, sizeof(char));
+    char c;
+    for (int64_t i = 1; i < len; i++)
+    {
+        c = str[i];
+        if (c >= 'a' && c <= 'z')
+            str_upper[i] = c - 32;
+    }
+    return str_upper;
+}
+
+char *to_lower(char *str)
+{
+    int64_t len = strlen(str);
+    char *str_lower = (char *)calloc(len, sizeof(char));
+    char c;
+    for (int64_t i = 1; i < len; i++)
+    {
+        c = str[i];
+        if (c >= 'A' && c <= 'Z')
+            str_lower[i] = c + 32;
+    }
+    return str_lower;
+}
+
 int64_t sign_int(int64_t number)
 {
     return ((number < 0) ? -1 : 1);
@@ -300,6 +393,28 @@ _Bool is_odd(int64_t number)
 _Bool is_even(int64_t number)
 {
     return (!(number & 1));
+}
+
+int64_t ceil_num(double number)
+{
+    int64_t whole_number_part = (int64_t)number;
+    double fraction_part = number - whole_number_part;
+    if (fraction_part > 0)
+        return (whole_number_part + 1);
+    return whole_number_part;
+}
+
+int64_t floor_num(double number)
+{
+    return (int64_t)number;
+}
+
+int64_t round_num(double number)
+{
+    int64_t whole_number_part = (int64_t)number;
+    double fraction_part = number - whole_number_part;
+    _Bool x = (fraction_part > 0.5);
+    return (whole_number_part + x);
 }
 
 double to_radian(double angle_in_degree)
@@ -2304,6 +2419,15 @@ _Bool are_similar_num_array(NumArray array_1, NumArray array_2)
 _Bool are_similar_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     return (matrix_1.rows == matrix_2.rows && matrix_1.cols == matrix_2.cols);
+}
+
+int64_t clip_int(int64_t number, int64_t min, int64_t max)
+{
+    if (number <= min)
+        return min;
+    else if (number >= max)
+        return max;
+    return number;
 }
 
 double clip_double(double number, double min, double max)
@@ -4324,6 +4448,333 @@ void print_matrix_types_(Matrix matrix, text_style text_style)
 {
     print_matrix_types(matrix, text_style);
     newline(1);
+}
+
+// NOTE : Calendar Stuffs 
+
+char *month_fullname_for(int64_t month)
+{
+    char *month_fullname = (char *)calloc(10, sizeof(char));
+    switch (month)
+    {
+    case 1:
+        strncpy(month_fullname, "January", 8);
+        break;
+    case 2:
+        strncpy(month_fullname, "February", 9);
+        break;
+    case 3:
+        strncpy(month_fullname, "March", 6);
+        break;
+    case 4:
+        strncpy(month_fullname, "April", 6);
+        break;
+    case 5:
+        strncpy(month_fullname, "May", 4);
+        break;
+    case 6:
+        strncpy(month_fullname, "June", 5);
+        break;
+    case 7:
+        strncpy(month_fullname, "July", 5);
+        break;
+    case 8:
+        strncpy(month_fullname, "August", 7);
+        break;
+    case 9:
+        strncpy(month_fullname, "September", 10);
+        break;
+    case 10:
+        strncpy(month_fullname, "October", 8);
+        break;
+    case 11:
+        strncpy(month_fullname, "November", 9);
+        break;
+    case 12:
+        strncpy(month_fullname, "December", 9);
+        break;
+    default:
+        break;
+    }
+    return month_fullname;
+}
+
+char *month_shortname_for(int64_t month)
+{
+    char *month_shortname = (char *)calloc(4, sizeof(char));
+    switch (month)
+    {
+    case 1:
+        strncpy(month_shortname, "Jan", 4);
+        break;
+    case 2:
+        strncpy(month_shortname, "Feb", 4);
+        break;
+    case 3:
+        strncpy(month_shortname, "Mar", 4);
+        break;
+    case 4:
+        strncpy(month_shortname, "Apr", 4);
+        break;
+    case 5:
+        strncpy(month_shortname, "May", 4);
+        break;
+    case 6:
+        strncpy(month_shortname, "Jun", 4);
+        break;
+    case 7:
+        strncpy(month_shortname, "Jul", 4);
+        break;
+    case 8:
+        strncpy(month_shortname, "Aug", 4);
+        break;
+    case 9:
+        strncpy(month_shortname, "Sep", 4);
+        break;
+    case 10:
+        strncpy(month_shortname, "Oct", 4);
+        break;
+    case 11:
+        strncpy(month_shortname, "Nov", 4);
+        break;
+    case 12:
+        strncpy(month_shortname, "Dec", 4);
+        break;
+    default:
+        break;
+    }
+    return month_shortname;
+}
+
+char *w_day_fullname_for(int64_t w_day)
+{
+    char *w_day_fullname = (char *)calloc(10, sizeof(char));
+    switch (w_day)
+    {
+    case 1:
+        strncpy(w_day_fullname, "Saturday", 9);
+        break;
+    case 2:
+        strncpy(w_day_fullname, "Sunday", 7);
+        break;
+    case 3:
+        strncpy(w_day_fullname, "Monday", 7);
+        break;
+    case 4:
+        strncpy(w_day_fullname, "Tuesday", 8);
+        break;
+    case 5:
+        strncpy(w_day_fullname, "Wednesday", 10);
+        break;
+    case 6:
+        strncpy(w_day_fullname, "Thursday", 9);
+        break;
+    case 7:
+        strncpy(w_day_fullname, "Friday", 7);
+        break;
+    default:
+        break;
+    }
+    return w_day_fullname;
+}
+
+char *w_day_shortname_for(int64_t w_day)
+{
+    char *w_day_shortname = (char *)calloc(4, sizeof(char));
+    switch (w_day)
+    {
+    case 1:
+        strncpy(w_day_shortname, "Sat", 4);
+        break;
+    case 2:
+        strncpy(w_day_shortname, "Sun", 4);
+        break;
+    case 3:
+        strncpy(w_day_shortname, "Mon", 4);
+        break;
+    case 4:
+        strncpy(w_day_shortname, "Tue", 4);
+        break;
+    case 5:
+        strncpy(w_day_shortname, "Wed", 4);
+        break;
+    case 6:
+        strncpy(w_day_shortname, "Thu", 4);
+        break;
+    case 7:
+        strncpy(w_day_shortname, "Fri", 4);
+        break;
+    default:
+        break;
+    }
+    return w_day_shortname;
+}
+
+int64_t delta_m_for(int64_t month)
+{
+    switch (month)
+    {
+    case 5:
+        return 0;
+    case 8:
+        return 1;
+    case 2:
+    case 3:
+    case 11:
+        return 2;
+    case 6:
+        return 3;
+    case 9:
+    case 12:
+        return 4;
+    case 4:
+    case 7:
+        return 5;
+    case 1:
+    case 10:
+        return 6;
+    default:
+        return -1;
+    }
+}
+
+_Bool is_leapyear(int64_t year)
+{
+    return (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0));
+}
+
+int64_t w_day_for(int64_t year, int64_t month, int64_t m_day)
+{
+    _Bool lambda = is_leapyear(year) && (month > 2);
+    _Bool is_bc = (year < 0);
+    int64_t days = ceil_num(1.25 * year) + m_day + delta_m_for(month) + lambda - is_bc;
+    int64_t w_day = days % 7;
+    if (w_day == 0)
+        return 7;
+    return w_day;
+}
+
+int64_t last_m_day_for(int64_t year, int64_t month)
+{
+    month = clip_int(month, 1, 12);
+
+    if (month == 2 && is_leapyear(year))
+        return 28;
+
+    switch (month)
+    {
+    case 2:
+        return 29;
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+        return 30;
+    default:
+        return 31;
+    }
+}
+
+int64_t clip_m_day(int64_t year, int64_t month, int64_t m_day)
+{
+    int64_t last_m_day = last_m_day_for(year, month);
+    return clip_int(m_day, 1, last_m_day);
+}
+
+char *refine_date_str(char *date_str)
+{
+    int64_t len = strlen(date_str);
+    if (len < 3)
+        return NULL;
+
+    _Bool is_minus_checked = 0;
+    int64_t count = 3, i = 0, r = 0;
+    char *refined_date_str = (char *)calloc(len, sizeof(char));
+
+    while (i < len && count > 0)
+    {
+        if (date_str[i] == '-' && is_minus_checked == 0)
+        {
+            is_minus_checked = 1;
+            refined_date_str[r++] = '-';
+        }
+        else if (date_str[i] == '/' && (refined_date_str[r - 1] >= '0' && refined_date_str[r - 1] <= '9'))
+        {
+            is_minus_checked = 1;
+            if (--count > 0)
+                refined_date_str[r++] = '/';
+        }
+        else if (date_str[i] >= '0' && date_str[i] <= '9')
+            refined_date_str[r++] = date_str[i];
+        i++;
+    }
+
+    return refined_date_str;
+}
+
+Date new_date(char *date_str) // Format for 'date_str': year/month/day | Example: date_str = "2022/11/2"
+{
+    Date date;
+    date_str = refine_date_str(date_str);
+    sscanf(date_str, "%lld/%lld/%lld", &date.year, &date.month, &date.m_day);
+    date.is_leapyear = is_leapyear(date.year);
+    date.month = clip_int(date.month, 1, 12);
+    date.m_day = clip_m_day(date.year, date.month, date.m_day);
+    sprintf(date.date_str, "%lld/%lld/%lld", date.year, date.month, date.m_day);
+    date.is_bc = (date.year < 0);
+    date.month_fullname = month_fullname_for(date.month);
+    date.month_shortname = month_shortname_for(date.month);
+    date.w_day = w_day_for(date.year, date.month, date.m_day);
+    date.w_day_fullname = w_day_fullname_for(date.w_day);
+    date.w_day_shortname = w_day_shortname_for(date.w_day);
+    return date;
+}
+
+void print_date_str(Date date, _Bool is_month_as_name) //
+{
+    printf("%lld/", date.year);
+    if (is_month_as_name)
+    {
+        printf("%s/", date.month_fullname);
+    }
+    else
+    {
+        if (date.month < 10)
+            printf("0");
+        printf("%lld/", date.month);
+    }
+    if (date.m_day < 10)
+        printf("0");
+    printf("%lld", date.m_day);
+}
+
+void print_date_str_(Date date, _Bool is_month_as_name)
+{
+    print_date_str(date, is_month_as_name);
+    printf("\n");
+}
+
+void print_date_info(Date date)
+{
+    char *bc_or_ad = (char *)calloc(3, sizeof(char));
+    if (date.is_bc)
+        strncpy(bc_or_ad, "BC", 3);
+    else
+        strncpy(bc_or_ad, "AD", 3);
+
+    char *leapyear_or_not = (char *)calloc(13, sizeof(char));
+    if (date.is_bc)
+        strncpy(leapyear_or_not, "not Leapyear", 13);
+    else
+        strncpy(leapyear_or_not, "Leapyear", 9);
+
+    printf("%lld (%s, %s) / %lld (%s) / %lld (%s)", date.year, bc_or_ad, leapyear_or_not, date.month, date.month_fullname, date.m_day, date.w_day_fullname);
+}
+
+void print_date_info_(Date date)
+{
+    print_date_info(date);
+    printf("\n");
 }
 
 #endif // _CMATHLIB__ARITHMOS_
