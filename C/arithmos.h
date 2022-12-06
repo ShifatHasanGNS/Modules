@@ -1728,7 +1728,7 @@ Matrix input_matrix(int64_t rows, int64_t cols)
     for (r = 0; r < rows; r++)
     {
         *temp_str = '\0';
-        fgets(temp_str, sizeof(temp_str), stdin);
+        fgets(temp_str, len, stdin);
         temp_row = parse_number(temp_str, cols);
         for (c = 0; c < cols; c++)
         {
