@@ -4876,4 +4876,45 @@ void print_date_info_(Date date)
     printf("\n");
 }
 
+void print_calendar_month(int64_t year, int64_t month)
+{
+    month = clip_int(month, 1, 12);
+    char *month_name = month_fullname_for(month);
+
+    int64_t title_padding = (22 - (int_num_len(year) + strlen(month_name))) >> 1;
+    if (title_padding < 1)
+        title_padding = 0;
+    printf("%s[ %s, %lld ]\n", str_from_char(' ', title_padding), month_name, year);
+
+    printf("SAT SUN MON TUE WED THU FRI\n");
+
+    Date date = new_date(year, month, 1);
+    int64_t weekly_day = weekly_day_for(date);
+
+    int64_t padding_for_first_day = (weekly_day << 2) - 3 + (weekly_day < 10);
+    printf("%s1", str_from_char(' ', padding_for_first_day));
+
+    for (int64_t i = 2; i <= last_day_for(year, month); i++)
+    {
+        weekly_day = mod_nonzero((weekly_day + 1), 7);
+        if (weekly_day == 1)
+            printf("\n ");
+        else
+            printf("  ");
+            
+        printf("%s%lld", str_from_char(' ', (i < 10)), i);
+    }
+}
+
+void print_calendar_year(int64_t year)
+{
+    for (int64_t month = 1; month < 12; month++)
+    {
+        print_calendar_month(year, month);
+        printf("\n\n");
+    }
+    print_calendar_month(year, 12);
+    printf("\n");
+}
+
 #endif // _CMATHLIB__ARITHMOS_
