@@ -1722,6 +1722,7 @@ Matrix input_matrix(int64_t rows, int64_t cols)
     // Temporary Variables...
     double *temp_row = (double *)calloc(cols, sizeof(double));
     char *temp_str = (char *)calloc(len, sizeof(char));
+    int64_t temp_len = 0;
     // Creating the Matrix...
     Matrix matrix = new_matrix(rows, cols);
     // Getting the Matrix_Input...
@@ -1729,6 +1730,8 @@ Matrix input_matrix(int64_t rows, int64_t cols)
     {
         *temp_str = '\0';
         fgets(temp_str, len, stdin);
+        temp_len = strlen(temp_str);
+        temp_str[temp_len - 1] = '\0';
         temp_row = parse_number(temp_str, cols);
         for (c = 0; c < cols; c++)
         {
@@ -4450,7 +4453,7 @@ void print_matrix_types_(Matrix matrix, text_style text_style)
     newline(1);
 }
 
-// NOTE : Calendar Stuffs 
+// NOTE : Calendar Stuffs
 
 char *month_fullname_for(int64_t month)
 {
