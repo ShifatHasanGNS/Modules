@@ -243,18 +243,25 @@ typedef struct
 
 typedef struct
 {
-    _Bool is_bc;
-    _Bool is_leapyear;
-    char *date_str;
-    char *month_fullname;
-    char *month_shortname;
-    char *w_day_fullname;
-    char *w_day_shortname;
     int64_t year;
     int64_t month;
-    int64_t m_day; // monthly day
-    int64_t w_day; // weekly day
+    int64_t day; // monthly day
 } Date;
+
+typedef struct
+{
+    _Bool is_bc;
+    _Bool is_leapyear;
+    int64_t year;
+    int64_t month;
+    int64_t day; // monthly day
+    char *month_fullname;
+    char *month_shortname;
+    int64_t weekly_day; // weekly day
+    char *weekly_day_fullname;
+    char *weekly_day_shortname;
+    char *date_str;
+} Date_Info;
 
 // --------------------------------------------------------------- //
 //                        F U N C T I O N s                        //
@@ -309,12 +316,22 @@ void print_elapsed_time(TimeStamp before, TimeStamp after, time_unit unit)
     printf("[ Time Elapsed : %lf %s ]\n", time_elapsed(before, after, unit), unit_str);
 }
 
+char *str_from_char(char c, int64_t number_of_copy)
+{
+    char *str = (char *)calloc(number_of_copy, sizeof(char));
+    for (int64_t i = 0; i < number_of_copy; i++)
+        str[i] = c;
+    str[number_of_copy] = '\0';
+    return str;
+}
+
 char *slice_str(char *str, int64_t start, int64_t end)
 {
     int64_t len = end - start, r = 0;
     char *slice = (char *)calloc(len, sizeof(char));
     for (int64_t i = start; i < end; i++)
         slice[r++] = str[i];
+    slice[len] = '\0';
     return slice;
 }
 
@@ -323,8 +340,10 @@ char *to_title(char *str)
     int64_t len = strlen(str);
     char *str_title = (char *)calloc(len, sizeof(char));
     char x, c = str[0];
+
     if (c >= 'a' && c <= 'z')
         str_title[0] = c - 32;
+
     for (int64_t i = 1; i < len; i++)
     {
         x = str[i - 1];
@@ -333,7 +352,11 @@ char *to_title(char *str)
             str_title[i] = c - 32;
         else if (c >= 'A' && c <= 'Z')
             str_title[i] = c + 32;
+        else
+            str_title[i] = c;
     }
+    str_title[len] = '\0';
+
     return str_title;
 }
 
@@ -342,12 +365,17 @@ char *to_upper(char *str)
     int64_t len = strlen(str);
     char *str_upper = (char *)calloc(len, sizeof(char));
     char c;
-    for (int64_t i = 1; i < len; i++)
+
+    for (int64_t i = 0; i < len; i++)
     {
         c = str[i];
         if (c >= 'a' && c <= 'z')
             str_upper[i] = c - 32;
+        else
+            str_upper[i] = c;
     }
+    str_upper[len] = '\0';
+
     return str_upper;
 }
 
@@ -356,12 +384,17 @@ char *to_lower(char *str)
     int64_t len = strlen(str);
     char *str_lower = (char *)calloc(len, sizeof(char));
     char c;
-    for (int64_t i = 1; i < len; i++)
+
+    for (int64_t i = 0; i < len; i++)
     {
         c = str[i];
         if (c >= 'A' && c <= 'Z')
             str_lower[i] = c + 32;
+        else
+            str_lower[i] = c;
     }
+    str_lower[len] = '\0';
+
     return str_lower;
 }
 
@@ -472,9 +505,17 @@ int64_t mod(int64_t a, int64_t m)
     if (a < m)
         return a;
     else if (a == m)
-        return 1;
+        return 0;
     else
         return a % m;
+}
+
+int64_t mod_nonzero(int64_t a, int64_t m)
+{
+    int64_t result = mod(a, m);
+    if (result == 0)
+        return m;
+    return result;
 }
 
 int64_t bigmod(int64_t a, int64_t b, int64_t m)
@@ -592,6 +633,14 @@ double power_double(double base, double n)
     }
 }
 
+int64_t int_num_len(int64_t number)
+{
+    int64_t sign = sign_int(number);
+    int64_t abs_num = sign * number;
+    int64_t len = (sign < 1) + 1 + floor_num(log10(abs_num));
+    return len;
+}
+
 int64_t last_digit_int(int64_t number, int64_t power)
 {
     if (power == 0)
@@ -690,6 +739,7 @@ int64_t factorial(int64_t n) // MAX --> n = 12
     return N;
 }
 
+/*
 char *factorial_str(int64_t n)
 {
     char *N = (char *)calloc(1024, sizeof(char));
@@ -716,7 +766,7 @@ char *factorial_str(int64_t n)
     return N;
 }
 
-/*
+
 int64_t multiply_for_factorial_str(int64_t x, int64_t res[], int64_t res_size)
 {
     int64_t carry = 0;
@@ -1722,13 +1772,16 @@ Matrix input_matrix(int64_t rows, int64_t cols)
     // Temporary Variables...
     double *temp_row = (double *)calloc(cols, sizeof(double));
     char *temp_str = (char *)calloc(len, sizeof(char));
+    int64_t temp_len = 0;
     // Creating the Matrix...
     Matrix matrix = new_matrix(rows, cols);
     // Getting the Matrix_Input...
     for (r = 0; r < rows; r++)
     {
         *temp_str = '\0';
-        gets(temp_str);
+        fgets(temp_str, len, stdin);
+        temp_len = strlen(temp_str);
+        temp_str[temp_len - 1] = '\0';
         temp_row = parse_number(temp_str, cols);
         for (c = 0; c < cols; c++)
         {
@@ -4364,6 +4417,7 @@ char *pre_space(double number, int64_t max_number_length, int64_t number_of_digi
     char *spaces = (char *)calloc(extra_space_number, sizeof(char));
     for (int64_t i = 0; i < extra_space_number; i++)
         spaces[i] = ' ';
+    spaces[extra_space_number] = '\0';
     return spaces;
 }
 
@@ -4450,7 +4504,7 @@ void print_matrix_types_(Matrix matrix, text_style text_style)
     newline(1);
 }
 
-// NOTE : Calendar Stuffs 
+// NOTE : Calendar Stuffs
 
 char *month_fullname_for(int64_t month)
 {
@@ -4546,68 +4600,68 @@ char *month_shortname_for(int64_t month)
     return month_shortname;
 }
 
-char *w_day_fullname_for(int64_t w_day)
+char *weekly_day_fullname_for(int64_t weekly_day)
 {
-    char *w_day_fullname = (char *)calloc(10, sizeof(char));
-    switch (w_day)
+    char *weekly_day_fullname = (char *)calloc(10, sizeof(char));
+    switch (weekly_day)
     {
     case 1:
-        strncpy(w_day_fullname, "Saturday", 9);
+        strncpy(weekly_day_fullname, "Saturday", 9);
         break;
     case 2:
-        strncpy(w_day_fullname, "Sunday", 7);
+        strncpy(weekly_day_fullname, "Sunday", 7);
         break;
     case 3:
-        strncpy(w_day_fullname, "Monday", 7);
+        strncpy(weekly_day_fullname, "Monday", 7);
         break;
     case 4:
-        strncpy(w_day_fullname, "Tuesday", 8);
+        strncpy(weekly_day_fullname, "Tuesday", 8);
         break;
     case 5:
-        strncpy(w_day_fullname, "Wednesday", 10);
+        strncpy(weekly_day_fullname, "Wednesday", 10);
         break;
     case 6:
-        strncpy(w_day_fullname, "Thursday", 9);
+        strncpy(weekly_day_fullname, "Thursday", 9);
         break;
     case 7:
-        strncpy(w_day_fullname, "Friday", 7);
+        strncpy(weekly_day_fullname, "Friday", 7);
         break;
     default:
         break;
     }
-    return w_day_fullname;
+    return weekly_day_fullname;
 }
 
-char *w_day_shortname_for(int64_t w_day)
+char *weekly_day_shortname_for(int64_t weekly_day)
 {
-    char *w_day_shortname = (char *)calloc(4, sizeof(char));
-    switch (w_day)
+    char *weekly_day_shortname = (char *)calloc(4, sizeof(char));
+    switch (weekly_day)
     {
     case 1:
-        strncpy(w_day_shortname, "Sat", 4);
+        strncpy(weekly_day_shortname, "Sat", 4);
         break;
     case 2:
-        strncpy(w_day_shortname, "Sun", 4);
+        strncpy(weekly_day_shortname, "Sun", 4);
         break;
     case 3:
-        strncpy(w_day_shortname, "Mon", 4);
+        strncpy(weekly_day_shortname, "Mon", 4);
         break;
     case 4:
-        strncpy(w_day_shortname, "Tue", 4);
+        strncpy(weekly_day_shortname, "Tue", 4);
         break;
     case 5:
-        strncpy(w_day_shortname, "Wed", 4);
+        strncpy(weekly_day_shortname, "Wed", 4);
         break;
     case 6:
-        strncpy(w_day_shortname, "Thu", 4);
+        strncpy(weekly_day_shortname, "Thu", 4);
         break;
     case 7:
-        strncpy(w_day_shortname, "Fri", 4);
+        strncpy(weekly_day_shortname, "Fri", 4);
         break;
     default:
         break;
     }
-    return w_day_shortname;
+    return weekly_day_shortname;
 }
 
 int64_t delta_m_for(int64_t month)
@@ -4643,18 +4697,18 @@ _Bool is_leapyear(int64_t year)
     return (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0));
 }
 
-int64_t w_day_for(int64_t year, int64_t month, int64_t m_day)
+int64_t weekly_day_for(Date date)
 {
-    _Bool lambda = is_leapyear(year) && (month > 2);
-    _Bool is_bc = (year < 0);
-    int64_t days = ceil_num(1.25 * year) + m_day + delta_m_for(month) + lambda - is_bc;
-    int64_t w_day = days % 7;
-    if (w_day == 0)
+    _Bool lambda = is_leapyear(date.year) && (date.month > 2);
+    _Bool is_bc = (date.year < 0);
+    int64_t days = ceil_num(1.25 * date.year) + date.day + delta_m_for(date.month) + lambda - is_bc;
+    int64_t weekly_day = days % 7;
+    if (weekly_day == 0)
         return 7;
-    return w_day;
+    return weekly_day;
 }
 
-int64_t last_m_day_for(int64_t year, int64_t month)
+int64_t last_day_for(int64_t year, int64_t month)
 {
     month = clip_int(month, 1, 12);
 
@@ -4675,10 +4729,10 @@ int64_t last_m_day_for(int64_t year, int64_t month)
     }
 }
 
-int64_t clip_m_day(int64_t year, int64_t month, int64_t m_day)
+int64_t clip_day(Date date)
 {
-    int64_t last_m_day = last_m_day_for(year, month);
-    return clip_int(m_day, 1, last_m_day);
+    int64_t last_day = last_day_for(date.year, date.month);
+    return clip_int(date.day, 1, last_day);
 }
 
 char *refine_date_str(char *date_str)
@@ -4708,34 +4762,78 @@ char *refine_date_str(char *date_str)
             refined_date_str[r++] = date_str[i];
         i++;
     }
+    refined_date_str[r] = '\0';
 
     return refined_date_str;
 }
 
-Date new_date(char *date_str) // Format for 'date_str': year/month/day | Example: date_str = "2022/11/2"
+Date new_date_from(char *date_str) // Format for 'date_str': year/month/day | Example: date_str = "2022/11/2"
 {
     Date date;
     date_str = refine_date_str(date_str);
-    sscanf(date_str, "%lld/%lld/%lld", &date.year, &date.month, &date.m_day);
-    date.is_leapyear = is_leapyear(date.year);
+    sscanf(date_str, "%lld/%lld/%lld", &date.year, &date.month, &date.day);
     date.month = clip_int(date.month, 1, 12);
-    date.m_day = clip_m_day(date.year, date.month, date.m_day);
-    sprintf(date.date_str, "%lld/%lld/%lld", date.year, date.month, date.m_day);
-    date.is_bc = (date.year < 0);
-    date.month_fullname = month_fullname_for(date.month);
-    date.month_shortname = month_shortname_for(date.month);
-    date.w_day = w_day_for(date.year, date.month, date.m_day);
-    date.w_day_fullname = w_day_fullname_for(date.w_day);
-    date.w_day_shortname = w_day_shortname_for(date.w_day);
+    date.day = clip_day(date);
     return date;
 }
 
-void print_date_str(Date date, _Bool is_month_as_name) //
+Date new_date(int64_t year, int64_t month, int64_t day)
+{
+    Date date;
+    date.year = year;
+    date.month = clip_int(month, 1, 12);
+    date.day = day;
+    date.day = clip_day(date);
+    return date;
+}
+
+Date_Info new_date_info_from(char *date_str) // Format for 'date_str': year/month/day | Example: date_str = "2022/11/2"
+{
+    Date_Info date_info;
+    date_str = refine_date_str(date_str);
+    sscanf(date_str, "%lld/%lld/%lld", &date_info.year, &date_info.month, &date_info.day);
+    date_info.is_bc = (date_info.year < 0);
+    date_info.is_leapyear = is_leapyear(date_info.year);
+    date_info.month = clip_int(date_info.month, 1, 12);
+    Date date = new_date(date_info.year, date_info.month, date_info.day);
+    date_info.day = clip_day(date);
+    date.day = date_info.day;
+    date_info.month_fullname = month_fullname_for(date_info.month);
+    date_info.month_shortname = month_shortname_for(date_info.month);
+    date_info.weekly_day = weekly_day_for(date);
+    date_info.weekly_day_fullname = weekly_day_fullname_for(date_info.weekly_day);
+    date_info.weekly_day_shortname = weekly_day_shortname_for(date_info.weekly_day);
+    sprintf(date_info.date_str, "%lld/%lld/%lld", date_info.year, date_info.month, date_info.day);
+    return date_info;
+}
+
+Date_Info new_date_info(Date date)
+{
+    Date_Info date_info;
+    date_info.is_bc = (date.year < 0);
+    date_info.is_leapyear = is_leapyear(date.year);
+    date_info.year = date.year;
+    date_info.month = clip_int(date.month, 1, 12);
+    date = new_date(date_info.year, date_info.month, date.day);
+    date_info.day = clip_day(date);
+    date.day = date_info.day;
+    date_info.month_fullname = month_fullname_for(date_info.month);
+    date_info.month_shortname = month_shortname_for(date_info.month);
+    date_info.weekly_day = weekly_day_for(date);
+    date_info.weekly_day_fullname = weekly_day_fullname_for(date_info.weekly_day);
+    date_info.weekly_day_shortname = weekly_day_shortname_for(date_info.weekly_day);
+    int64_t len = int_num_len(date_info.year) + int_num_len(date_info.month) + int_num_len(date_info.day) + 3;
+    date_info.date_str = (char *)calloc(len, sizeof(char));
+    sprintf(date_info.date_str, "%lld/%lld/%lld", date_info.year, date_info.month, date_info.day);
+    return date_info;
+}
+
+void print_date_str(Date date, _Bool is_month_as_name)
 {
     printf("%lld/", date.year);
     if (is_month_as_name)
     {
-        printf("%s/", date.month_fullname);
+        printf("%s/", month_fullname_for(date.month));
     }
     else
     {
@@ -4743,9 +4841,9 @@ void print_date_str(Date date, _Bool is_month_as_name) //
             printf("0");
         printf("%lld/", date.month);
     }
-    if (date.m_day < 10)
+    if (date.day < 10)
         printf("0");
-    printf("%lld", date.m_day);
+    printf("%lld", date.day);
 }
 
 void print_date_str_(Date date, _Bool is_month_as_name)
@@ -4756,24 +4854,66 @@ void print_date_str_(Date date, _Bool is_month_as_name)
 
 void print_date_info(Date date)
 {
+    Date_Info date_info = new_date_info(date);
     char *bc_or_ad = (char *)calloc(3, sizeof(char));
-    if (date.is_bc)
+    if (date_info.is_bc)
         strncpy(bc_or_ad, "BC", 3);
     else
         strncpy(bc_or_ad, "AD", 3);
 
     char *leapyear_or_not = (char *)calloc(13, sizeof(char));
-    if (date.is_bc)
-        strncpy(leapyear_or_not, "not Leapyear", 13);
-    else
+    if (is_leapyear(date.year))
         strncpy(leapyear_or_not, "Leapyear", 9);
+    else
+        strncpy(leapyear_or_not, "not Leapyear", 13);
 
-    printf("%lld (%s, %s) / %lld (%s) / %lld (%s)", date.year, bc_or_ad, leapyear_or_not, date.month, date.month_fullname, date.m_day, date.w_day_fullname);
+    printf("%lld (%s, %s) / %lld (%s) / %lld (%s)", date_info.year, bc_or_ad, leapyear_or_not, date_info.month, date_info.month_fullname, date_info.day, weekly_day_fullname_for(date_info.weekly_day));
 }
 
 void print_date_info_(Date date)
 {
     print_date_info(date);
+    printf("\n");
+}
+
+void print_calendar_month(int64_t year, int64_t month)
+{
+    month = clip_int(month, 1, 12);
+    char *month_name = month_fullname_for(month);
+
+    int64_t title_padding = (22 - (int_num_len(year) + strlen(month_name))) >> 1;
+    if (title_padding < 1)
+        title_padding = 0;
+    printf("%s[ %s, %lld ]\n", str_from_char(' ', title_padding), month_name, year);
+
+    printf("SAT SUN MON TUE WED THU FRI\n");
+
+    Date date = new_date(year, month, 1);
+    int64_t weekly_day = weekly_day_for(date);
+
+    int64_t padding_for_first_day = (weekly_day << 2) - 3 + (weekly_day < 10);
+    printf("%s1", str_from_char(' ', padding_for_first_day));
+
+    for (int64_t i = 2; i <= last_day_for(year, month); i++)
+    {
+        weekly_day = mod_nonzero((weekly_day + 1), 7);
+        if (weekly_day == 1)
+            printf("\n ");
+        else
+            printf("  ");
+            
+        printf("%s%lld", str_from_char(' ', (i < 10)), i);
+    }
+}
+
+void print_calendar_year(int64_t year)
+{
+    for (int64_t month = 1; month < 12; month++)
+    {
+        print_calendar_month(year, month);
+        printf("\n\n");
+    }
+    print_calendar_month(year, 12);
     printf("\n");
 }
 
