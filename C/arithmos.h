@@ -500,6 +500,39 @@ double trim_double(double num, int64_t number_of_digits_after_the_radix_dot)
     return (number / pow(10, number_of_digits_after_the_radix_dot));
 }
 
+float64_t fast_inverse(float64_t n) // 1/n
+{
+    union
+    {
+        float64_t f;
+        uint64_t u;
+    } x = {n};
+
+    x.u = 0x7fde8f165f9c4a37 - x.u; // 9213959213902744119_10 = 7fde8f165f9c4a37_16
+
+    for (int64_t i = 0; i < 4; i++)
+        x.f = x.f * (2 - (n * x.f));
+
+    return x.f;
+}
+
+float64_t fast_inverse_sqrt(float64_t n) // 1 / sqrt(n)
+{
+    float64_t r = 0.5 * n;
+    union
+    {
+        float64_t f;
+        uint64_t u;
+    } x = {n};
+
+    x.u = 0x5fe6eb50c7b537a9 - (x.u >> 1); // 6910469410427058089_10 = 5fe6eb50c7b537a9_16
+
+    for (int64_t i = 0; i < 4; i++)
+        x.f = x.f * (1.5F - (r * x.f * x.f));
+
+    return x.f;
+}
+
 int64_t mod(int64_t a, int64_t m)
 {
     if (a < m)
@@ -4901,7 +4934,7 @@ void print_calendar_month(int64_t year, int64_t month)
             printf("\n ");
         else
             printf("  ");
-            
+
         printf("%s%lld", str_from_char(' ', (i < 10)), i);
     }
 }
