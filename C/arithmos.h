@@ -500,11 +500,11 @@ double trim_double(double num, int64_t number_of_digits_after_the_radix_dot)
     return (number / pow(10, number_of_digits_after_the_radix_dot));
 }
 
-float64_t fast_inverse(float64_t n) // 1/n
+double fast_inverse(double n) // 1/n
 {
     union
     {
-        float64_t f;
+        double f;
         uint64_t u;
     } x = {n};
 
@@ -516,12 +516,12 @@ float64_t fast_inverse(float64_t n) // 1/n
     return x.f;
 }
 
-float64_t fast_inverse_sqrt(float64_t n) // 1 / sqrt(n)
+double fast_inverse_sqrt(double n) // 1 / sqrt(n)
 {
-    float64_t r = 0.5 * n;
+    double r = 0.5 * n;
     union
     {
-        float64_t f;
+        double f;
         uint64_t u;
     } x = {n};
 
