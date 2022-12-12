@@ -760,7 +760,7 @@ int64_t fibonacci(int64_t n_th)
     return (One_over_SquareRootOf5 * (power_double(PHI_0, n_th) - power_double(PHI_1, n_th)));
 }
 
-int64_t factorial(int64_t n) // MAX --> n = 12
+int64_t factorial(int64_t n) // MAX --> n = 20
 {
     if (n < 0)
         return 0;
@@ -772,67 +772,6 @@ int64_t factorial(int64_t n) // MAX --> n = 12
     return N;
 }
 
-/*
-char *factorial_str(int64_t n)
-{
-    char *N = (char *)calloc(1024, sizeof(char));
-    int64_t a[200], counter, temp, i;
-    a[0] = 1;
-    counter = 0;
-    for (; n >= 2; n--)
-    {
-        temp = 0;
-        for (i = 0; i <= counter; i++)
-        {
-            temp = (a[i] * n) + temp;
-            a[i] = temp % 10;
-            temp = temp / 10;
-        }
-        while (temp > 0)
-        {
-            a[++counter] = temp % 10;
-            temp = temp / 10;
-        }
-    }
-    for (i = counter; i >= 0; i--)
-        sprintf(N, "%lld", a[i]);
-    return N;
-}
-
-
-int64_t multiply_for_factorial_str(int64_t x, int64_t res[], int64_t res_size)
-{
-    int64_t carry = 0;
-    for (int64_t i = 0; i < res_size; i++)
-    {
-        int64_t prod = res[i] * x + carry;
-        res[i] = prod % 10;
-        carry = prod / 10;
-    }
-    while (carry)
-    {
-        res[res_size] = carry % 10;
-        carry = carry / 10;
-        res_size++;
-    }
-    return res_size;
-}
-
-char *factorial_str(int64_t n)
-{
-    int64_t res[1024];
-    char *N = (char *)calloc(1024, sizeof(char));
-    res[0] = 1;
-    int64_t res_size = 1;
-    for (int64_t x = 2; x <= n; x++)
-        res_size = multiply_for_factorial_str(x, res, res_size);
-    sprintf(N, "%lld", res[res_size - 1]);
-    for (int64_t i = res_size - 2; i >= 0; i--)
-        sprintf(N, "%s%lld", N, res[i]);
-    return N;
-}
-*/
-
 double sum(char *expression, char *interval)
 {
     char *lower_bound = (char *)calloc(128, sizeof(char));
@@ -840,7 +779,7 @@ double sum(char *expression, char *interval)
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
     char *format = "%0.15lf";
-    int64_t a, b; // MAX = 2147483647
+    int64_t a, b; // MAX = 9223372036854775807
     double answer = 0;
 
     if (strcmp(lower_bound, "-inf") == 0)
@@ -904,7 +843,7 @@ double product(char *expression, char *interval)
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
     char *format = "%0.15lf";
-    int64_t a, b; // MAX = 2147483647
+    int64_t a, b; // MAX = 9223372036854775807
     double answer = 0;
 
     if (strcmp(lower_bound, "-inf") == 0)
@@ -1806,6 +1745,7 @@ Matrix input_matrix(int64_t rows, int64_t cols)
     // Temporary Variables...
     double *temp_row = (double *)calloc(cols, sizeof(double));
     char *temp_str = (char *)calloc(len, sizeof(char));
+
     int64_t temp_len = 0;
     // Creating the Matrix...
     Matrix matrix = new_matrix(rows, cols);
@@ -1816,7 +1756,9 @@ Matrix input_matrix(int64_t rows, int64_t cols)
         fgets(temp_str, len, stdin);
         temp_len = strlen(temp_str);
         temp_str[temp_len - 1] = '\0';
+
         temp_row = parse_number(temp_str, cols);
+
         for (c = 0; c < cols; c++)
         {
             matrix.data[r][c] = temp_row[c];
