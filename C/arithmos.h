@@ -1754,23 +1754,24 @@ char *remove_char(char *str, char c)
     return new_str;
 }
 
-char **split(char *str, int64_t str_len, char c)
+char **split(char *str, int64_t str_len, char delimiter_char)
 {
-    // Initialize...
-    char *string = (char *)calloc((str_len + 2), sizeof(char));
+    int64_t len = (str_len + 2), number_of_tokens = 0;
+    int64_t n = (len >> 1);
+    char *string = (char *)calloc(len, sizeof(char));
     sprintf(string, "%s ", str);
-    int64_t len = strlen(string), number_of_tokens = 0, count_c = 0;
-    char str_c[2], **list_of_tokens = (char **)malloc(sizeof(char *) * (len - count_c - 2) + sizeof(char) * (len - count_c));
-    sprintf(str_c, "%c", c);
-    // Split...
-    char *token = strtok(string, str_c);
-    while (token != NULL)
-    {
-        list_of_tokens[number_of_tokens] = token;
-        number_of_tokens++;
-        token = strtok(NULL, str_c);
-    }
-    // Return the splited 2D-Array of character...
+
+    // initialize the 'list_of_tokens'
+    char **list_of_tokens = (char **)calloc(n, sizeof(char *));
+    for (int64_t i = 0; i < n; i++)
+        list_of_tokens[i] = (char *)calloc(64, sizeof(char));
+
+    // Split
+    char delimiter_str[2] = {delimiter_char, '\0'};
+    char *token, *rest_string = string;
+    while ((token = strtok_r(rest_string, delimiter_str, &rest_string)))
+        list_of_tokens[number_of_tokens++] = token;
+
     return list_of_tokens;
 }
 
@@ -1781,7 +1782,7 @@ double *parse_number(char *string, int64_t number_of_numbers)
     // Get the splitted_String as a 2D_Character_Array...
     char **splitted_string = split(string, string_len, ' ');
     // Initialize the 1D_Number_Array...
-    while (splitted_string[count])
+    while (splitted_string[count][0])
         count++;
     double *list_of_nums = (double *)calloc(count, sizeof(double));
     // Parse the numbers...
