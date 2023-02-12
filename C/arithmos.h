@@ -806,17 +806,17 @@ double sum(char *expression, char *interval)
     FILE *fp;
     fp = fopen("temp_sum.c", "w");
 
-    fprintf(fp, "#include \"number.h\"\n\n");
-    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", expression);
-    fprintf(fp, "void main()\n{\n");
-    fprintf(fp, "\tdouble sum = 0;\n");
+    fprintf(fp, "#include \"arithmos.h\"\n\n");
+    fprintf(fp, "float f(float x)\n{\n\treturn (%s);\n}\n\n", expression);
+    fprintf(fp, "int main()\n{\n");
+    fprintf(fp, "\tfloat sum = 0;\n");
     fprintf(fp, "\tfor (int64_t x = %lld; x <= %lld; x++)\n", a, b);
     fprintf(fp, "\t\tsum += f(x);\n");
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer_sum.txt\", \"w\");\n");
     fprintf(fp, "\tfprintf(fp, \"%s\", sum);\n", format);
     fprintf(fp, "\tfclose(fp);\n");
-    fprintf(fp, "}");
+    fprintf(fp, "\treturn 0;\n}");
 
     fclose(fp);
 
@@ -870,17 +870,17 @@ double product(char *expression, char *interval)
     FILE *fp;
     fp = fopen("temp_sum.c", "w");
 
-    fprintf(fp, "#include \"number.h\"\n\n");
-    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", expression);
-    fprintf(fp, "void main()\n{\n");
-    fprintf(fp, "\tdouble sum = 1;\n");
+    fprintf(fp, "#include \"arithmos.h\"\n\n");
+    fprintf(fp, "float f(float x)\n{\n\treturn (%s);\n}\n\n", expression);
+    fprintf(fp, "int main()\n{\n");
+    fprintf(fp, "\tfloat sum = 1;\n");
     fprintf(fp, "\tfor (int64_t x = %lld; x <= %lld; x++)\n", a, b);
     fprintf(fp, "\t\tsum *= f(x);\n");
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer_product.txt\", \"w\");\n");
     fprintf(fp, "\tfprintf(fp, \"%s\", sum);\n", format);
     fprintf(fp, "\tfclose(fp);\n");
-    fprintf(fp, "}");
+    fprintf(fp, "\treturn 0;\n}");
 
     fclose(fp);
 
@@ -908,17 +908,17 @@ double differentiate(char *function, double x)
     FILE *fp;
     fp = fopen("temp_derivative.c", "w");
 
-    fprintf(fp, "#include \"number.h\"\n\n");
-    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", function);
-    fprintf(fp, "void main()\n{\n");
-    fprintf(fp, "\tdouble dx = 0.000000000000001, a = 0, b = 0, x = %0.15lf, result = 0;\n\n", x);
+    fprintf(fp, "#include \"arithmos.h\"\n\n");
+    fprintf(fp, "float f(float x)\n{\n\treturn (%s);\n}\n\n", function);
+    fprintf(fp, "int main()\n{\n");
+    fprintf(fp, "\tfloat dx = 0.000000000000001, a = 0, b = 0, x = %0.15lf, result = 0;\n\n", x);
     fprintf(fp, "\ta = f(x+dx);\n\tb = f(x-dx);\n");
     fprintf(fp, "\tresult = (a - b)/(2 * dx);\n\n");
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer_derivative.txt\", \"w\");\n");
     fprintf(fp, "\tfprintf(fp, \"%s\", result);\n", format);
     fprintf(fp, "\tfclose(fp);\n");
-    fprintf(fp, "}");
+    fprintf(fp, "\treturn 0;\n}");
 
     fclose(fp);
 
@@ -1018,10 +1018,10 @@ double integrate(char *integrand, char *interval)
     FILE *fp;
     fp = fopen("temp_integral.c", "w");
 
-    fprintf(fp, "#include \"number.h\"\n\n");
-    fprintf(fp, "double f(double x)\n{\n\treturn (%s);\n}\n\n", integrand);
-    fprintf(fp, "void main()\n{\n");
-    fprintf(fp, "\tdouble sum = 0, x = 0, t = 0, result = 0;\n");
+    fprintf(fp, "#include \"arithmos.h\"\n\n");
+    fprintf(fp, "float f(float x)\n{\n\treturn (%s);\n}\n\n", integrand);
+    fprintf(fp, "int main()\n{\n");
+    fprintf(fp, "\tfloat sum = 0, x = 0, result = 0;\n");
     fprintf(fp, "\tfor (int64_t i = 1; i <= 10000000; i++)\n");
     fprintf(fp, "\t{\n");
     fprintf(fp, "\t\tx = %0.15lf + (%0.15lf * (i - 0.5) * %0.15lf);\n", A, C, dx);
@@ -1038,11 +1038,11 @@ double integrate(char *integrand, char *interval)
     fprintf(fp, "\tfp = fopen(\"temp_answer_integral.txt\", \"w\");\n");
     fprintf(fp, "\tfprintf(fp, \"%s\", result);\n", format);
     fprintf(fp, "\tfclose(fp);\n");
-    fprintf(fp, "}");
+    fprintf(fp, "\treturn 0;\n}");
 
     fclose(fp);
 
-    char *command = "gcc temp_integral.c -o temp_integral.exe";
+    char *command = "gcc temp_integral.c -o temp_integral";
     system(command);
     command = "temp_integral.exe";
     system(command);
