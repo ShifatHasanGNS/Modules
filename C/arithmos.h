@@ -26,7 +26,8 @@
 
 #define DONE printf("Done...\n")
 #define $(_real_, _img_) new_number(_real_, _img_)
-#define $$ (double[])
+#define $$ (f80[])
+#define loop while (1)
 
 // Time Stamp for Stop-Watch:
 #define TIME(_TIME_STAMP_) clock_gettime(CLOCK_MONOTONIC, &_TIME_STAMP_)
@@ -36,40 +37,40 @@
     free(_pointer_);        \
     _pointer_ = NULL
 
-#define newline(number_of_new_lines)                                 \
-    for (int64_t temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
+#define newline(number_of_new_lines)                             \
+    for (i64 temp_i = 0; temp_i < number_of_new_lines; temp_i++) \
     printf("\n")
 
-#define PHI_0 (double)1.61803398874989484820458683436563811772030917980576    // [1 + sqrt(5)] / 2
-#define PHI_1 (double)(-0.61803398874989484820458683436563811772030917980576) // [1 - sqrt(5)] / 2
+#define PHI_0 (f80)1.61803398874989484820458683436563811772030917980576    // [1 + sqrt(5)] / 2
+#define PHI_1 (f80)(-0.61803398874989484820458683436563811772030917980576) // [1 - sqrt(5)] / 2
 
-#define E (double)2.71828182845904523536028747135266249775724709369995 // e --> Euler's Constant
+#define E (f80)2.71828182845904523536028747135266249775724709369995 // e --> Euler's Constant
 
-#define TAU (double)6.28318530717958647692528676655900576839433879875021       // TAU = 2 * PI
-#define PI (double)3.14159265358979323846264338327950288419716939937510        // PI
-#define PI_over_2 (double)1.57079632679489661923132169163975144209858469968755 // PI / 2
-#define PI_over_3 (double)1.04719755119659774615421446109316762806572313312503 // PI / 3
-#define PI_over_4 (double)0.78539816339744830961566084581987572104929234984377 // PI / 4
-#define PI_over_5 (double)0.62831853071795864769252867665590057683943387987502 // PI / 5
-#define PI_over_6 (double)0.52359877559829887307710723054658381403286156656251 // PI / 6
+#define TAU (f80)6.28318530717958647692528676655900576839433879875021       // TAU = 2 * PI
+#define PI (f80)3.14159265358979323846264338327950288419716939937510        // PI
+#define PI_over_2 (f80)1.57079632679489661923132169163975144209858469968755 // PI / 2
+#define PI_over_3 (f80)1.04719755119659774615421446109316762806572313312503 // PI / 3
+#define PI_over_4 (f80)0.78539816339744830961566084581987572104929234984377 // PI / 4
+#define PI_over_5 (f80)0.62831853071795864769252867665590057683943387987502 // PI / 5
+#define PI_over_6 (f80)0.52359877559829887307710723054658381403286156656251 // PI / 6
 
-#define EulerGamma (double)0.57721566490153286060651209008240243104215933593992 // gamma
+#define EulerGamma (f80)0.57721566490153286060651209008240243104215933593992 // gamma
 
-#define SquareRootOf2 (double)1.41421356237309504880168872420969807856967187537695 // sqrt(2)
-#define SquareRootOf3 (double)1.73205080756887729352744634150587236694280525381038 // sqrt(3)
-#define SquareRootOf5 (double)2.23606797749978969640917366873127623544061835961153 // sqrt(5)
+#define SquareRootOf2 (f80)1.41421356237309504880168872420969807856967187537695 // sqrt(2)
+#define SquareRootOf3 (f80)1.73205080756887729352744634150587236694280525381038 // sqrt(3)
+#define SquareRootOf5 (f80)2.23606797749978969640917366873127623544061835961153 // sqrt(5)
 
-#define One_over_SquareRootOf2 (double)0.70710678118654752440084436210484903928483593768847 // 1 / sqrt(2)
-#define One_over_SquareRootOf3 (double)0.57735026918962576450914878050195745564760175127013 // 1 / sqrt(3)
-#define One_over_SquareRootOf5 (double)0.44721359549995793928183473374625524708812367192231 // 1 / sqrt(5)
+#define One_over_SquareRootOf2 (f80)0.70710678118654752440084436210484903928483593768847 // 1 / sqrt(2)
+#define One_over_SquareRootOf3 (f80)0.57735026918962576450914878050195745564760175127013 // 1 / sqrt(3)
+#define One_over_SquareRootOf5 (f80)0.44721359549995793928183473374625524708812367192231 // 1 / sqrt(5)
 
-#define Half (double)0.5                                                                            // 1 / 2
-#define OneForth (double)0.25                                                                       // 1 / 4
-#define OneThird (double)0.3333333333333333                                                         // 1 / 3
-#define TwoThird (double)0.6666666666666667                                                         // 2 / 3
-#define FourThird (double)1.3333333333333333                                                        // 4 / 3
-#define One_over_ThreeTimesCubeRootOf2 (double)0.26456684199469991245861760654538471006524888798331 // 1 / (3 * 2^(1 / 3))
-#define CubeRootOf2_over_Three (double)0.41997368329829105492240353575940945019008382156717         // 2^(1 / 3) / 3
+#define Half (f80)0.5                                                                            // 1 / 2
+#define OneForth (f80)0.25                                                                       // 1 / 4
+#define OneThird (f80)0.3333333333333333                                                         // 1 / 3
+#define TwoThird (f80)0.6666666666666667                                                         // 2 / 3
+#define FourThird (f80)1.3333333333333333                                                        // 4 / 3
+#define One_over_ThreeTimesCubeRootOf2 (f80)0.26456684199469991245861760654538471006524888798331 // 1 / (3 * 2^(1 / 3))
+#define CubeRootOf2_over_Three (f80)0.41997368329829105492240353575940945019008382156717         // 2^(1 / 3) / 3
 
 #define angle_mode(polar) polar.angle_mode // angle-mode of polar, where variable 'polar' is of type 'Polar2D/Polar'
 
@@ -159,83 +160,93 @@ typedef enum // matrix_type
 //                        S T R U C T U R E s                       //
 // ---------------------------------------------------------------- //
 
-typedef char *String;
+typedef char *String;        // %s
+typedef unsigned char uchar; // %uc
+typedef float f32;           // %f
+typedef double f64;          // %lf
+typedef long double f80;     // %Lf
+typedef int16_t i16;         // %d
+typedef int32_t i32;         // %ld
+typedef int64_t i64;         // %lld
+typedef uint16_t u16;        // %u
+typedef uint32_t u32;        // %lu
+typedef uint64_t u64;        // %llu
 
 typedef struct timespec TimeStamp;
 
 typedef struct
 {
-    int64_t first;
-    int64_t second;
+    i64 first;
+    i64 second;
 } Matrix_Index;
 
 typedef struct
 {
-    double r;
-    double theta;
+    f80 r;
+    f80 theta;
     angle_mode angle_mode;
 } Polar2D;
 
 typedef struct
 {
-    double r;
-    double theta_x;
-    double theta_z;
+    f80 r;
+    f80 theta_x;
+    f80 theta_z;
     angle_mode angle_mode;
 } Polar;
 
 typedef struct
 {
-    double real;
-    double img;
+    f80 real;
+    f80 img;
 } Complex;
 
 typedef struct
 {
-    int64_t length;
+    i64 length;
     Complex *complex_numbers;
 } Complex_Array;
 
 typedef struct
 {
-    double X;
-    double Y;
+    f80 X;
+    f80 Y;
 } Point2D, Vector2D;
 
 typedef struct
 {
-    double X;
-    double Y;
-    double Z;
+    f80 X;
+    f80 Y;
+    f80 Z;
 } Point, Vector;
 
 typedef struct
 {
-    int64_t len;
-    double *nums;
+    i64 len;
+    f80 *nums;
 } NumArray;
 
 typedef struct
 {
-    int64_t rows;
-    int64_t cols;
-    double **data;
+    i64 rows;
+    i64 cols;
+    f80 **data;
 } Matrix;
 
 typedef struct
 {
-    int64_t n;
+    i64 n;
     Matrix *mat;
 } Tensor;
 
 typedef struct
 {
     Complex z;
-    double real;
-    double img;
-    double r;
-    int64_t r_i;
-    double r_f;
+    f80 real;
+    f80 img;
+    f80 r;
+    i64 r_i;
+    f80 r_f;
     short sign_real;
     short sign_img;
     short sign_r;
@@ -243,21 +254,21 @@ typedef struct
 
 typedef struct
 {
-    int64_t year;
-    int64_t month;
-    int64_t day; // monthly day
+    i64 year;
+    i64 month;
+    i64 day; // monthly day
 } Date;
 
 typedef struct
 {
     _Bool is_bc;
     _Bool is_leapyear;
-    int64_t year;
-    int64_t month;
-    int64_t day; // monthly day
+    i64 year;
+    i64 month;
+    i64 day; // monthly day
     char *month_fullname;
     char *month_shortname;
-    int64_t weekly_day; // weekly day
+    i64 weekly_day; // weekly day
     char *weekly_day_fullname;
     char *weekly_day_shortname;
     char *date_str;
@@ -267,11 +278,11 @@ typedef struct
 //                        F U N C T I O N s                        //
 // --------------------------------------------------------------- //
 
-double time_elapsed(TimeStamp before, TimeStamp after, time_unit unit) // returns elapsed time according to the time_unit.
+f80 time_elapsed(TimeStamp before, TimeStamp after, time_unit unit) // returns elapsed time according to the time_unit.
 {
-    double before_nsec = before.tv_nsec;
-    double after_nsec = after.tv_nsec;
-    double unit_value = -1.0;
+    f80 before_nsec = before.tv_nsec;
+    f80 after_nsec = after.tv_nsec;
+    f80 unit_value = -1.0;
     switch (unit)
     {
     case nanosecond:
@@ -289,7 +300,7 @@ double time_elapsed(TimeStamp before, TimeStamp after, time_unit unit) // return
     default:
         break;
     }
-    double elapsed = (after_nsec - before_nsec) / (unit_value);
+    f80 elapsed = (after_nsec - before_nsec) / (unit_value);
     return elapsed;
 }
 
@@ -313,23 +324,23 @@ void print_elapsed_time(TimeStamp before, TimeStamp after, time_unit unit)
     default:
         return;
     }
-    printf("[ Time Elapsed : %lf %s ]\n", time_elapsed(before, after, unit), unit_str);
+    printf("[ Time Elapsed : %Lf %s ]\n", time_elapsed(before, after, unit), unit_str);
 }
 
-char *str_from_char(char c, int64_t number_of_copy)
+char *str_from_char(char c, i64 number_of_copy)
 {
     char *str = (char *)calloc(number_of_copy, sizeof(char));
-    for (int64_t i = 0; i < number_of_copy; i++)
+    for (i64 i = 0; i < number_of_copy; i++)
         str[i] = c;
     str[number_of_copy] = '\0';
     return str;
 }
 
-char *slice_str(char *str, int64_t start, int64_t end)
+char *slice_str(char *str, i64 start, i64 end)
 {
-    int64_t len = end - start, r = 0;
+    i64 len = end - start, r = 0;
     char *slice = (char *)calloc(len, sizeof(char));
-    for (int64_t i = start; i < end; i++)
+    for (i64 i = start; i < end; i++)
         slice[r++] = str[i];
     slice[len] = '\0';
     return slice;
@@ -337,14 +348,14 @@ char *slice_str(char *str, int64_t start, int64_t end)
 
 char *to_title(char *str)
 {
-    int64_t len = strlen(str);
+    i64 len = strlen(str);
     char *str_title = (char *)calloc(len, sizeof(char));
     char x, c = str[0];
 
     if (c >= 'a' && c <= 'z')
         str_title[0] = c - 32;
 
-    for (int64_t i = 1; i < len; i++)
+    for (i64 i = 1; i < len; i++)
     {
         x = str[i - 1];
         c = str[i];
@@ -362,11 +373,11 @@ char *to_title(char *str)
 
 char *to_upper(char *str)
 {
-    int64_t len = strlen(str);
+    i64 len = strlen(str);
     char *str_upper = (char *)calloc(len, sizeof(char));
     char c;
 
-    for (int64_t i = 0; i < len; i++)
+    for (i64 i = 0; i < len; i++)
     {
         c = str[i];
         if (c >= 'a' && c <= 'z')
@@ -381,11 +392,11 @@ char *to_upper(char *str)
 
 char *to_lower(char *str)
 {
-    int64_t len = strlen(str);
+    i64 len = strlen(str);
     char *str_lower = (char *)calloc(len, sizeof(char));
     char c;
 
-    for (int64_t i = 0; i < len; i++)
+    for (i64 i = 0; i < len; i++)
     {
         c = str[i];
         if (c >= 'A' && c <= 'Z')
@@ -398,142 +409,142 @@ char *to_lower(char *str)
     return str_lower;
 }
 
-int64_t sign_int(int64_t number)
+i64 sign_int(i64 number)
 {
     return ((number < 0) ? -1 : 1);
 }
 
-int64_t sign_double(double number)
+i64 sign_double(f80 number)
 {
     return ((number < 0) ? -1 : 1);
 }
 
-_Bool is_negative(double number)
+_Bool is_negative(f80 number)
 {
     return (number < 0);
 }
 
-_Bool is_positive(double number)
+_Bool is_positive(f80 number)
 {
     return (number >= 0);
 }
 
-_Bool is_odd(int64_t number)
+_Bool is_odd(i64 number)
 {
     return (number & 1);
 }
 
-_Bool is_even(int64_t number)
+_Bool is_even(i64 number)
 {
     return (!(number & 1));
 }
 
-int64_t ceil_num(double number)
+i64 ceil_num(f80 number)
 {
-    int64_t whole_number_part = (int64_t)number;
-    double fraction_part = number - whole_number_part;
+    i64 whole_number_part = (i64)number;
+    f80 fraction_part = number - whole_number_part;
     if (fraction_part > 0)
         return (whole_number_part + 1);
     return whole_number_part;
 }
 
-int64_t floor_num(double number)
+i64 floor_num(f80 number)
 {
-    return (int64_t)number;
+    return (i64)number;
 }
 
-int64_t round_num(double number)
+i64 round_num(f80 number)
 {
-    int64_t whole_number_part = (int64_t)number;
-    double fraction_part = number - whole_number_part;
+    i64 whole_number_part = (i64)number;
+    f80 fraction_part = number - whole_number_part;
     _Bool x = (fraction_part > 0.5);
     return (whole_number_part + x);
 }
 
-double to_radian(double angle_in_degree)
+f80 to_radian(f80 angle_in_degree)
 {
     return ((angle_in_degree * PI) / 180);
 }
 
-double to_degree(double angle_in_radian)
+f80 to_degree(f80 angle_in_radian)
 {
     return ((angle_in_radian * 180) / PI);
 }
 
-int64_t abs_int(int64_t number)
+i64 abs_int(i64 number)
 {
     return (sign_int(number) * number);
 }
 
-double abs_double(double number)
+f80 abs_double(f80 number)
 {
     return (sign_double(number) * number);
 }
 
-int64_t max_int(int64_t number_1, int64_t number_2)
+i64 max_int(i64 number_1, i64 number_2)
 {
     return (number_1 > number_2) ? number_1 : number_2;
 }
 
-double max_double(double number_1, double number_2)
+f80 max_double(f80 number_1, f80 number_2)
 {
     return (number_1 > number_2) ? number_1 : number_2;
 }
 
-int64_t min_int(int64_t number_1, int64_t number_2)
+i64 min_int(i64 number_1, i64 number_2)
 {
     return (number_1 < number_2) ? number_1 : number_2;
 }
 
-double min_double(double number_1, double number_2)
+f80 min_double(f80 number_1, f80 number_2)
 {
     return (number_1 < number_2) ? number_1 : number_2;
 }
 
-double trim_double(double num, int64_t number_of_digits_after_the_radix_dot)
+f80 trim_double(f80 num, i64 number_of_digits_after_the_radix_dot)
 {
-    int64_t number = (int64_t)(num * pow(10, number_of_digits_after_the_radix_dot + 1));
-    int64_t last_digit = number - (int64_t)(number / 10);
-    number = (int64_t)(number / 10);
+    i64 number = (i64)(num * pow(10, number_of_digits_after_the_radix_dot + 1));
+    i64 last_digit = number - (i64)(number / 10);
+    number = (i64)(number / 10);
     if (last_digit > 4)
         number++;
     return (number / pow(10, number_of_digits_after_the_radix_dot));
 }
 
-double fast_inverse(double n) // 1/n
+f80 fast_inverse(f80 n) // 1/n
 {
     union
     {
-        double f;
+        f80 f;
         uint64_t u;
     } x = {n};
 
     x.u = 0x7fde8f165f9c4a37 - x.u; // 9213959213902744119_10 = 7fde8f165f9c4a37_16
 
-    for (int64_t i = 0; i < 4; i++)
+    for (i64 i = 0; i < 4; i++)
         x.f = x.f * (2 - (n * x.f));
 
     return x.f;
 }
 
-double fast_inverse_sqrt(double n) // 1 / sqrt(n)
+f80 fast_inverse_sqrt(f80 n) // 1 / sqrt(n)
 {
-    double r = 0.5 * n;
+    f80 r = 0.5 * n;
     union
     {
-        double f;
+        f80 f;
         uint64_t u;
     } x = {n};
 
     x.u = 0x5fe6eb50c7b537a9 - (x.u >> 1); // 6910469410427058089_10 = 5fe6eb50c7b537a9_16
 
-    for (int64_t i = 0; i < 4; i++)
+    for (i64 i = 0; i < 4; i++)
         x.f = x.f * (1.5F - (r * x.f * x.f));
 
     return x.f;
 }
 
-int64_t mod(int64_t a, int64_t m)
+i64 mod(i64 a, i64 m)
 {
     if (a < m)
         return a;
@@ -543,55 +554,55 @@ int64_t mod(int64_t a, int64_t m)
         return a % m;
 }
 
-int64_t mod_nonzero(int64_t a, int64_t m)
+i64 mod_nonzero(i64 a, i64 m)
 {
-    int64_t result = mod(a, m);
+    i64 result = mod(a, m);
     if (result == 0)
         return m;
     return result;
 }
 
-int64_t bigmod(int64_t a, int64_t b, int64_t m)
+i64 bigmod(i64 a, i64 b, i64 m)
 {
     if (b == 0)
         return mod(1, m);
-    int64_t result = bigmod(a, b / 2, m);
+    i64 result = bigmod(a, b / 2, m);
     result = mod(result * result, m);
     if (b & 1)
         result = mod(result * a, m);
     return result;
 }
 
-int64_t bigmod_str(char *num, int64_t m)
+i64 bigmod_str(char *num, i64 m)
 {
-    int64_t result = 0, len = strlen(num);
-    for (int64_t i = 0; i < len; i++)
-        result = (result * 10 + (int64_t)num[i] - '0') % m;
+    i64 result = 0, len = strlen(num);
+    for (i64 i = 0; i < len; i++)
+        result = (result * 10 + (i64)num[i] - '0') % m;
     return result;
 }
 
-int64_t gcd(int64_t a, int64_t b)
+i64 gcd(i64 a, i64 b)
 {
-    int64_t min = (a < b) ? a : b;
-    int64_t max = (a > b) ? a : b;
-    int64_t r = mod(max, min);
+    i64 min = (a < b) ? a : b;
+    i64 max = (a > b) ? a : b;
+    i64 r = mod(max, min);
     if (r == 0)
         return min;
     return gcd(min, r);
 }
 
-int64_t lcm(int64_t a, int64_t b)
+i64 lcm(i64 a, i64 b)
 {
     return ((a * b) / gcd(a, b));
 }
 
-int64_t power_int(int64_t base, int64_t n)
+i64 power_int(i64 base, i64 n)
 {
     if (n == 0)
         return 1;
     else if (n == 1)
         return base;
-    int64_t result = 1;
+    i64 result = 1;
     while (n > 0)
     {
         if (n & 1)
@@ -602,7 +613,7 @@ int64_t power_int(int64_t base, int64_t n)
     return result;
 }
 
-double power_double(double base, double n)
+f80 power_double(f80 base, f80 n)
 {
     if (n == 0.0)
         return 1;
@@ -614,23 +625,23 @@ double power_double(double base, double n)
         return cbrt(base);
     else
     {
-        int64_t r = 1, sign_of_base = sign_double(base), sign_of_n = sign_double(n);
+        i64 r = 1, sign_of_base = sign_double(base), sign_of_n = sign_double(n);
         base = abs_double(base);
         n = abs_double(n);
-        double remaining_power = trim_double(n - floor(n), 15), result = 1.0;
-        int64_t p = floor(n);
+        f80 remaining_power = trim_double(n - floor(n), 15), result = 1.0;
+        i64 p = floor(n);
         if (sign_of_n == -1)
             base = 1.0 / base;
-        double b = base;
+        f80 b = base;
         if (remaining_power == 0.0 && sign_of_base == -1)
         {
             if (p & 1)
                 r = -1;
             else
             {
-                int64_t lower_part = pow(10.0, 15.0);
-                int64_t upper_part = remaining_power * lower_part;
-                int64_t h = gcd(upper_part, lower_part);
+                i64 lower_part = pow(10.0, 15.0);
+                i64 upper_part = remaining_power * lower_part;
+                i64 h = gcd(upper_part, lower_part);
                 upper_part /= h;
                 lower_part /= h;
                 if (!(lower_part & 1))
@@ -666,15 +677,15 @@ double power_double(double base, double n)
     }
 }
 
-int64_t int_num_len(int64_t number)
+i64 int_num_len(i64 number)
 {
-    int64_t sign = sign_int(number);
-    int64_t abs_num = sign * number;
-    int64_t len = (sign < 1) + 1 + floor_num(log10(abs_num));
+    i64 sign = sign_int(number);
+    i64 abs_num = sign * number;
+    i64 len = (sign < 1) + 1 + floor_num(log10(abs_num));
     return len;
 }
 
-int64_t last_digit_int(int64_t number, int64_t power)
+i64 last_digit_int(i64 number, i64 power)
 {
     if (power == 0)
         return 1;
@@ -682,7 +693,7 @@ int64_t last_digit_int(int64_t number, int64_t power)
         return 0;
     if (number < 1 || power < 1)
         return -1;
-    int64_t n = number - floor(number / 10) * 10;
+    i64 n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
     if (n == 0 || n == 1 || n == 5 || n == 6)
@@ -693,7 +704,7 @@ int64_t last_digit_int(int64_t number, int64_t power)
     }
     else
     {
-        int64_t m = mod(power, 4);
+        i64 m = mod(power, 4);
         if (m == 1)
             return n;
         else if (m == 2)
@@ -706,7 +717,7 @@ int64_t last_digit_int(int64_t number, int64_t power)
     return -1;
 }
 
-int64_t last_digit_uint(int64_t number, int64_t power)
+i64 last_digit_uint(i64 number, i64 power)
 {
     if (power == 0)
         return 1;
@@ -714,7 +725,7 @@ int64_t last_digit_uint(int64_t number, int64_t power)
         return 0;
     number = abs_double(number);
     power = abs_double(power);
-    int64_t n = number - floor(number / 10) * 10;
+    i64 n = number - floor(number / 10) * 10;
     if (power == 1)
         return n;
     if (n == 0 || n == 1 || n == 5 || n == 6)
@@ -727,7 +738,7 @@ int64_t last_digit_uint(int64_t number, int64_t power)
     {
         char *str = (char *)calloc(floor(log10(power) + 1), sizeof(char));
         sprintf(str, "%lld", power);
-        int64_t m = bigmod_str(str, 4);
+        i64 m = bigmod_str(str, 4);
         FREE_PTR(str);
         if (m == 1)
             return n;
@@ -741,46 +752,46 @@ int64_t last_digit_uint(int64_t number, int64_t power)
     return -1;
 }
 
-double ln(double x)
+f80 ln(f80 x)
 {
     if (x > 0)
         return log(x);
     return -INFINITY;
 }
 
-double log_double(double base, double x)
+f80 log_double(f80 base, f80 x)
 {
     if (x > 0)
         return (ln(x) / ln(base));
     return -INFINITY;
 }
 
-int64_t fibonacci(int64_t n_th)
+i64 fibonacci(i64 n_th)
 {
     return (One_over_SquareRootOf5 * (power_double(PHI_0, n_th) - power_double(PHI_1, n_th)));
 }
 
-int64_t factorial(int64_t n) // MAX --> n = 20
+i64 factorial(i64 n) // MAX --> n = 20
 {
     if (n < 0)
         return 0;
     else if (n == 0)
         return 1;
-    int64_t N = 1;
-    for (int64_t i = 1; i <= n; i++)
+    i64 N = 1;
+    for (i64 i = 1; i <= n; i++)
         N *= i;
     return N;
 }
 
-double sum(char *expression, char *interval)
+f80 sum(char *expression, char *interval)
 {
     char *lower_bound = (char *)calloc(128, sizeof(char));
     char *upper_bound = (char *)calloc(128, sizeof(char));
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
-    char *format = "%0.15lf";
-    int64_t a, b; // MAX = 9223372036854775807
-    double answer = 0;
+    char *format = "%0.15Lf";
+    i64 a, b; // MAX = 9223372036854775807
+    f80 answer = 0;
 
     if (strcmp(lower_bound, "-inf") == 0)
     {
@@ -807,10 +818,10 @@ double sum(char *expression, char *interval)
     fp = fopen("temp_sum.c", "w");
 
     fprintf(fp, "#include \"arithmos.h\"\n\n");
-    fprintf(fp, "float f(float x)\n{\n\treturn (%s);\n}\n\n", expression);
+    fprintf(fp, "f80 f(f80 x)\n{\n\treturn (%s);\n}\n\n", expression);
     fprintf(fp, "int main()\n{\n");
     fprintf(fp, "\tfloat sum = 0;\n");
-    fprintf(fp, "\tfor (int64_t x = %lld; x <= %lld; x++)\n", a, b);
+    fprintf(fp, "\tfor (i64 x = %lld; x <= %lld; x++)\n", a, b);
     fprintf(fp, "\t\tsum += f(x);\n");
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer_sum.txt\", \"w\");\n");
@@ -820,31 +831,31 @@ double sum(char *expression, char *interval)
 
     fclose(fp);
 
-    char *command = "gcc temp_sum.c -o temp_sum.exe";
+    char *command = "gcc temp_sum.c -o temp_sum";
     system(command);
-    command = "temp_sum.exe";
+    command = "temp_sum";
     system(command);
 
     fp = fopen("temp_answer_sum.txt", "r");
-    fscanf(fp, "%lf", &answer);
+    fscanf(fp, "%Lf", &answer);
     fclose(fp);
 
-    remove("temp_sum.exe");
+    remove("temp_sum");
     remove("temp_sum.c");
     remove("temp_answer_sum.txt");
 
     return answer;
 }
 
-double product(char *expression, char *interval)
+f80 product(char *expression, char *interval)
 {
     char *lower_bound = (char *)calloc(128, sizeof(char));
     char *upper_bound = (char *)calloc(128, sizeof(char));
     sscanf(interval, "%s %s", lower_bound, upper_bound);
 
-    char *format = "%0.15lf";
-    int64_t a, b; // MAX = 9223372036854775807
-    double answer = 0;
+    char *format = "%0.15Lf";
+    i64 a, b; // MAX = 9223372036854775807
+    f80 answer = 0;
 
     if (strcmp(lower_bound, "-inf") == 0)
     {
@@ -871,10 +882,10 @@ double product(char *expression, char *interval)
     fp = fopen("temp_sum.c", "w");
 
     fprintf(fp, "#include \"arithmos.h\"\n\n");
-    fprintf(fp, "float f(float x)\n{\n\treturn (%s);\n}\n\n", expression);
+    fprintf(fp, "f80 f(f80 x)\n{\n\treturn (%s);\n}\n\n", expression);
     fprintf(fp, "int main()\n{\n");
     fprintf(fp, "\tfloat sum = 1;\n");
-    fprintf(fp, "\tfor (int64_t x = %lld; x <= %lld; x++)\n", a, b);
+    fprintf(fp, "\tfor (i64 x = %lld; x <= %lld; x++)\n", a, b);
     fprintf(fp, "\t\tsum *= f(x);\n");
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer_product.txt\", \"w\");\n");
@@ -884,34 +895,34 @@ double product(char *expression, char *interval)
 
     fclose(fp);
 
-    char *command = "gcc temp_sum.c -o temp_sum.exe";
+    char *command = "gcc temp_sum.c -o temp_sum";
     system(command);
-    command = "temp_sum.exe";
+    command = "temp_sum";
     system(command);
 
     fp = fopen("temp_answer_product.txt", "r");
-    fscanf(fp, "%lf", &answer);
+    fscanf(fp, "%Lf", &answer);
     fclose(fp);
 
-    remove("temp_sum.exe");
+    remove("temp_sum");
     remove("temp_sum.c");
     remove("temp_answer_product.txt");
 
     return answer;
 }
 
-double differentiate(char *function, double x)
+f80 differentiate(char *function, f80 x)
 {
-    double answer = 0;
-    char *format = "%0.15lf";
+    f80 answer = 0;
+    char *format = "%0.15Lf";
 
     FILE *fp;
     fp = fopen("temp_derivative.c", "w");
 
     fprintf(fp, "#include \"arithmos.h\"\n\n");
-    fprintf(fp, "float f(float x)\n{\n\treturn (%s);\n}\n\n", function);
+    fprintf(fp, "f80 f(f80 x)\n{\n\treturn (%s);\n}\n\n", function);
     fprintf(fp, "int main()\n{\n");
-    fprintf(fp, "\tfloat dx = 0.000000000000001, a = 0, b = 0, x = %0.15lf, result = 0;\n\n", x);
+    fprintf(fp, "\tfloat dx = 0.000000000000001, a = 0, b = 0, x = %0.15Lf, result = 0;\n\n", x);
     fprintf(fp, "\ta = f(x+dx);\n\tb = f(x-dx);\n");
     fprintf(fp, "\tresult = (a - b)/(2 * dx);\n\n");
     fprintf(fp, "\tFILE *fp;\n");
@@ -922,23 +933,23 @@ double differentiate(char *function, double x)
 
     fclose(fp);
 
-    char *command = "gcc temp_derivative.c -o temp_derivative.exe";
+    char *command = "gcc temp_derivative.c -o temp_derivative";
     system(command);
-    command = "temp_derivative.exe";
+    command = "temp_derivative";
     system(command);
 
     fp = fopen("temp_answer_derivative.txt", "r");
-    fscanf(fp, "%lf", &answer);
+    fscanf(fp, "%Lf", &answer);
     fclose(fp);
 
-    remove("temp_derivative.exe");
+    remove("temp_derivative");
     remove("temp_derivative.c");
     remove("temp_answer_derivative.txt");
 
     return answer;
 }
 
-double integrate(char *integrand, char *interval)
+f80 integrate(char *integrand, char *interval)
 {
     char *lower_bound = (char *)calloc(128, sizeof(char));
     char *upper_bound = (char *)calloc(128, sizeof(char));
@@ -947,9 +958,9 @@ double integrate(char *integrand, char *interval)
     if (strcmp(lower_bound, upper_bound) == 0)
         return 0;
 
-    double a, b, A, B, C, dx = 0.0000001, answer = 0;
-    char *format = "%0.15lf";
-    int64_t sign = 1;
+    f80 a, b, A, B, C, dx = 0.0000001, answer = 0;
+    char *format = "%0.15Lf";
+    i64 sign = 1;
     _Bool m = 0;
 
     if (strcmp(lower_bound, "-inf") == 0)
@@ -962,7 +973,7 @@ double integrate(char *integrand, char *interval)
         }
         else
         {
-            sscanf(upper_bound, "%lf", &b);
+            sscanf(upper_bound, "%Lf", &b);
             B = atan(b);
         }
     }
@@ -978,14 +989,14 @@ double integrate(char *integrand, char *interval)
         }
         else
         {
-            sscanf(upper_bound, "%lf", &b);
+            sscanf(upper_bound, "%Lf", &b);
             A = atan(b);
         }
     }
 
     else
     {
-        sscanf(lower_bound, "%lf", &a);
+        sscanf(lower_bound, "%Lf", &a);
         if (strcmp(upper_bound, "inf") == 0)
         {
             m = 1;
@@ -1001,7 +1012,7 @@ double integrate(char *integrand, char *interval)
         }
         else
         {
-            sscanf(upper_bound, "%lf", &b);
+            sscanf(upper_bound, "%Lf", &b);
             A = a;
             B = b;
             if (b < a)
@@ -1019,12 +1030,12 @@ double integrate(char *integrand, char *interval)
     fp = fopen("temp_integral.c", "w");
 
     fprintf(fp, "#include \"arithmos.h\"\n\n");
-    fprintf(fp, "float f(float x)\n{\n\treturn (%s);\n}\n\n", integrand);
+    fprintf(fp, "f80 f(f80 x)\n{\n\treturn (%s);\n}\n\n", integrand);
     fprintf(fp, "int main()\n{\n");
     fprintf(fp, "\tfloat sum = 0, x = 0, result = 0;\n");
-    fprintf(fp, "\tfor (int64_t i = 1; i <= 10000000; i++)\n");
+    fprintf(fp, "\tfor (i64 i = 1; i <= 10000000; i++)\n");
     fprintf(fp, "\t{\n");
-    fprintf(fp, "\t\tx = %0.15lf + (%0.15lf * (i - 0.5) * %0.15lf);\n", A, C, dx);
+    fprintf(fp, "\t\tx = %0.15Lf + (%0.15Lf * (i - 0.5) * %0.15Lf);\n", A, C, dx);
     if (m)
     {
         fprintf(fp, "\t\tx = tan(x);\n");
@@ -1033,7 +1044,7 @@ double integrate(char *integrand, char *interval)
     else
         fprintf(fp, "\t\tsum += f(x);\n");
     fprintf(fp, "\t}\n\n");
-    fprintf(fp, "\tresult = %lld * %0.15lf * sum * %0.15lf;\n\n", sign, C, dx);
+    fprintf(fp, "\tresult = %lld * %0.15Lf * sum * %0.15Lf;\n\n", sign, C, dx);
     fprintf(fp, "\tFILE *fp;\n");
     fprintf(fp, "\tfp = fopen(\"temp_answer_integral.txt\", \"w\");\n");
     fprintf(fp, "\tfprintf(fp, \"%s\", result);\n", format);
@@ -1044,14 +1055,14 @@ double integrate(char *integrand, char *interval)
 
     char *command = "gcc temp_integral.c -o temp_integral";
     system(command);
-    command = "temp_integral.exe";
+    command = "temp_integral";
     system(command);
 
     fp = fopen("temp_answer_integral.txt", "r");
-    fscanf(fp, "%lf", &answer);
+    fscanf(fp, "%Lf", &answer);
     fclose(fp);
 
-    remove("temp_integral.exe");
+    remove("temp_integral");
     remove("temp_integral.c");
     remove("temp_answer_integral.txt");
 
@@ -1081,10 +1092,10 @@ _Bool are_identical_matrix(Matrix matrix_1, Matrix matrix_2)
 {
     if (matrix_1.rows == matrix_2.rows && matrix_1.cols == matrix_2.cols)
     {
-        int64_t count = 0;
-        for (int64_t r = 0; r < matrix_1.rows; r++)
+        i64 count = 0;
+        for (i64 r = 0; r < matrix_1.rows; r++)
         {
-            for (int64_t c = 0; c < matrix_1.cols; c++)
+            for (i64 c = 0; c < matrix_1.cols; c++)
                 if (matrix_1.data[r][c] == matrix_2.data[r][c])
                     count++;
         }
@@ -1095,7 +1106,7 @@ _Bool are_identical_matrix(Matrix matrix_1, Matrix matrix_2)
     return 0;
 }
 
-Matrix_Index new_matrix_index(int64_t first, int64_t second)
+Matrix_Index new_matrix_index(i64 first, i64 second)
 {
     Matrix_Index p;
     p.first = first;
@@ -1103,7 +1114,7 @@ Matrix_Index new_matrix_index(int64_t first, int64_t second)
     return p;
 }
 
-Polar2D new_polar2D(double r, double theta, angle_mode angle_mode)
+Polar2D new_polar2D(f80 r, f80 theta, angle_mode angle_mode)
 {
     Polar2D p;
     p.r = r;
@@ -1112,7 +1123,7 @@ Polar2D new_polar2D(double r, double theta, angle_mode angle_mode)
     return p;
 }
 
-Polar new_polar(double r, double theta_x, double theta_z, angle_mode angle_mode)
+Polar new_polar(f80 r, f80 theta_x, f80 theta_z, angle_mode angle_mode)
 {
     Polar p;
     p.r = r;
@@ -1122,7 +1133,7 @@ Polar new_polar(double r, double theta_x, double theta_z, angle_mode angle_mode)
     return p;
 }
 
-Point2D new_point2D(double X, double Y)
+Point2D new_point2D(f80 X, f80 Y)
 {
     Point2D p;
     p.X = X;
@@ -1130,7 +1141,7 @@ Point2D new_point2D(double X, double Y)
     return p;
 }
 
-Vector2D new_vector2D(double X, double Y)
+Vector2D new_vector2D(f80 X, f80 Y)
 {
     Vector2D v;
     v.X = X;
@@ -1138,7 +1149,7 @@ Vector2D new_vector2D(double X, double Y)
     return v;
 }
 
-Point new_point(double X, double Y, double Z)
+Point new_point(f80 X, f80 Y, f80 Z)
 {
     Point p;
     p.X = X;
@@ -1147,7 +1158,7 @@ Point new_point(double X, double Y, double Z)
     return p;
 }
 
-Vector new_vector(double X, double Y, double Z)
+Vector new_vector(f80 X, f80 Y, f80 Z)
 {
     Vector v;
     v.X = X;
@@ -1156,16 +1167,16 @@ Vector new_vector(double X, double Y, double Z)
     return v;
 }
 
-NumArray new_num_array(int64_t number_of_elements)
+NumArray new_num_array(i64 number_of_elements)
 {
     NumArray na;
     na.len = number_of_elements;
-    double *nums = (double *)calloc(number_of_elements, sizeof(double));
+    f80 *nums = (f80 *)calloc(number_of_elements, sizeof(f80));
     na.nums = nums;
     return na;
 }
 
-NumArray new_num_array_(int64_t number_of_elements, double nums[])
+NumArray new_num_array_(i64 number_of_elements, f80 nums[])
 {
     NumArray na;
     na.len = number_of_elements;
@@ -1173,72 +1184,72 @@ NumArray new_num_array_(int64_t number_of_elements, double nums[])
     return na;
 }
 
-Matrix new_matrix(int64_t rows, int64_t cols)
+Matrix new_matrix(i64 rows, i64 cols)
 {
     Matrix matrix;
     matrix.rows = rows;
     matrix.cols = cols;
-    double **data = (double **)calloc(rows, sizeof(double *));
-    for (int64_t x = 0; x < rows; x++)
-        data[x] = (double *)calloc(cols, sizeof(double));
+    f80 **data = (f80 **)calloc(rows, sizeof(f80 *));
+    for (i64 x = 0; x < rows; x++)
+        data[x] = (f80 *)calloc(cols, sizeof(f80));
     matrix.data = data;
     return matrix;
 }
 
-Tensor new_tensor(int64_t number_of_mats, int64_t rows, int64_t cols)
+Tensor new_tensor(i64 number_of_mats, i64 rows, i64 cols)
 {
     Tensor tensor;
     tensor.n = number_of_mats;
     Matrix *mat = (Matrix *)calloc(number_of_mats, sizeof(Matrix));
-    for (int64_t x = 0; x < number_of_mats; x++)
+    for (i64 x = 0; x < number_of_mats; x++)
         mat[x] = new_matrix(rows, cols);
     tensor.mat = mat;
     return tensor;
 }
 
-Matrix new_column_matrix(int64_t rows)
+Matrix new_column_matrix(i64 rows)
 {
     return new_matrix(rows, 1);
 }
 
-Matrix new_row_matrix(int64_t cols)
+Matrix new_row_matrix(i64 cols)
 {
     return new_matrix(1, cols);
 }
 
-Matrix new_identity_matrix(int64_t order)
+Matrix new_identity_matrix(i64 order)
 {
     Matrix matrix = new_matrix(order, order);
-    for (int64_t r = 0; r < order; r++)
+    for (i64 r = 0; r < order; r++)
         matrix.data[r][r] = 1;
     return matrix;
 }
 
-Matrix new_scalar_matrix(int64_t order, double scalar_number)
+Matrix new_scalar_matrix(i64 order, f80 scalar_number)
 {
     Matrix matrix = new_matrix(order, order);
-    for (int64_t r = 0; r < order; r++)
+    for (i64 r = 0; r < order; r++)
         matrix.data[r][r] = scalar_number;
     return matrix;
 }
 
-Matrix new_primary_diagonal_matrix(int64_t order, Matrix row_matrix)
+Matrix new_primary_diagonal_matrix(i64 order, Matrix row_matrix)
 {
     Matrix matrix = new_matrix(order, order);
-    for (int64_t r = 0; r < order; r++)
+    for (i64 r = 0; r < order; r++)
         matrix.data[r][r] = row_matrix.data[0][r];
     return matrix;
 }
 
-Matrix new_secondary_diagonal_matrix(int64_t order, Matrix row_matrix)
+Matrix new_secondary_diagonal_matrix(i64 order, Matrix row_matrix)
 {
     Matrix matrix = new_matrix(order, order);
-    for (int64_t r = 0; r < order; r++)
+    for (i64 r = 0; r < order; r++)
         matrix.data[r][order - r - 1] = row_matrix.data[0][r];
     return matrix;
 }
 
-Complex new_complex(double real_part, double imaginary_part)
+Complex new_complex(f80 real_part, f80 imaginary_part)
 {
     Complex complex_number;
     complex_number.real = real_part;
@@ -1246,7 +1257,7 @@ Complex new_complex(double real_part, double imaginary_part)
     return complex_number;
 }
 
-Complex_Array new_complex_array(int64_t length)
+Complex_Array new_complex_array(i64 length)
 {
     Complex_Array complex_array;
     complex_array.length = length;
@@ -1254,44 +1265,44 @@ Complex_Array new_complex_array(int64_t length)
     return complex_array;
 }
 
-Number new_number(double real_part, double imaginary_part)
+Number new_number(f80 real_part, f80 imaginary_part)
 {
     Number n;
     n.z = new_complex(real_part, imaginary_part);
     n.real = real_part;
     n.img = imaginary_part;
-    double R = (real_part * real_part) + (imaginary_part * imaginary_part);
+    f80 R = (real_part * real_part) + (imaginary_part * imaginary_part);
     n.r = sqrt(R);
-    n.r_i = (int64_t)n.r;
-    n.r_f = (double)(n.r - n.r_i);
+    n.r_i = (i64)n.r;
+    n.r_f = (f80)(n.r - n.r_i);
     n.sign_real = (real_part < 0.0) ? -1 : 1;
     n.sign_img = (imaginary_part < 0.0) ? -1 : 1;
     n.sign_r = (n.r < 0.0) ? -1 : 1;
     return n;
 }
 
-NumArray random_num_array(int64_t number_of_elements, int64_t rounding_number, double scalar)
+NumArray random_num_array(i64 number_of_elements, i64 rounding_number, f80 scalar)
 {
     srand(time(0));
     NumArray na = new_num_array(number_of_elements);
-    for (int64_t i = 0; i < number_of_elements; i++)
+    for (i64 i = 0; i < number_of_elements; i++)
         na.nums[i] = scalar * ((rand() % rounding_number) + 1);
     return na;
 }
 
-NumArray random_num_array_(int64_t number_of_elements, int64_t rounding_number, double scalar, double seed)
+NumArray random_num_array_(i64 number_of_elements, i64 rounding_number, f80 scalar, f80 seed)
 {
     srand(seed);
     NumArray na = new_num_array(number_of_elements);
-    for (int64_t i = 0; i < number_of_elements; i++)
+    for (i64 i = 0; i < number_of_elements; i++)
         na.nums[i] = scalar * ((rand() % rounding_number) + 1);
     return na;
 }
 
-NumArray scale_num_array(NumArray array, double scalar)
+NumArray scale_num_array(NumArray array, f80 scalar)
 {
     NumArray na = new_num_array(array.len);
-    for (int64_t i = 0; i < array.len; i++)
+    for (i64 i = 0; i < array.len; i++)
         na.nums[i] = scalar * array.nums[i];
     return na;
 }
@@ -1323,9 +1334,9 @@ Complex copy_complex(Complex z)
 
 Complex_Array copy_complex_array(Complex_Array complex_array)
 {
-    int64_t len = complex_array.length;
+    i64 len = complex_array.length;
     Complex_Array copy_of_complex_array = new_complex_array(len);
-    for (int64_t i = 0; i < len; i++)
+    for (i64 i = 0; i < len; i++)
         copy_of_complex_array.complex_numbers[i] = complex_array.complex_numbers[i];
     return copy_of_complex_array;
 }
@@ -1375,22 +1386,22 @@ Vector zero_vector()
     return new_vector(0, 0, 0);
 }
 
-Complex complex_from_real(double number)
+Complex complex_from_real(f80 number)
 {
     return new_complex(number, 0);
 }
 
-Complex complex_from_imaginary(double imaginary_number)
+Complex complex_from_imaginary(f80 imaginary_number)
 {
     return new_complex(0, imaginary_number);
 }
 
-double real_part(Complex z)
+f80 real_part(Complex z)
 {
     return z.real;
 }
 
-double imaginary_part(Complex z)
+f80 imaginary_part(Complex z)
 {
     return z.img;
 }
@@ -1403,20 +1414,20 @@ Complex conjugate(Complex z)
     return c_number;
 }
 
-double value_of_complex(Complex z)
+f80 value_of_complex(Complex z)
 {
     return sqrt((z.real * z.real) + (z.img * z.img));
 }
 
-Complex scale_complex(Complex z, double scalar)
+Complex scale_complex(Complex z, f80 scalar)
 {
     return new_complex(scalar * z.real, scalar * z.img);
 }
 
-int64_t quadrent_for_complex(Complex z)
+i64 quadrent_for_complex(Complex z)
 {
-    double real = z.real;
-    double imaginary = z.img;
+    f80 real = z.real;
+    f80 imaginary = z.img;
     if (real >= 0 && imaginary >= 0)
         return 1;
     if (real < 0 && imaginary >= 0)
@@ -1428,14 +1439,14 @@ int64_t quadrent_for_complex(Complex z)
     return -1;
 }
 
-double argument(Complex z, angle_mode angle_mode)
+f80 argument(Complex z, angle_mode angle_mode)
 {
-    double real = z.real;
-    double imaginary = z.img;
+    f80 real = z.real;
+    f80 imaginary = z.img;
 
     if (real == 0)
     {
-        double arg = 90 * sign_double(imaginary);
+        f80 arg = 90 * sign_double(imaginary);
         if (angle_mode == radian)
             return to_radian(arg);
         else if (angle_mode == degree)
@@ -1455,7 +1466,7 @@ double argument(Complex z, angle_mode angle_mode)
     }
     else
     {
-        double arg = atan(abs_double(imaginary / real));
+        f80 arg = atan(abs_double(imaginary / real));
         if (real > 0 && imaginary > 0)
         {
             if (angle_mode == radian)
@@ -1488,14 +1499,14 @@ double argument(Complex z, angle_mode angle_mode)
     return NAN;
 }
 
-double angle_for_complex(Complex z, angle_mode angle_mode)
+f80 angle_for_complex(Complex z, angle_mode angle_mode)
 {
-    double real = z.real;
-    double imaginary = z.img;
+    f80 real = z.real;
+    f80 imaginary = z.img;
 
     if (real == 0)
     {
-        double arg = 90 * sign_double(imaginary);
+        f80 arg = 90 * sign_double(imaginary);
         if (angle_mode == radian)
             return to_radian(arg);
         else if (angle_mode == degree)
@@ -1515,7 +1526,7 @@ double angle_for_complex(Complex z, angle_mode angle_mode)
     }
     else
     {
-        double arg = atan(abs_double(imaginary / real));
+        f80 arg = atan(abs_double(imaginary / real));
         if (real > 0 && imaginary > 0)
         {
             if (angle_mode == radian)
@@ -1549,10 +1560,10 @@ double angle_for_complex(Complex z, angle_mode angle_mode)
     return NAN;
 }
 
-int64_t quadrent_for_angle(double angle, angle_mode angle_mode)
+i64 quadrent_for_angle(f80 angle, angle_mode angle_mode)
 {
-    double theta = remainder(abs_double(angle), TAU), pi_1 = PI / 2, pi_2 = (3 * PI) / 2;
-    int64_t quadrent = -1;
+    f80 theta = remainder(abs_double(angle), TAU), pi_1 = PI / 2, pi_2 = (3 * PI) / 2;
+    i64 quadrent = -1;
     if (angle_mode == radian)
     {
         if (theta >= 0 && theta <= pi_1)
@@ -1611,20 +1622,20 @@ Complex divide_complex(Complex z1, Complex z2) // (x1 + iy1) / (x2 + iy2) = ((x1
 
 Complex power_complex(Complex base, Complex n)
 {
-    double r = value_of_complex(base);
-    double t = argument(base, radian);
-    double x = n.real, y = n.img;
-    double p = (x * log(r)) - (y * t);
-    double R = power_double(E, p);
-    double T = (y * log(r)) + (x * t);
-    double real = R * cos(T), img = R * sin(T);
+    f80 r = value_of_complex(base);
+    f80 t = argument(base, radian);
+    f80 x = n.real, y = n.img;
+    f80 p = (x * log(r)) - (y * t);
+    f80 R = power_double(E, p);
+    f80 T = (y * log(r)) + (x * t);
+    f80 real = R * cos(T), img = R * sin(T);
     return new_complex(real, img);
 }
 
 Complex complex_ln(Complex z)
 {
-    double r = value_of_complex(z);
-    double t = argument(z, radian);
+    f80 r = value_of_complex(z);
+    f80 t = argument(z, radian);
     if (r < 0)
         return new_complex(log(abs_double(r)), (t + PI));
     else if (r > 0)
@@ -1634,8 +1645,8 @@ Complex complex_ln(Complex z)
 
 Complex complex_log10(Complex z)
 {
-    double r = value_of_complex(z);
-    double t = argument(z, radian);
+    f80 r = value_of_complex(z);
+    f80 t = argument(z, radian);
     if (r < 0)
         return new_complex(log(abs_double(r)) / log(10), (t + PI) / log(10));
     else if (r > 0)
@@ -1651,8 +1662,8 @@ Complex complex_log(Complex base, Complex z)
 _Bool is_number(char *string)
 {
     if (string == NULL || *string == '\0')
-        return 0;                                           // Checking if the string is Empty...
-    int64_t count_dot = 0, count_plus = 0, count_minus = 0; // Initializing...
+        return 0;                                       // Checking if the string is Empty...
+    i64 count_dot = 0, count_plus = 0, count_minus = 0; // Initializing...
     // Checking if the string is a number...
     while (*string)
     {
@@ -1685,24 +1696,24 @@ _Bool is_number(char *string)
 char *remove_char(char *str, char c)
 {
     char *new_str = (char *)calloc(strlen(str), sizeof(char));
-    int64_t count = 0;
-    for (int64_t i = 0; new_str[i]; i++)
+    i64 count = 0;
+    for (i64 i = 0; new_str[i]; i++)
         if (new_str[i] != c)
             new_str[count++] = new_str[i];
     new_str[count] = '\0';
     return new_str;
 }
 
-char **split(char *str, int64_t str_len, char delimiter_char)
+char **split(char *str, i64 str_len, char delimiter_char)
 {
-    int64_t len = (str_len + 2), number_of_tokens = 0;
-    int64_t n = (len >> 1);
+    i64 len = (str_len + 2), number_of_tokens = 0;
+    i64 n = (len >> 1);
     char *string = (char *)calloc(len, sizeof(char));
     sprintf(string, "%s ", str);
 
     // initialize the 'list_of_tokens'
     char **list_of_tokens = (char **)calloc(n, sizeof(char *));
-    for (int64_t i = 0; i < n; i++)
+    for (i64 i = 0; i < n; i++)
         list_of_tokens[i] = (char *)calloc(64, sizeof(char));
 
     // Split
@@ -1714,39 +1725,39 @@ char **split(char *str, int64_t str_len, char delimiter_char)
     return list_of_tokens;
 }
 
-double *parse_number(char *string, int64_t number_of_numbers)
+f80 *parse_number(char *string, i64 number_of_numbers)
 {
-    int64_t count = 0, c = 0, i, string_len = number_of_numbers << 6;
-    double temp_num;
+    i64 count = 0, c = 0, i, string_len = number_of_numbers << 6;
+    f80 temp_num;
     // Get the splitted_String as a 2D_Character_Array...
     char **splitted_string = split(string, string_len, ' ');
     // Initialize the 1D_Number_Array...
     while (splitted_string[count][0])
         count++;
-    double *list_of_nums = (double *)calloc(count, sizeof(double));
+    f80 *list_of_nums = (f80 *)calloc(count, sizeof(f80));
     // Parse the numbers...
     for (i = 0; i < count; i++)
     {
         if (is_number(splitted_string[i]))
         {
-            sscanf(splitted_string[i], "%lf", &temp_num);
+            sscanf(splitted_string[i], "%Lf", &temp_num);
             list_of_nums[c++] = temp_num;
             if (number_of_numbers != -1 && c == number_of_numbers)
                 break;
         }
     }
-    // Return the list as a double type 1D_Number_Array...
+    // Return the list as a f80 type 1D_Number_Array...
     return list_of_nums;
 }
 
-Matrix input_matrix(int64_t rows, int64_t cols)
+Matrix input_matrix(i64 rows, i64 cols)
 {
-    int64_t r, c, len = 64 * cols;
+    i64 r, c, len = 64 * cols;
     // Temporary Variables...
-    double *temp_row = (double *)calloc(cols, sizeof(double));
+    f80 *temp_row = (f80 *)calloc(cols, sizeof(f80));
     char *temp_str = (char *)calloc(len, sizeof(char));
 
-    int64_t temp_len = 0;
+    i64 temp_len = 0;
     // Creating the Matrix...
     Matrix matrix = new_matrix(rows, cols);
     // Getting the Matrix_Input...
@@ -1768,29 +1779,29 @@ Matrix input_matrix(int64_t rows, int64_t cols)
     return matrix;
 }
 
-Matrix input_row_matrix(int64_t cols)
+Matrix input_row_matrix(i64 cols)
 {
     return input_matrix(1, cols);
 }
 
-Matrix input_column_matrix(int64_t rows)
+Matrix input_column_matrix(i64 rows)
 {
     return input_matrix(rows, 1);
 }
 
-Matrix input_square_matrix(int64_t order)
+Matrix input_square_matrix(i64 order)
 {
     return input_matrix(order, order);
 }
 
-Matrix matrix_from_array(int64_t rows, int64_t cols, NumArray array)
+Matrix matrix_from_array(i64 rows, i64 cols, NumArray array)
 {
     if ((rows * cols) == array.len)
     {
         Matrix matrix = new_matrix(rows, cols);
-        for (int64_t r = 0; r < rows; r++)
+        for (i64 r = 0; r < rows; r++)
         {
-            for (int64_t c = 0; c < cols; c++)
+            for (i64 c = 0; c < cols; c++)
                 matrix.data[r][c] = array.nums[cols * r + c];
         }
         return matrix;
@@ -1798,7 +1809,7 @@ Matrix matrix_from_array(int64_t rows, int64_t cols, NumArray array)
     return new_matrix(0, 0);
 }
 
-Matrix matrix_from_array_(int64_t rows, int64_t cols, double nums[])
+Matrix matrix_from_array_(i64 rows, i64 cols, f80 nums[])
 {
     return matrix_from_array(rows, cols, new_num_array_(rows * cols, nums));
 }
@@ -1808,7 +1819,7 @@ Matrix column_matrix_from_array(NumArray array)
     return matrix_from_array(array.len, 1, array);
 }
 
-Matrix column_matrix_from_array_(int64_t len, double array[])
+Matrix column_matrix_from_array_(i64 len, f80 array[])
 {
     NumArray narray = new_num_array_(len, array);
     return matrix_from_array(len, 1, narray);
@@ -1819,7 +1830,7 @@ Matrix row_matrix_from_array(NumArray array)
     return matrix_from_array(1, array.len, array);
 }
 
-Matrix row_matrix_from_array_(int64_t len, double array[])
+Matrix row_matrix_from_array_(i64 len, f80 array[])
 {
     NumArray narray = new_num_array_(len, array);
     return matrix_from_array(1, len, narray);
@@ -1830,10 +1841,10 @@ NumArray array_from_matrix(Matrix matrix)
     if (!is_null_matrix(matrix))
     {
         NumArray array = new_num_array(matrix.rows * matrix.cols);
-        int64_t i = 0;
-        for (int64_t r = 0; r < matrix.rows; r++)
+        i64 i = 0;
+        for (i64 r = 0; r < matrix.rows; r++)
         {
-            for (int64_t c = 0; c < matrix.cols; c++)
+            for (i64 c = 0; c < matrix.cols; c++)
                 array.nums[i++] = matrix.data[r][c];
         }
         return array;
@@ -1841,25 +1852,25 @@ NumArray array_from_matrix(Matrix matrix)
     return new_num_array(0);
 }
 
-Matrix random_matrix(int64_t rows, int64_t cols, int64_t rounding_number, double scalar)
+Matrix random_matrix(i64 rows, i64 cols, i64 rounding_number, f80 scalar)
 {
     srand(time(0));
     Matrix r_matrix = new_matrix(rows, cols);
-    for (int64_t r = 0; r < rows; r++)
+    for (i64 r = 0; r < rows; r++)
     {
-        for (int64_t c = 0; c < cols; c++)
+        for (i64 c = 0; c < cols; c++)
             r_matrix.data[r][c] = scalar * ((rand() % rounding_number) + 1);
     }
     return r_matrix;
 }
 
-Matrix random_matrix_(int64_t rows, int64_t cols, int64_t rounding_number, double scalar, double seed)
+Matrix random_matrix_(i64 rows, i64 cols, i64 rounding_number, f80 scalar, f80 seed)
 {
     srand(seed);
     Matrix r_matrix = new_matrix(rows, cols);
-    for (int64_t r = 0; r < rows; r++)
+    for (i64 r = 0; r < rows; r++)
     {
-        for (int64_t c = 0; c < cols; c++)
+        for (i64 c = 0; c < cols; c++)
             r_matrix.data[r][c] = scalar * ((rand() % rounding_number) + 1);
     }
     return r_matrix;
@@ -1868,9 +1879,9 @@ Matrix random_matrix_(int64_t rows, int64_t cols, int64_t rounding_number, doubl
 Matrix copy_matrix(Matrix matrix)
 {
     Matrix c_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        for (int64_t c = 0; c < matrix.cols; c++)
+        for (i64 c = 0; c < matrix.cols; c++)
             c_matrix.data[r][c] = matrix.data[r][c];
     }
     return c_matrix;
@@ -1965,7 +1976,7 @@ Complex complex_from_polar2D(Polar2D number) // r * e^(i * theta) --> (x + iy) =
     }
     else if (number.angle_mode == degree)
     {
-        double angle = to_radian(number.theta);
+        f80 angle = to_radian(number.theta);
         return scale_complex(new_complex(cos(angle), sin(angle)), number.r);
     }
     return new_complex(0, 0);
@@ -1993,24 +2004,24 @@ Point2D point2D_from_polar2D(Polar2D point)
 
 Point point_from_polar(Polar point)
 {
-    double t1 = point.theta_x, t2 = point.theta_z;
+    f80 t1 = point.theta_x, t2 = point.theta_z;
     if (point.angle_mode == degree)
     {
         t1 = to_radian(point.theta_x);
         t2 = to_radian(point.theta_z);
     }
-    double x = point.r * sin(t2) * cos(t1);
-    double y = point.r * sin(t2) * sin(t1);
-    double z = point.r * cos(t2);
+    f80 x = point.r * sin(t2) * cos(t1);
+    f80 y = point.r * sin(t2) * sin(t1);
+    f80 z = point.r * cos(t2);
     return new_point(x, y, z);
 }
 
 Polar polar_from_point(Point point, angle_mode angle_mode)
 {
-    double x = point.X, y = point.Y, z = point.Z;
-    double r = sqrt(x * x + y + y + z * z);
-    double t1 = acos(x / sqrt(x * x + y * y));
-    double t2 = acos(z / r);
+    f80 x = point.X, y = point.Y, z = point.Z;
+    f80 r = sqrt(x * x + y + y + z * z);
+    f80 t1 = acos(x / sqrt(x * x + y * y));
+    f80 t2 = acos(z / r);
     if (angle_mode == degree)
     {
         t1 = to_degree(t1);
@@ -2109,15 +2120,15 @@ Vector input_vector()
     return vector_from_matrix(input_matrix(1, 3));
 }
 
-Matrix generate_magic_square(int64_t n)
+Matrix generate_magic_square(i64 n)
 {
     n = n - !(n & 1);
-    int64_t r = 0, c = n >> 1;
+    i64 r = 0, c = n >> 1;
 
     Matrix magic_square = new_matrix(n, n);
     magic_square.data[r][c] = 1;
 
-    for (int64_t count = 2; count <= (n * n); count++)
+    for (i64 count = 2; count <= (n * n); count++)
     {
         if (r == 0 && c < (n - 1)) // x . | . x .
         {                          // . . | . . .
@@ -2156,36 +2167,36 @@ Matrix generate_magic_square(int64_t n)
 Matrix transpose(Matrix matrix)
 {
     Matrix transposed_matrix = new_matrix(matrix.cols, matrix.rows);
-    for (int64_t r = 0; r < matrix.cols; r++)
+    for (i64 r = 0; r < matrix.cols; r++)
     {
-        for (int64_t c = 0; c < matrix.rows; c++)
+        for (i64 c = 0; c < matrix.rows; c++)
             transposed_matrix.data[r][c] = matrix.data[c][r];
     }
     return transposed_matrix;
 }
 
-Matrix reshape(Matrix matrix, int64_t rows, int64_t cols)
+Matrix reshape(Matrix matrix, i64 rows, i64 cols)
 {
     if (!is_null_matrix(matrix) && (rows * cols) == (matrix.rows * matrix.cols))
         return matrix_from_array(rows, cols, array_from_matrix(matrix));
     return matrix;
 }
 
-Matrix resize(Matrix matrix, int64_t rows, int64_t cols)
+Matrix resize(Matrix matrix, i64 rows, i64 cols)
 {
     Matrix m = new_matrix(rows, cols);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        for (int64_t c = 0; c < matrix.rows; c++)
+        for (i64 c = 0; c < matrix.rows; c++)
             m.data[r][c] = matrix.data[r][c];
     }
     return m;
 }
 
-NumArray nth_row_data(Matrix matrix, int64_t nth_row) // First Column = 0
+NumArray nth_row_data(Matrix matrix, i64 nth_row) // First Column = 0
 {
     NumArray row_data = new_num_array(matrix.cols);
-    for (int64_t c = 0; c < matrix.cols; c++)
+    for (i64 c = 0; c < matrix.cols; c++)
         row_data.nums[c] = matrix.data[nth_row][c];
     return row_data;
 }
@@ -2195,7 +2206,7 @@ Matrix append_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (row_matrix.rows == 1)
     {
         Matrix new_matrix = resize(base_matrix, base_matrix.rows + 1, base_matrix.cols);
-        for (int64_t c = 0; c < base_matrix.cols; c++)
+        for (i64 c = 0; c < base_matrix.cols; c++)
             new_matrix.data[base_matrix.rows][c] = row_matrix.data[0][c];
         return new_matrix;
     }
@@ -2207,23 +2218,23 @@ Matrix append_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (column_matrix.cols == 1)
     {
         Matrix new_matrix = resize(base_matrix, base_matrix.rows, base_matrix.cols + 1);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
             new_matrix.data[r][base_matrix.cols] = column_matrix.data[r][0];
         return new_matrix;
     }
     return base_matrix;
 }
 
-Matrix insert_row_matrix(Matrix base_matrix, int64_t index_of_row, Matrix row_matrix)
+Matrix insert_row_matrix(Matrix base_matrix, i64 index_of_row, Matrix row_matrix)
 {
     if (row_matrix.rows == 1)
     {
         if (index_of_row >= 0 && index_of_row < base_matrix.rows)
         {
             Matrix m = new_matrix(base_matrix.rows + 1, base_matrix.cols);
-            for (int64_t r = 0; r < base_matrix.rows + 1; r++)
+            for (i64 r = 0; r < base_matrix.rows + 1; r++)
             {
-                for (int64_t c = 0; c < base_matrix.cols; c++)
+                for (i64 c = 0; c < base_matrix.cols; c++)
                 {
                     if (r < index_of_row)
                         m.data[r][c] = base_matrix.data[r][c];
@@ -2243,16 +2254,16 @@ Matrix insert_row_matrix(Matrix base_matrix, int64_t index_of_row, Matrix row_ma
     return base_matrix;
 }
 
-Matrix insert_column_matrix(Matrix base_matrix, int64_t index_of_col, Matrix column_matrix)
+Matrix insert_column_matrix(Matrix base_matrix, i64 index_of_col, Matrix column_matrix)
 {
     if (column_matrix.cols == 1)
     {
         if (index_of_col >= 0 && index_of_col < base_matrix.cols)
         {
             Matrix m = new_matrix(base_matrix.rows, base_matrix.cols + 1);
-            for (int64_t r = 0; r < base_matrix.rows; r++)
+            for (i64 r = 0; r < base_matrix.rows; r++)
             {
-                for (int64_t c = 0; c < base_matrix.cols + 1; c++)
+                for (i64 c = 0; c < base_matrix.cols + 1; c++)
                 {
                     if (c < index_of_col)
                         m.data[r][c] = base_matrix.data[r][c];
@@ -2271,16 +2282,16 @@ Matrix insert_column_matrix(Matrix base_matrix, int64_t index_of_col, Matrix col
     return base_matrix;
 }
 
-Matrix del_row_matrix(Matrix base_matrix, int64_t index_of_row)
+Matrix del_row_matrix(Matrix base_matrix, i64 index_of_row)
 {
     if (index_of_row >= 0 && index_of_row < base_matrix.rows)
     {
         Matrix m = new_matrix(base_matrix.rows - 1, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
             if (r == index_of_row)
                 continue;
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
             {
                 if (r < index_of_row)
                     m.data[r][c] = base_matrix.data[r][c];
@@ -2293,14 +2304,14 @@ Matrix del_row_matrix(Matrix base_matrix, int64_t index_of_row)
     return base_matrix;
 }
 
-Matrix del_column_matrix(Matrix base_matrix, int64_t index_of_col)
+Matrix del_column_matrix(Matrix base_matrix, i64 index_of_col)
 {
     if (index_of_col >= 0 && index_of_col < base_matrix.cols)
     {
         Matrix m = new_matrix(base_matrix.rows, base_matrix.cols - 1);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
             {
                 if (c < index_of_col)
                     m.data[r][c] = base_matrix.data[r][c];
@@ -2315,14 +2326,14 @@ Matrix del_column_matrix(Matrix base_matrix, int64_t index_of_col)
     return base_matrix;
 }
 
-Matrix replace_row_matrix(Matrix base_matrix, int64_t index_of_row, Matrix row_matrix)
+Matrix replace_row_matrix(Matrix base_matrix, i64 index_of_row, Matrix row_matrix)
 {
     if (row_matrix.rows == 1 && index_of_row >= 0 && index_of_row < base_matrix.rows)
     {
         Matrix m = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
             {
                 if (r == index_of_row)
                     m.data[r][c] = row_matrix.data[0][c];
@@ -2335,14 +2346,14 @@ Matrix replace_row_matrix(Matrix base_matrix, int64_t index_of_row, Matrix row_m
     return base_matrix;
 }
 
-Matrix replace_column_matrix(Matrix base_matrix, int64_t index_of_col, Matrix column_matrix)
+Matrix replace_column_matrix(Matrix base_matrix, i64 index_of_col, Matrix column_matrix)
 {
     if (column_matrix.cols == 1 && index_of_col >= 0 && index_of_col < base_matrix.cols)
     {
         Matrix m = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
             {
                 if (c == index_of_col)
                     m.data[r][c] = column_matrix.data[r][0];
@@ -2381,12 +2392,12 @@ Matrix swap_index(Matrix base_matrix, Matrix_Index first_index, Matrix_Index sec
     return base_matrix;
 }
 
-Matrix swap_row(Matrix base_matrix, int64_t first_row, int64_t second_row)
+Matrix swap_row(Matrix base_matrix, i64 first_row, i64 second_row)
 {
     if (first_row < base_matrix.rows && second_row < base_matrix.rows && first_row != second_row)
     {
         Matrix mat = copy_matrix(base_matrix);
-        for (int64_t c = 0; c < base_matrix.cols; c++)
+        for (i64 c = 0; c < base_matrix.cols; c++)
         {
             mat.data[first_row][c] = base_matrix.data[second_row][c];
             mat.data[second_row][c] = base_matrix.data[first_row][c];
@@ -2396,12 +2407,12 @@ Matrix swap_row(Matrix base_matrix, int64_t first_row, int64_t second_row)
     return base_matrix;
 }
 
-Matrix swap_column(Matrix base_matrix, int64_t first_col, int64_t second_col)
+Matrix swap_column(Matrix base_matrix, i64 first_col, i64 second_col)
 {
     if (first_col < base_matrix.cols && second_col < base_matrix.cols && first_col != second_col)
     {
         Matrix mat = copy_matrix(base_matrix);
-        for (int64_t r = 0; r < base_matrix.cols; r++)
+        for (i64 r = 0; r < base_matrix.cols; r++)
         {
             mat.data[r][first_col] = base_matrix.data[r][second_col];
             mat.data[r][second_col] = base_matrix.data[r][first_col];
@@ -2411,24 +2422,24 @@ Matrix swap_column(Matrix base_matrix, int64_t first_col, int64_t second_col)
     return base_matrix;
 }
 
-Matrix get_row_matrix(Matrix base_matrix, int64_t index_of_row)
+Matrix get_row_matrix(Matrix base_matrix, i64 index_of_row)
 {
     if (index_of_row >= 0 && index_of_row < base_matrix.rows)
     {
         Matrix m = new_matrix(1, base_matrix.cols);
-        for (int64_t c = 0; c < base_matrix.cols; c++)
+        for (i64 c = 0; c < base_matrix.cols; c++)
             m.data[0][c] = base_matrix.data[index_of_row][c];
         return m;
     }
     return new_matrix(0, 0);
 }
 
-Matrix get_column_matrix(Matrix base_matrix, int64_t index_of_col)
+Matrix get_column_matrix(Matrix base_matrix, i64 index_of_col)
 {
     if (index_of_col >= 0 && index_of_col < base_matrix.rows)
     {
         Matrix m = new_matrix(base_matrix.rows, 1);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
             m.data[r][0] = base_matrix.data[r][index_of_col];
         return m;
     }
@@ -2450,7 +2461,7 @@ _Bool are_similar_matrix(Matrix matrix_1, Matrix matrix_2)
     return (matrix_1.rows == matrix_2.rows && matrix_1.cols == matrix_2.cols);
 }
 
-int64_t clip_int(int64_t number, int64_t min, int64_t max)
+i64 clip_int(i64 number, i64 min, i64 max)
 {
     if (number <= min)
         return min;
@@ -2459,7 +2470,7 @@ int64_t clip_int(int64_t number, int64_t min, int64_t max)
     return number;
 }
 
-double clip_double(double number, double min, double max)
+f80 clip_double(f80 number, f80 min, f80 max)
 {
     if (number < min)
         return min;
@@ -2468,10 +2479,10 @@ double clip_double(double number, double min, double max)
     return number;
 }
 
-NumArray clip_number_array(NumArray array, double min, double max)
+NumArray clip_number_array(NumArray array, f80 min, f80 max)
 {
     NumArray clipped_array = new_num_array(array.len);
-    for (int64_t i = 0; i < array.len; i++)
+    for (i64 i = 0; i < array.len; i++)
     {
         if (array.nums[i] >= min && array.nums[i] <= max)
             clipped_array.nums[i] = array.nums[i];
@@ -2483,12 +2494,12 @@ NumArray clip_number_array(NumArray array, double min, double max)
     return clipped_array;
 }
 
-Matrix clip_matrix(Matrix matrix, double min, double max)
+Matrix clip_matrix(Matrix matrix, f80 min, f80 max)
 {
     Matrix clipped_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        for (int64_t c = 0; c < matrix.cols; c++)
+        for (i64 c = 0; c < matrix.cols; c++)
         {
             if (matrix.data[r][c] >= min && matrix.data[r][c] <= max)
                 clipped_matrix.data[r][c] = matrix.data[r][c];
@@ -2501,18 +2512,18 @@ Matrix clip_matrix(Matrix matrix, double min, double max)
     return clipped_matrix;
 }
 
-int64_t argmax_num_array_index(NumArray array)
+i64 argmax_num_array_index(NumArray array)
 {
-    int64_t arg = 0;
-    for (int64_t i = 1; i < array.len; i++)
+    i64 arg = 0;
+    for (i64 i = 1; i < array.len; i++)
         arg = (array.nums[arg] > array.nums[i]) ? arg : i;
     return arg;
 }
 
-int64_t argmin_num_array_index(NumArray array)
+i64 argmin_num_array_index(NumArray array)
 {
-    int64_t arg = 0;
-    for (int64_t i = 1; i < array.len; i++)
+    i64 arg = 0;
+    for (i64 i = 1; i < array.len; i++)
         arg = (array.nums[arg] < array.nums[i]) ? arg : i;
     return arg;
 }
@@ -2520,10 +2531,10 @@ int64_t argmin_num_array_index(NumArray array)
 NumArray argmax_matrix_row_indices(Matrix matrix)
 {
     NumArray arg_array = new_num_array(matrix.rows * matrix.cols);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        int64_t arg_c = 0;
-        for (int64_t c = 1; c < matrix.cols; c++)
+        i64 arg_c = 0;
+        for (i64 c = 1; c < matrix.cols; c++)
             arg_c = (matrix.data[r][arg_c] > matrix.data[r][c]) ? arg_c : c;
         arg_array.nums[r] = arg_c;
     }
@@ -2533,10 +2544,10 @@ NumArray argmax_matrix_row_indices(Matrix matrix)
 NumArray argmax_matrix_column_indices(Matrix matrix)
 {
     NumArray arg_array = new_num_array(matrix.rows * matrix.cols);
-    for (int64_t c = 0; c < matrix.cols; c++)
+    for (i64 c = 0; c < matrix.cols; c++)
     {
-        int64_t arg_r = 0;
-        for (int64_t r = 1; r < matrix.rows; r++)
+        i64 arg_r = 0;
+        for (i64 r = 1; r < matrix.rows; r++)
             arg_r = (matrix.data[arg_r][c] > matrix.data[r][c]) ? arg_r : r;
         arg_array.nums[c] = arg_r;
     }
@@ -2546,10 +2557,10 @@ NumArray argmax_matrix_column_indices(Matrix matrix)
 NumArray argmin_matrix_row_indices(Matrix matrix)
 {
     NumArray arg_array = new_num_array(matrix.rows * matrix.cols);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        int64_t arg_c = 0;
-        for (int64_t c = 1; c < matrix.cols; c++)
+        i64 arg_c = 0;
+        for (i64 c = 1; c < matrix.cols; c++)
             arg_c = (matrix.data[r][arg_c] < matrix.data[r][c]) ? arg_c : c;
         arg_array.nums[r] = arg_c;
     }
@@ -2559,49 +2570,49 @@ NumArray argmin_matrix_row_indices(Matrix matrix)
 NumArray argmin_matrix_column_indices(Matrix matrix)
 {
     NumArray arg_array = new_num_array(matrix.rows * matrix.cols);
-    for (int64_t c = 0; c < matrix.cols; c++)
+    for (i64 c = 0; c < matrix.cols; c++)
     {
-        int64_t arg_r = 0;
-        for (int64_t r = 1; r < matrix.rows; r++)
+        i64 arg_r = 0;
+        for (i64 r = 1; r < matrix.rows; r++)
             arg_r = (matrix.data[arg_r][c] < matrix.data[r][c]) ? arg_r : r;
         arg_array.nums[c] = arg_r;
     }
     return arg_array;
 }
 
-double sum_num_array(NumArray array)
+f80 sum_num_array(NumArray array)
 {
-    double sum = 0;
-    for (int64_t i = 0; i < array.len; i++)
+    f80 sum = 0;
+    for (i64 i = 0; i < array.len; i++)
         sum += array.nums[i];
     return sum;
 }
 
-double mean_num_array(NumArray array)
+f80 mean_num_array(NumArray array)
 {
     return (sum_num_array(array) / (array.len));
 }
 
-double product_num_array(NumArray array)
+f80 product_num_array(NumArray array)
 {
-    double product = 0;
-    for (int64_t i = 0; i < array.len; i++)
+    f80 product = 0;
+    for (i64 i = 0; i < array.len; i++)
         product *= array.nums[i];
     return product;
 }
 
-double max_num_array_element(NumArray array)
+f80 max_num_array_element(NumArray array)
 {
-    double max = array.nums[0];
-    for (int64_t i = 1; i < array.len; i++)
+    f80 max = array.nums[0];
+    for (i64 i = 1; i < array.len; i++)
         max = (max > array.nums[i]) ? max : array.nums[i];
     return max;
 }
 
-double min_num_array_element(NumArray array)
+f80 min_num_array_element(NumArray array)
 {
-    double min = array.nums[0];
-    for (int64_t i = 1; i < array.len; i++)
+    f80 min = array.nums[0];
+    for (i64 i = 1; i < array.len; i++)
         min = (min < array.nums[i]) ? min : array.nums[i];
     return min;
 }
@@ -2609,10 +2620,10 @@ double min_num_array_element(NumArray array)
 Matrix sum_matrix_row_elements(Matrix matrix)
 {
     Matrix sum_matrix = new_matrix(matrix.rows, 1);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        double sum = 0;
-        for (int64_t c = 0; c < matrix.cols; c++)
+        f80 sum = 0;
+        for (i64 c = 0; c < matrix.cols; c++)
             sum += matrix.data[r][c];
         sum_matrix.data[r][0] = sum;
     }
@@ -2622,10 +2633,10 @@ Matrix sum_matrix_row_elements(Matrix matrix)
 Matrix sum_matrix_column_elements(Matrix matrix)
 {
     Matrix sum_matrix = new_matrix(1, matrix.cols);
-    for (int64_t c = 0; c < matrix.cols; c++)
+    for (i64 c = 0; c < matrix.cols; c++)
     {
-        double sum = 0;
-        for (int64_t r = 0; r < matrix.rows; r++)
+        f80 sum = 0;
+        for (i64 r = 0; r < matrix.rows; r++)
             sum += matrix.data[r][c];
         sum_matrix.data[0][c] = sum;
     }
@@ -2635,10 +2646,10 @@ Matrix sum_matrix_column_elements(Matrix matrix)
 Matrix product_matrix_row_elements(Matrix matrix)
 {
     Matrix product_matrix = new_matrix(matrix.rows, 1);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        double product = 0;
-        for (int64_t c = 0; c < matrix.cols; c++)
+        f80 product = 0;
+        for (i64 c = 0; c < matrix.cols; c++)
             product *= matrix.data[r][c];
         product_matrix.data[r][0] = product;
     }
@@ -2648,10 +2659,10 @@ Matrix product_matrix_row_elements(Matrix matrix)
 Matrix product_matrix_column_elements(Matrix matrix)
 {
     Matrix product_matrix = new_matrix(1, matrix.cols);
-    for (int64_t c = 0; c < matrix.cols; c++)
+    for (i64 c = 0; c < matrix.cols; c++)
     {
-        double product = 0;
-        for (int64_t r = 0; r < matrix.rows; r++)
+        f80 product = 0;
+        for (i64 r = 0; r < matrix.rows; r++)
             product *= matrix.data[r][c];
         product_matrix.data[0][c] = product;
     }
@@ -2661,10 +2672,10 @@ Matrix product_matrix_column_elements(Matrix matrix)
 Matrix max_matrix_row_elements(Matrix matrix)
 {
     Matrix max_matrix = new_matrix(matrix.rows, 1);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        double max = matrix.data[r][0];
-        for (int64_t c = 1; c < matrix.cols; c++)
+        f80 max = matrix.data[r][0];
+        for (i64 c = 1; c < matrix.cols; c++)
             max = (max > matrix.data[r][c]) ? max : matrix.data[r][c];
         max_matrix.data[r][0] = max;
     }
@@ -2674,10 +2685,10 @@ Matrix max_matrix_row_elements(Matrix matrix)
 Matrix max_matrix_column_elements(Matrix matrix)
 {
     Matrix max_matrix = new_matrix(1, matrix.cols);
-    for (int64_t c = 0; c < matrix.cols; c++)
+    for (i64 c = 0; c < matrix.cols; c++)
     {
-        double max = matrix.data[0][c];
-        for (int64_t r = 1; r < matrix.rows; r++)
+        f80 max = matrix.data[0][c];
+        for (i64 r = 1; r < matrix.rows; r++)
             max = (max > matrix.data[r][c]) ? max : matrix.data[r][c];
         max_matrix.data[0][c] = max;
     }
@@ -2687,10 +2698,10 @@ Matrix max_matrix_column_elements(Matrix matrix)
 Matrix min_matrix_row_elements(Matrix matrix)
 {
     Matrix min_matrix = new_matrix(matrix.rows, 1);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        double min = matrix.data[r][0];
-        for (int64_t c = 1; c < matrix.cols; c++)
+        f80 min = matrix.data[r][0];
+        for (i64 c = 1; c < matrix.cols; c++)
             min = (min < matrix.data[r][c]) ? min : matrix.data[r][c];
         min_matrix.data[r][0] = min;
     }
@@ -2700,10 +2711,10 @@ Matrix min_matrix_row_elements(Matrix matrix)
 Matrix min_matrix_column_elements(Matrix matrix)
 {
     Matrix min_matrix = new_matrix(1, matrix.cols);
-    for (int64_t c = 0; c < matrix.cols; c++)
+    for (i64 c = 0; c < matrix.cols; c++)
     {
-        double min = matrix.data[0][c];
-        for (int64_t r = 1; r < matrix.rows; r++)
+        f80 min = matrix.data[0][c];
+        for (i64 r = 1; r < matrix.rows; r++)
             min = (min < matrix.data[r][c]) ? min : matrix.data[r][c];
         min_matrix.data[0][c] = min;
     }
@@ -2715,9 +2726,9 @@ Matrix max_matrix_elements(Matrix matrix_1, Matrix matrix_2)
     if (are_similar_matrix(matrix_1, matrix_2))
     {
         Matrix max_matrix = new_matrix(matrix_1.rows, matrix_1.cols);
-        for (int64_t r = 0; r < matrix_1.rows; r++)
+        for (i64 r = 0; r < matrix_1.rows; r++)
         {
-            for (int64_t c = 0; c < matrix_1.cols; c++)
+            for (i64 c = 0; c < matrix_1.cols; c++)
                 max_matrix.data[r][c] = max_double(matrix_1.data[r][c], matrix_2.data[r][c]);
         }
         return max_matrix;
@@ -2731,9 +2742,9 @@ Matrix min_matrix_elements(Matrix matrix_1, Matrix matrix_2)
     if (are_similar_matrix(matrix_1, matrix_2))
     {
         Matrix min_matrix = new_matrix(matrix_1.rows, matrix_1.cols);
-        for (int64_t r = 0; r < matrix_1.rows; r++)
+        for (i64 r = 0; r < matrix_1.rows; r++)
         {
-            for (int64_t c = 0; c < matrix_1.cols; c++)
+            for (i64 c = 0; c < matrix_1.cols; c++)
                 min_matrix.data[r][c] = min_double(matrix_1.data[r][c], matrix_2.data[r][c]);
         }
         return min_matrix;
@@ -2745,20 +2756,20 @@ Matrix min_matrix_elements(Matrix matrix_1, Matrix matrix_2)
 Matrix exp_matrix(Matrix matrix)
 {
     Matrix exped_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        for (int64_t c = 0; c < matrix.cols; c++)
+        for (i64 c = 0; c < matrix.cols; c++)
             exped_matrix.data[r][c] = exp(matrix.data[r][c]);
     }
     return exped_matrix;
 }
 
-Matrix exp_matrix_(Matrix matrix, double base)
+Matrix exp_matrix_(Matrix matrix, f80 base)
 {
     Matrix exped_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        for (int64_t c = 0; c < matrix.cols; c++)
+        for (i64 c = 0; c < matrix.cols; c++)
             exped_matrix.data[r][c] = power_double(base, matrix.data[r][c]);
     }
     return exped_matrix;
@@ -2772,37 +2783,37 @@ NumArray compare_num_array_elements(NumArray array_1, char *comparator, NumArray
 
         if (strcmp(comparator, "==") == 0)
         {
-            for (int64_t i = 0; i < array_1.len; i++)
+            for (i64 i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] == array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "!=") == 0)
         {
-            for (int64_t i = 0; i < array_1.len; i++)
+            for (i64 i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] != array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "<") == 0)
         {
-            for (int64_t i = 0; i < array_1.len; i++)
+            for (i64 i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] < array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, "<=") == 0)
         {
-            for (int64_t i = 0; i < array_1.len; i++)
+            for (i64 i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] <= array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, ">") == 0)
         {
-            for (int64_t i = 0; i < array_1.len; i++)
+            for (i64 i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] > array_2.nums[i]);
             return new_array;
         }
         else if (strcmp(comparator, ">=") == 0)
         {
-            for (int64_t i = 0; i < array_1.len; i++)
+            for (i64 i = 0; i < array_1.len; i++)
                 new_array.nums[i] = (array_1.nums[i] >= array_2.nums[i]);
             return new_array;
         }
@@ -2818,54 +2829,54 @@ Matrix compare_matrix_elements(Matrix matrix_1, char *comparator, Matrix matrix_
         Matrix new_mat = new_matrix(matrix_1.rows, matrix_1.cols);
         if (strcmp(comparator, "==") == 0)
         {
-            for (int64_t r = 0; r < matrix_1.rows; r++)
+            for (i64 r = 0; r < matrix_1.rows; r++)
             {
-                for (int64_t c = 0; c < matrix_1.cols; c++)
+                for (i64 c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] == matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, "!=") == 0)
         {
-            for (int64_t r = 0; r < matrix_1.rows; r++)
+            for (i64 r = 0; r < matrix_1.rows; r++)
             {
-                for (int64_t c = 0; c < matrix_1.cols; c++)
+                for (i64 c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] != matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, "<") == 0)
         {
-            for (int64_t r = 0; r < matrix_1.rows; r++)
+            for (i64 r = 0; r < matrix_1.rows; r++)
             {
-                for (int64_t c = 0; c < matrix_1.cols; c++)
+                for (i64 c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] < matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, "<=") == 0)
         {
-            for (int64_t r = 0; r < matrix_1.rows; r++)
+            for (i64 r = 0; r < matrix_1.rows; r++)
             {
-                for (int64_t c = 0; c < matrix_1.cols; c++)
+                for (i64 c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] <= matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, ">") == 0)
         {
-            for (int64_t r = 0; r < matrix_1.rows; r++)
+            for (i64 r = 0; r < matrix_1.rows; r++)
             {
-                for (int64_t c = 0; c < matrix_1.cols; c++)
+                for (i64 c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] > matrix_2.data[r][c]);
             }
             return new_mat;
         }
         else if (strcmp(comparator, ">=") == 0)
         {
-            for (int64_t r = 0; r < matrix_1.rows; r++)
+            for (i64 r = 0; r < matrix_1.rows; r++)
             {
-                for (int64_t c = 0; c < matrix_1.cols; c++)
+                for (i64 c = 0; c < matrix_1.cols; c++)
                     new_mat.data[r][c] = (matrix_1.data[r][c] >= matrix_2.data[r][c]);
             }
             return new_mat;
@@ -2881,7 +2892,7 @@ Matrix principal_diagonal(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         Matrix diagonal_matrix = new_matrix(1, matrix.cols);
-        for (int64_t r = 0; r < matrix.rows; r++)
+        for (i64 r = 0; r < matrix.rows; r++)
             diagonal_matrix.data[0][r] = matrix.data[r][r];
         return diagonal_matrix;
     }
@@ -2893,19 +2904,19 @@ Matrix principal_diagonal_matrix(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         Matrix diagonal_matrix = new_matrix(matrix.rows, matrix.cols);
-        for (int64_t r = 0; r < matrix.rows; r++)
+        for (i64 r = 0; r < matrix.rows; r++)
             diagonal_matrix.data[r][r] = matrix.data[r][r];
         return diagonal_matrix;
     }
     return new_matrix(0, 0);
 }
 
-double trace(Matrix matrix)
+f80 trace(Matrix matrix)
 {
     if (matrix.rows == matrix.cols)
     {
-        double sum = 0;
-        for (int64_t r = 0; r < matrix.rows; r++)
+        f80 sum = 0;
+        for (i64 r = 0; r < matrix.rows; r++)
             sum += matrix.data[r][r];
         return sum;
     }
@@ -2917,7 +2928,7 @@ Matrix secondary_diagonal(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         Matrix diagonal_matrix = new_matrix(1, matrix.cols);
-        for (int64_t r = 0; r < matrix.rows; r++)
+        for (i64 r = 0; r < matrix.rows; r++)
             diagonal_matrix.data[0][r] = matrix.data[r][matrix.cols - r - 1];
         return diagonal_matrix;
     }
@@ -2929,31 +2940,31 @@ Matrix secondary_diagonal_matrix(Matrix matrix)
     if (matrix.rows == matrix.cols)
     {
         Matrix diagonal_matrix = new_matrix(matrix.rows, matrix.cols);
-        for (int64_t r = 0; r < matrix.rows; r++)
+        for (i64 r = 0; r < matrix.rows; r++)
             diagonal_matrix.data[r][matrix.cols - r - 1] = matrix.data[r][matrix.cols - r - 1];
         return diagonal_matrix;
     }
     return new_matrix(0, 0);
 }
 
-double secondary_trace(Matrix matrix)
+f80 secondary_trace(Matrix matrix)
 {
     if (matrix.rows == matrix.cols)
     {
-        double sum = 0;
-        for (int64_t r = 0; r < matrix.rows; r++)
+        f80 sum = 0;
+        for (i64 r = 0; r < matrix.rows; r++)
             sum += matrix.data[r][matrix.cols - r - 1];
         return sum;
     }
     return 0;
 }
 
-Matrix scale_matrix(Matrix matrix, double scalar_number)
+Matrix scale_matrix(Matrix matrix, f80 scalar_number)
 {
     Matrix scaled_matrix = new_matrix(matrix.rows, matrix.cols);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
-        for (int64_t c = 0; c < matrix.cols; c++)
+        for (i64 c = 0; c < matrix.cols; c++)
             scaled_matrix.data[r][c] = scalar_number * matrix.data[r][c];
     }
     return scaled_matrix;
@@ -2974,9 +2985,9 @@ Matrix add_matrix(Matrix matrix_1, Matrix matrix_2)
     if (are_perfect_matrix(matrix_1, matrix_2, addition))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_1.cols);
-        for (int64_t r = 0; r < matrix_1.rows; r++)
+        for (i64 r = 0; r < matrix_1.rows; r++)
         {
-            for (int64_t c = 0; c < matrix_1.cols; c++)
+            for (i64 c = 0; c < matrix_1.cols; c++)
                 result.data[r][c] = matrix_1.data[r][c] + matrix_2.data[r][c];
         }
         return result;
@@ -2989,9 +3000,9 @@ Matrix subtract_matrix(Matrix matrix_1, Matrix matrix_2)
     if (are_perfect_matrix(matrix_1, matrix_2, subtraction))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_1.cols);
-        for (int64_t r = 0; r < matrix_1.rows; r++)
+        for (i64 r = 0; r < matrix_1.rows; r++)
         {
-            for (int64_t c = 0; c < matrix_1.cols; c++)
+            for (i64 c = 0; c < matrix_1.cols; c++)
                 result.data[r][c] = matrix_1.data[r][c] - matrix_2.data[r][c];
         }
         return result;
@@ -3004,9 +3015,9 @@ Matrix add_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (base_matrix.cols == row_matrix.cols)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] + row_matrix.data[0][c];
         }
         return result;
@@ -3019,9 +3030,9 @@ Matrix add_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (base_matrix.rows == column_matrix.rows)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] + column_matrix.data[r][0];
         }
         return result;
@@ -3034,9 +3045,9 @@ Matrix subtract_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (base_matrix.cols == row_matrix.cols)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] - row_matrix.data[0][c];
         }
         return result;
@@ -3049,9 +3060,9 @@ Matrix subtract_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (base_matrix.rows == column_matrix.rows)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] - column_matrix.data[r][0];
         }
         return result;
@@ -3064,9 +3075,9 @@ Matrix divide_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (base_matrix.cols == row_matrix.cols)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] / row_matrix.data[0][c];
         }
         return result;
@@ -3079,9 +3090,9 @@ Matrix divide_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (base_matrix.rows == column_matrix.rows)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
+            for (i64 c = 0; c < base_matrix.cols; c++)
                 result.data[r][c] = base_matrix.data[r][c] / column_matrix.data[r][0];
         }
         return result;
@@ -3094,10 +3105,10 @@ Matrix mod_row_matrix(Matrix base_matrix, Matrix row_matrix)
     if (base_matrix.cols == row_matrix.cols)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
-                result.data[r][c] = (int64_t)base_matrix.data[r][c] % (int64_t)row_matrix.data[0][c];
+            for (i64 c = 0; c < base_matrix.cols; c++)
+                result.data[r][c] = (i64)base_matrix.data[r][c] % (i64)row_matrix.data[0][c];
         }
         return result;
     }
@@ -3109,10 +3120,10 @@ Matrix mod_column_matrix(Matrix base_matrix, Matrix column_matrix)
     if (base_matrix.rows == column_matrix.rows)
     {
         Matrix result = new_matrix(base_matrix.rows, base_matrix.cols);
-        for (int64_t r = 0; r < base_matrix.rows; r++)
+        for (i64 r = 0; r < base_matrix.rows; r++)
         {
-            for (int64_t c = 0; c < base_matrix.cols; c++)
-                result.data[r][c] = (int64_t)base_matrix.data[r][c] % (int64_t)column_matrix.data[r][0];
+            for (i64 c = 0; c < base_matrix.cols; c++)
+                result.data[r][c] = (i64)base_matrix.data[r][c] % (i64)column_matrix.data[r][0];
         }
         return result;
     }
@@ -3124,12 +3135,12 @@ Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
     if (are_perfect_matrix(matrix_1, matrix_2, multiplication))
     {
         Matrix result = new_matrix(matrix_1.rows, matrix_2.cols);
-        for (int64_t i = 0; i < matrix_1.rows; i++)
+        for (i64 i = 0; i < matrix_1.rows; i++)
         {
-            for (int64_t j = 0; j < matrix_2.cols; j++)
+            for (i64 j = 0; j < matrix_2.cols; j++)
             {
                 result.data[i][j] = 0;
-                for (int64_t k = 0; k < matrix_2.rows; k++)
+                for (i64 k = 0; k < matrix_2.rows; k++)
                     result.data[i][j] += matrix_1.data[i][k] * matrix_2.data[k][j];
             }
         }
@@ -3138,7 +3149,7 @@ Matrix multiply_matrix(Matrix matrix_1, Matrix matrix_2)
     return new_matrix(0, 0);
 }
 
-Matrix power_matrix(Matrix matrix, int64_t n)
+Matrix power_matrix(Matrix matrix, i64 n)
 {
     if (matrix.rows == matrix.cols)
     {
@@ -3165,17 +3176,17 @@ Matrix power_matrix(Matrix matrix, int64_t n)
     return matrix;
 }
 
-Matrix minor_matrix(Matrix matrix, int64_t index_row, int64_t index_col)
+Matrix minor_matrix(Matrix matrix, i64 index_row, i64 index_col)
 {
     if (is_square_matrix(matrix))
     {
         Matrix minor = new_matrix(matrix.rows - 1, matrix.cols - 1);
-        int64_t r = 0, c = 0;
-        for (int64_t row = 0; row < matrix.rows; row++)
+        i64 r = 0, c = 0;
+        for (i64 row = 0; row < matrix.rows; row++)
         {
             if (row != index_row)
             {
-                for (int64_t col = 0; col < matrix.rows; col++)
+                for (i64 col = 0; col < matrix.rows; col++)
                 {
                     if (col != index_col)
                         minor.data[r][c++] = matrix.data[row][col];
@@ -3189,16 +3200,16 @@ Matrix minor_matrix(Matrix matrix, int64_t index_row, int64_t index_col)
     return new_matrix(0, 0);
 }
 
-double determinant(Matrix matrix)
+f80 determinant(Matrix matrix)
 {
     if (is_square_matrix(matrix))
     {
         if (matrix.rows == 1 && matrix.cols == 1)
             return matrix.data[0][0];
         Matrix temp_minor_matrix = new_matrix(matrix.rows - 1, matrix.cols - 1);
-        int64_t sign = 1;
-        double det = 0;
-        for (int64_t c = 0; c < matrix.rows; c++)
+        i64 sign = 1;
+        f80 det = 0;
+        for (i64 c = 0; c < matrix.rows; c++)
         {
             temp_minor_matrix = minor_matrix(matrix, 0, c);
             det += sign * matrix.data[0][c] * determinant(temp_minor_matrix);
@@ -3209,19 +3220,19 @@ double determinant(Matrix matrix)
     return 0;
 }
 
-double minor(Matrix matrix, int64_t index_row, int64_t index_col)
+f80 minor(Matrix matrix, i64 index_row, i64 index_col)
 {
     if (is_square_matrix(matrix))
         return determinant(minor_matrix(matrix, index_row, index_col));
     return 0;
 }
 
-double co_factor(Matrix matrix, int64_t index_row, int64_t index_col)
+f80 co_factor(Matrix matrix, i64 index_row, i64 index_col)
 {
     if (is_square_matrix(matrix))
     {
-        int64_t sign = (index_row + index_col) % 2 == 0 ? 1 : -1;
-        return (double)sign * determinant(minor_matrix(matrix, index_row, index_col));
+        i64 sign = (index_row + index_col) % 2 == 0 ? 1 : -1;
+        return (f80)sign * determinant(minor_matrix(matrix, index_row, index_col));
     }
     return 0;
 }
@@ -3231,9 +3242,9 @@ Matrix adjoint(Matrix matrix)
     if (is_square_matrix(matrix))
     {
         Matrix adjoint_matrix = new_matrix(matrix.rows, matrix.cols);
-        for (int64_t r = 0; r < matrix.cols; r++)
+        for (i64 r = 0; r < matrix.cols; r++)
         {
-            for (int64_t c = 0; c < matrix.rows; c++)
+            for (i64 c = 0; c < matrix.rows; c++)
                 adjoint_matrix.data[r][c] = co_factor(matrix, r, c);
         }
         return transpose(adjoint_matrix);
@@ -3268,22 +3279,22 @@ Vector subtract_vector(Vector vector_1, Vector vector_2)
     return new_vector((vector_1.X - vector_2.X), (vector_1.Y - vector_2.Y), (vector_1.Z - vector_2.Z));
 }
 
-Vector2D scale_vector2D(Vector2D vector, double scalar_number)
+Vector2D scale_vector2D(Vector2D vector, f80 scalar_number)
 {
     return new_vector2D((scalar_number * vector.X), (scalar_number * vector.Y));
 }
 
-Vector scale_vector(Vector vector, double scalar_number)
+Vector scale_vector(Vector vector, f80 scalar_number)
 {
     return new_vector((scalar_number * vector.X), (scalar_number * vector.Y), (scalar_number * vector.Z));
 }
 
-double dot2D(Vector2D vector_1, Vector2D vector_2)
+f80 dot2D(Vector2D vector_1, Vector2D vector_2)
 {
     return ((vector_1.X * vector_2.X) + (vector_1.Y * vector_2.Y));
 }
 
-double dot(Vector vector_1, Vector vector_2)
+f80 dot(Vector vector_1, Vector vector_2)
 {
     return ((vector_1.X * vector_2.X) + (vector_1.Y * vector_2.Y) + (vector_1.Z * vector_2.Z));
 }
@@ -3306,14 +3317,14 @@ Vector cross(Vector vector_1, Vector vector_2)
     return vector;
 }
 
-double value_of_vector2D(Vector2D vector)
+f80 value_of_vector2D(Vector2D vector)
 {
-    return sqrt(vector.X * vector.X + vector.Y * vector.Y);
+    return (f80)sqrt(vector.X * vector.X + vector.Y * vector.Y);
 }
 
-double value_of_vector(Vector vector)
+f80 value_of_vector(Vector vector)
 {
-    return sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z);
+    return (f80)sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z);
 }
 
 Vector2D unit_vector2D(Vector2D vector)
@@ -3326,15 +3337,15 @@ Vector unit_vector(Vector vector)
     return scale_vector(vector, 1 / value_of_vector(vector));
 }
 
-double angle_between_vectors2D(Vector2D vector_1, Vector2D vector_2, angle_mode angle_mode)
+f80 angle_between_vectors2D(Vector2D vector_1, Vector2D vector_2, angle_mode angle_mode)
 {
-    double angle = acos(dot2D(vector_1, vector_2) / (value_of_vector2D(vector_1) * value_of_vector2D(vector_2)));
+    f80 angle = acos(dot2D(vector_1, vector_2) / (value_of_vector2D(vector_1) * value_of_vector2D(vector_2)));
     return ((angle_mode == radian) ? angle : to_degree(angle));
 }
 
-double angle_between_vectors(Vector vector_1, Vector vector_2, angle_mode angle_mode)
+f80 angle_between_vectors(Vector vector_1, Vector vector_2, angle_mode angle_mode)
 {
-    double angle = acos(dot(vector_1, vector_2) / (value_of_vector(vector_1) * value_of_vector(vector_2)));
+    f80 angle = acos(dot(vector_1, vector_2) / (value_of_vector(vector_1) * value_of_vector(vector_2)));
     return ((angle_mode == radian) ? angle : to_degree(angle));
 }
 
@@ -3382,12 +3393,12 @@ Matrix dot_t2(Matrix matrix_1, Matrix matrix_2)
     return (multiply_matrix(matrix_1, transpose(matrix_2)));
 }
 
-double dot_array(NumArray array_1, NumArray array_2)
+f80 dot_array(NumArray array_1, NumArray array_2)
 {
     return (multiply_matrix(row_matrix_from_array(array_1), column_matrix_from_array(array_2))).data[0][0];
 }
 
-Matrix rotation_matrix_in_2D(double angle, angle_mode angle_mode)
+Matrix rotation_matrix_in_2D(f80 angle, angle_mode angle_mode)
 {
     if (angle_mode == degree)
         angle = to_radian(angle);
@@ -3399,13 +3410,13 @@ Matrix rotation_matrix_in_2D(double angle, angle_mode angle_mode)
     return r_matrix;
 }
 
-Matrix rotation_matrix_in_3D(Vector rotation_axis_vector, float angle, angle_mode angle_mode)
+Matrix rotation_matrix_in_3D(Vector rotation_axis_vector, f80 angle, angle_mode angle_mode)
 {
     if (angle_mode == degree)
         angle = to_radian(angle);
     angle = angle / 2;
     Vector v = unit_vector(rotation_axis_vector);
-    double vr = cos(angle), vi = (sin(angle) * v.X), vj = (sin(angle) * v.Y), vk = (sin(angle) * v.Z);
+    f80 vr = cos(angle), vi = (sin(angle) * v.X), vj = (sin(angle) * v.Y), vk = (sin(angle) * v.Z);
     Matrix r_matrix = new_matrix(3, 3);
     r_matrix.data[0][0] = 1 - (2 * (vj * vj + vk * vk));
     r_matrix.data[1][0] = 2 * (vi * vj + vk * vr);
@@ -3419,7 +3430,7 @@ Matrix rotation_matrix_in_3D(Vector rotation_axis_vector, float angle, angle_mod
     return r_matrix;
 }
 
-Point2D rotate_point_in_2D(Point2D point, Point2D reference_point_origin, double angle, angle_mode angle_mode)
+Point2D rotate_point_in_2D(Point2D point, Point2D reference_point_origin, f80 angle, angle_mode angle_mode)
 {
     Matrix p_matrix = column_matrix_from_vector2D(vector2D_from_point2D(point));
     Matrix rp_matrix = column_matrix_from_vector2D(vector2D_from_point2D(reference_point_origin));
@@ -3427,7 +3438,7 @@ Point2D rotate_point_in_2D(Point2D point, Point2D reference_point_origin, double
     return point2D_from_vector2D(vector2D_from_matrix(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(p_matrix, rp_matrix)), rp_matrix)));
 }
 
-Point rotate_point_in_3D(Point point, Point reference_point_origin, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
+Point rotate_point_in_3D(Point point, Point reference_point_origin, Vector rotation_axis_vector, f80 angle, angle_mode angle_mode)
 {
     Matrix p_matrix = column_matrix_from_vector(vector_from_point(point));
     Matrix rp_matrix = column_matrix_from_vector(vector_from_point(reference_point_origin));
@@ -3435,7 +3446,7 @@ Point rotate_point_in_3D(Point point, Point reference_point_origin, Vector rotat
     return point_from_vector(vector_from_matrix(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(p_matrix, rp_matrix)), rp_matrix)));
 }
 
-Vector2D rotate_vector_in_2D(Vector2D vector, Vector2D reference_vector_origin, double angle, angle_mode angle_mode)
+Vector2D rotate_vector_in_2D(Vector2D vector, Vector2D reference_vector_origin, f80 angle, angle_mode angle_mode)
 {
     Matrix v_matrix = column_matrix_from_vector2D(vector);
     Matrix rv_matrix = column_matrix_from_vector2D(reference_vector_origin);
@@ -3443,7 +3454,7 @@ Vector2D rotate_vector_in_2D(Vector2D vector, Vector2D reference_vector_origin, 
     return vector2D_from_matrix(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(v_matrix, rv_matrix)), rv_matrix));
 }
 
-Vector rotate_vector_in_3D(Vector vector, Vector reference_vector_origin, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
+Vector rotate_vector_in_3D(Vector vector, Vector reference_vector_origin, Vector rotation_axis_vector, f80 angle, angle_mode angle_mode)
 {
     Matrix v_matrix = column_matrix_from_vector(vector);
     Matrix rv_matrix = column_matrix_from_vector(reference_vector_origin);
@@ -3451,14 +3462,14 @@ Vector rotate_vector_in_3D(Vector vector, Vector reference_vector_origin, Vector
     return vector_from_matrix(add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(v_matrix, rv_matrix)), rv_matrix));
 }
 
-Matrix rotate_matrix_in_2D(Matrix column_vector2D_matrix, Vector2D reference_vector_origin, double angle, angle_mode angle_mode)
+Matrix rotate_matrix_in_2D(Matrix column_vector2D_matrix, Vector2D reference_vector_origin, f80 angle, angle_mode angle_mode)
 {
     Matrix rv_matrix = column_matrix_from_vector2D(reference_vector_origin);
     Matrix rotation_matrix = rotation_matrix_in_2D(angle, angle_mode);
     return add_matrix(multiply_matrix(rotation_matrix, subtract_matrix(column_vector2D_matrix, rv_matrix)), rv_matrix);
 }
 
-Matrix rotate_matrix_in_3D(Matrix column_vector_matrix, Vector reference_vector_origin, Vector rotation_axis_vector, double angle, angle_mode angle_mode)
+Matrix rotate_matrix_in_3D(Matrix column_vector_matrix, Vector reference_vector_origin, Vector rotation_axis_vector, f80 angle, angle_mode angle_mode)
 {
     Matrix rv_matrix = column_matrix_from_vector(reference_vector_origin);
     Matrix rotation_matrix = rotation_matrix_in_3D(rotation_axis_vector, angle, angle_mode);
@@ -3470,25 +3481,25 @@ Matrix solve_xy(Matrix coefficients_square_matrix, Matrix constants_column_matri
     Matrix result_column_matrix = new_matrix(coefficients_square_matrix.cols, 1);
     if (is_square_matrix(coefficients_square_matrix) && constants_column_matrix.rows == coefficients_square_matrix.cols && constants_column_matrix.cols == 1)
     {
-        double scaling_factor = 1 / determinant(coefficients_square_matrix);
-        for (int64_t i = 0; i < coefficients_square_matrix.cols; i++)
+        f80 scaling_factor = 1 / determinant(coefficients_square_matrix);
+        for (i64 i = 0; i < coefficients_square_matrix.cols; i++)
             result_column_matrix.data[i][0] = scaling_factor * determinant(replace_column_matrix(coefficients_square_matrix, i, constants_column_matrix));
     }
     return result_column_matrix;
 }
 
-double solve_x(double a, double b)
+f80 solve_x(f80 a, f80 b)
 {
     return -(b / a);
 }
 
-Complex_Array solve_x2(double a, double b, double c)
+Complex_Array solve_x2(f80 a, f80 b, f80 c)
 {
     Complex_Array complex_array = new_complex_array(2);
-    double m = (b * b) - (4 * a * c);
+    f80 m = (b * b) - (4 * a * c);
     if (m >= 0)
     {
-        double sqrt_m = sqrt(m);
+        f80 sqrt_m = sqrt(m);
         complex_array.complex_numbers[0] = new_complex((-b - sqrt_m) / 2, 0);
         complex_array.complex_numbers[1] = new_complex((-b + sqrt_m) / 2, 0);
         return complex_array;
@@ -3502,9 +3513,9 @@ Complex_Array solve_x2(double a, double b, double c)
     return complex_array;
 }
 
-Complex_Array solve_x3(double a, double b, double c, double d)
+Complex_Array solve_x3(f80 a, f80 b, f80 c, f80 d)
 {
-    double p, q, m, N, n, t, a0 = a;
+    f80 p, q, m, N, n, t, a0 = a;
     // y = 0 + 0*i
     Complex y = new_complex(0, 0);
     Complex_Array complex_array_2 = new_complex_array(2);
@@ -3532,9 +3543,9 @@ Complex_Array solve_x3(double a, double b, double c, double d)
         // z = m + n*i
         Complex z = new_complex(m, n);
         // r = (m^2 + |N|)^(1/2)
-        double r = sqrt((m * m) + abs_double(N));
+        f80 r = sqrt((m * m) + abs_double(N));
         // theta = arg(r) / 3
-        double theta = argument(z, radian) / 3;
+        f80 theta = argument(z, radian) / 3;
         // t = 2 * r^(1/3) * cos(theta)
         t = 2 * cbrt(r) * cos(theta);
     }
@@ -3612,10 +3623,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            int64_t n = matrix.rows, count_zeros = 0, count_non_zeros = 0;
-            for (int64_t r = 0; r < n; r++)
+            i64 n = matrix.rows, count_zeros = 0, count_non_zeros = 0;
+            for (i64 r = 0; r < n; r++)
             {
-                for (int64_t c = 0; c < n; c++)
+                for (i64 c = 0; c < n; c++)
                 {
                     if (c != r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3634,10 +3645,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            int64_t n = matrix.rows, constant = matrix.data[0][0], count_zeros = 0, count_consts = 0;
-            for (int64_t r = 0; r < n; r++)
+            i64 n = matrix.rows, constant = matrix.data[0][0], count_zeros = 0, count_consts = 0;
+            for (i64 r = 0; r < n; r++)
             {
-                for (int64_t c = 0; c < n; c++)
+                for (i64 c = 0; c < n; c++)
                 {
                     if (c != r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3656,10 +3667,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            int64_t n = matrix.rows, count_zeros = 0, count_unit = 0;
-            for (int64_t r = 0; r < n; r++)
+            i64 n = matrix.rows, count_zeros = 0, count_unit = 0;
+            for (i64 r = 0; r < n; r++)
             {
-                for (int64_t c = 0; c < n; c++)
+                for (i64 c = 0; c < n; c++)
                 {
                     if (c != r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3678,10 +3689,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            int64_t n = matrix.rows, count_zeros = 0;
-            for (int64_t r = 0; r < n; r++)
+            i64 n = matrix.rows, count_zeros = 0;
+            for (i64 r = 0; r < n; r++)
             {
-                for (int64_t c = 0; c < n; c++)
+                for (i64 c = 0; c < n; c++)
                 {
                     if (matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3698,10 +3709,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            int64_t n = matrix.rows, m = (n * (n - 1)) / 2, count_zeros = 0;
-            for (int64_t r = 0; r < n; r++)
+            i64 n = matrix.rows, m = (n * (n - 1)) / 2, count_zeros = 0;
+            for (i64 r = 0; r < n; r++)
             {
-                for (int64_t c = 0; c < n; c++)
+                for (i64 c = 0; c < n; c++)
                 {
                     if (c < r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3718,10 +3729,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
     {
         if (matrix.rows == matrix.cols)
         {
-            int64_t n = matrix.rows, m = (n * (n - 1)) / 2, count_zeros = 0;
-            for (int64_t r = 0; r < n; r++)
+            i64 n = matrix.rows, m = (n * (n - 1)) / 2, count_zeros = 0;
+            for (i64 r = 0; r < n; r++)
             {
-                for (int64_t c = 0; c < n; c++)
+                for (i64 c = 0; c < n; c++)
                 {
                     if (c > r && matrix.data[r][c] == 0)
                         count_zeros++;
@@ -3791,7 +3802,7 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
                 return 1;
             else if (is_type_of(matrix, identity_matrix))
                 return 1;
-            int64_t trial = 0;
+            i64 trial = 0;
             Matrix temp_matrix = new_matrix(matrix.rows, matrix.cols);
             temp_matrix = copy_matrix(matrix);
             while (trial != 1024)
@@ -3812,7 +3823,7 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
         {
             if (is_type_of(matrix, null_matrix))
                 return 1;
-            int64_t trial = 0;
+            i64 trial = 0;
             Matrix temp_matrix = new_matrix(matrix.rows, matrix.cols);
             temp_matrix = copy_matrix(matrix);
             while (trial != 1024)
@@ -3834,10 +3845,10 @@ _Bool is_type_of(Matrix matrix, matrix_type type)
 char **types_of_matrix(Matrix matrix, text_style text_style)
 {
     char **list_of_types = (char **)calloc(23, sizeof(char *));
-    for (int64_t i = 0; i < 22; i++)
+    for (i64 i = 0; i < 22; i++)
         list_of_types[i] = (char *)calloc(32, sizeof(char));
 
-    int64_t count = 0;
+    i64 count = 0;
 
     if (is_type_of(matrix, row_matrix))
     {
@@ -4110,11 +4121,11 @@ void print_polar2D(Polar2D point)
     if (point.r == 0.0 && point.theta == 0.0)
         printf("(0, 0)");
     else if (point.r != 0.0 && point.theta == 0.0)
-        printf("(%0.15lf, 0)", point.r);
+        printf("(%0.15Lf, 0)", point.r);
     else if (point.r == 0.0 && point.theta != 0.0)
-        printf("(0, %0.15lf)", point.theta);
+        printf("(0, %0.15Lf)", point.theta);
     else
-        printf("(%0.15lf, %0.15lf)", point.r, point.theta);
+        printf("(%0.15Lf, %0.15Lf)", point.r, point.theta);
 }
 
 void print_polar2D_(Polar2D point)
@@ -4128,19 +4139,19 @@ void print_polar(Polar point)
     if (point.r == 0.0 && point.theta_x == 0.0 && point.theta_z == 0.0)
         printf("(0, 0, 0)");
     else if (point.r != 0.0 && point.theta_x == 0.0 && point.theta_z == 0.0)
-        printf("(%0.15lf, 0, 0)", point.r);
+        printf("(%0.15Lf, 0, 0)", point.r);
     else if (point.r == 0.0 && point.theta_x != 0.0 && point.theta_z == 0.0)
-        printf("(0, %0.15lf, 0)", point.theta_x);
+        printf("(0, %0.15Lf, 0)", point.theta_x);
     else if (point.r != 0.0 && point.theta_x != 0.0 && point.theta_z == 0.0)
-        printf("(%0.15lf, %0.15lf, 0)", point.r, point.theta_x);
+        printf("(%0.15Lf, %0.15Lf, 0)", point.r, point.theta_x);
     else if (point.r == 0.0 && point.theta_x == 0.0 && point.theta_z != 0.0)
-        printf("(0, 0, %0.15lf)", point.theta_z);
+        printf("(0, 0, %0.15Lf)", point.theta_z);
     else if (point.r == 0.0 && point.theta_x != 0.0 && point.theta_z != 0.0)
-        printf("(0, %0.15lf, %0.15lf)", point.theta_x, point.theta_z);
+        printf("(0, %0.15Lf, %0.15Lf)", point.theta_x, point.theta_z);
     else if (point.r != 0.0 && point.theta_x == 0.0 && point.theta_z != 0.0)
-        printf("(%0.15lf, 0, %0.15lf)", point.r, point.theta_z);
+        printf("(%0.15Lf, 0, %0.15Lf)", point.r, point.theta_z);
     else
-        printf("(%0.15lf, %0.15lf, %0.15lf)", point.r, point.theta_x, point.theta_z);
+        printf("(%0.15Lf, %0.15Lf, %0.15Lf)", point.r, point.theta_x, point.theta_z);
 }
 
 void print_polar_(Polar point)
@@ -4154,11 +4165,11 @@ void print_point2D(Point2D point)
     if (point.X == 0.0 && point.Y == 0.0)
         printf("(0, 0)");
     else if (point.X != 0.0 && point.Y == 0.0)
-        printf("(%0.15lf, 0)", point.X);
+        printf("(%0.15Lf, 0)", point.X);
     else if (point.X == 0.0 && point.Y != 0.0)
-        printf("(0, %0.15lf)", point.Y);
+        printf("(0, %0.15Lf)", point.Y);
     else
-        printf("(%0.15lf, %0.15lf)", point.X, point.Y);
+        printf("(%0.15Lf, %0.15Lf)", point.X, point.Y);
 }
 
 void print_point2D_(Point2D point)
@@ -4172,19 +4183,19 @@ void print_point(Point point)
     if (point.X == 0.0 && point.Y == 0.0 && point.Z == 0.0)
         printf("(0, 0, 0)");
     else if (point.X != 0.0 && point.Y == 0.0 && point.Z == 0.0)
-        printf("(%0.15lf, 0, 0)", point.X);
+        printf("(%0.15Lf, 0, 0)", point.X);
     else if (point.X == 0.0 && point.Y != 0.0 && point.Z == 0.0)
-        printf("(0, %0.15lf, 0)", point.Y);
+        printf("(0, %0.15Lf, 0)", point.Y);
     else if (point.X == 0.0 && point.Y == 0.0 && point.Z != 0.0)
-        printf("(0, 0, %0.15lf)", point.Z);
+        printf("(0, 0, %0.15Lf)", point.Z);
     else if (point.X != 0.0 && point.Y != 0.0 && point.Z == 0.0)
-        printf("(%0.15lf, %0.15lf, 0)", point.X, point.Y);
+        printf("(%0.15Lf, %0.15Lf, 0)", point.X, point.Y);
     else if (point.X != 0.0 && point.Y == 0.0 && point.Z != 0.0)
-        printf("(%0.15lf, 0, %0.15lf)", point.X, point.Z);
+        printf("(%0.15Lf, 0, %0.15Lf)", point.X, point.Z);
     else if (point.X == 0.0 && point.Y != 0.0 && point.Z != 0.0)
-        printf("(0, %0.15lf, %0.15lf)", point.Y, point.Z);
+        printf("(0, %0.15Lf, %0.15Lf)", point.Y, point.Z);
     else
-        printf("(%0.15lf, %0.15lf, %0.15lf)", point.X, point.Y, point.Z);
+        printf("(%0.15Lf, %0.15Lf, %0.15Lf)", point.X, point.Y, point.Z);
 }
 
 void print_point_(Point point)
@@ -4198,15 +4209,15 @@ void print_complex(Complex number)
     if (number.real == 0.0 && number.img == 0.0)
         printf("(0)");
     else if (number.real != 0.0 && number.img == 0.0)
-        printf("(%0.15lf)", number.real);
+        printf("(%0.15Lf)", number.real);
     else if (number.real == 0.0 && number.img != 0.0)
-        printf("(%0.15lfi)", number.img);
+        printf("(%0.15Lfi)", number.img);
     else
     {
         if (number.img < 0.0)
-            printf("(%0.15lf - %0.15lfi)", number.real, abs_double(number.img));
+            printf("(%0.15Lf - %0.15Lfi)", number.real, abs_double(number.img));
         else
-            printf("(%0.15lf + %0.15lfi)", number.real, number.img);
+            printf("(%0.15Lf + %0.15Lfi)", number.real, number.img);
     }
 }
 
@@ -4228,7 +4239,7 @@ void print_complex_array(Complex_Array complex_array)
     {
         printf("[");
         print_complex(complex_array.complex_numbers[0]);
-        for (int64_t i = 1; i < complex_array.length; i++)
+        for (i64 i = 1; i < complex_array.length; i++)
         {
             printf(", ");
             print_complex(complex_array.complex_numbers[i]);
@@ -4248,15 +4259,15 @@ void print_vector2D(Vector2D vector)
     if (vector.X == 0.0 && vector.Y == 0.0)
         printf("<0>");
     else if (vector.X != 0.0 && vector.Y == 0.0)
-        printf("<%0.15lfi>", vector.X);
+        printf("<%0.15Lfi>", vector.X);
     else if (vector.X == 0.0 && vector.Y != 0.0)
-        printf("<%0.15lfj>", vector.Y);
+        printf("<%0.15Lfj>", vector.Y);
     else
     {
         if (vector.Y < 0.0)
-            printf("<%0.15lfi - %0.15lfj>", vector.X, abs_double(vector.Y));
+            printf("<%0.15Lfi - %0.15Lfj>", vector.X, abs_double(vector.Y));
         else
-            printf("<%0.15lfi + %0.15lfj>", vector.X, vector.Y);
+            printf("<%0.15Lfi + %0.15Lfj>", vector.X, vector.Y);
     }
 }
 
@@ -4271,42 +4282,42 @@ void print_vector(Vector vector)
     if (vector.X == 0.0 && vector.Y == 0.0 && vector.Z == 0.0)
         printf("<0>");
     else if (vector.X != 0.0 && vector.Y == 0.0 && vector.Z == 0.0)
-        printf("<%0.15lfi>", vector.X);
+        printf("<%0.15Lfi>", vector.X);
     else if (vector.X == 0.0 && vector.Y != 0.0 && vector.Z == 0.0)
-        printf("<%0.15lfj>", vector.Y);
+        printf("<%0.15Lfj>", vector.Y);
     else if (vector.X == 0.0 && vector.Y == 0.0 && vector.Z != 0.0)
-        printf("<%0.15lfk>", vector.Z);
+        printf("<%0.15Lfk>", vector.Z);
     else if (vector.X != 0.0 && vector.Y != 0.0 && vector.Z == 0.0)
     {
         if (vector.Y < 0.0)
-            printf("<%0.15lfi - %0.15lfj>", vector.X, abs_double(vector.Y));
+            printf("<%0.15Lfi - %0.15Lfj>", vector.X, abs_double(vector.Y));
         else
-            printf("<%0.15lfi + %0.15lfj>", vector.X, vector.Y);
+            printf("<%0.15Lfi + %0.15Lfj>", vector.X, vector.Y);
     }
     else if (vector.X != 0.0 && vector.Y == 0.0 && vector.Z != 0.0)
     {
         if (vector.Z < 0.0)
-            printf("<%0.15lfi - %0.15lfk>", vector.X, abs_double(vector.Z));
+            printf("<%0.15Lfi - %0.15Lfk>", vector.X, abs_double(vector.Z));
         else
-            printf("<%0.15lfi + %0.15lfk>", vector.X, vector.Z);
+            printf("<%0.15Lfi + %0.15Lfk>", vector.X, vector.Z);
     }
     else if (vector.X == 0.0 && vector.Y != 0.0 && vector.Z != 0.0)
     {
         if (vector.Z < 0.0)
-            printf("<%0.15lfj - %0.15lfk>", vector.Y, abs_double(vector.Z));
+            printf("<%0.15Lfj - %0.15Lfk>", vector.Y, abs_double(vector.Z));
         else
-            printf("<%0.15lfj + %0.15lfk>", vector.Y, vector.Z);
+            printf("<%0.15Lfj + %0.15Lfk>", vector.Y, vector.Z);
     }
     else
     {
         if (vector.Y < 0.0 && vector.Z < 0.0)
-            printf("<%0.15lfi - %0.15lfj - %0.15lfk>", vector.X, sqrt(vector.Y * vector.Y), sqrt(vector.Z * vector.Z));
+            printf("<%0.15Lfi - %0.15Lfj - %0.15Lfk>", vector.X, (f80)sqrt(vector.Y * vector.Y), (f80)sqrt(vector.Z * vector.Z));
         else if (vector.Y < 0.0 && vector.Z > 0.0)
-            printf("<%0.15lfi - %0.15lfj + %0.15lfk>", vector.X, sqrt(vector.Y * vector.Y), vector.Z);
+            printf("<%0.15Lfi - %0.15Lfj + %0.15Lfk>", vector.X, (f80)sqrt(vector.Y * vector.Y), vector.Z);
         else if (vector.Y > 0.0 && vector.Z < 0.0)
-            printf("<%0.15lfi + %0.15lfj - %0.15lfk>", vector.X, vector.Y, sqrt(vector.Z * vector.Z));
+            printf("<%0.15Lfi + %0.15Lfj - %0.15Lfk>", vector.X, vector.Y, (f80)sqrt(vector.Z * vector.Z));
         else
-            printf("<%0.15lfi + %0.15lfj + %0.15lfk>", vector.X, vector.Y, vector.Z);
+            printf("<%0.15Lfi + %0.15Lfj + %0.15Lfk>", vector.X, vector.Y, vector.Z);
     }
 }
 
@@ -4319,9 +4330,9 @@ void print_vector_(Vector vector)
 void print_num_array(NumArray num_array)
 {
     printf("[");
-    for (int64_t i = 0; i < num_array.len; i++)
+    for (i64 i = 0; i < num_array.len; i++)
     {
-        printf("%0.15lf", num_array.nums[i]);
+        printf("%0.15Lf", num_array.nums[i]);
         if ((i + 1) != num_array.len)
             printf(", ");
     }
@@ -4334,12 +4345,12 @@ void print_num_array_(NumArray num_array)
     newline(1);
 }
 
-int64_t num_len(double number, int64_t number_of_digits_after_the_radix_dot)
+i64 num_len(f80 number, i64 number_of_digits_after_the_radix_dot)
 {
-    int64_t length = (number < 0.0);
+    i64 length = (number < 0.0);
     length += (number_of_digits_after_the_radix_dot == 0) ? 0 : (number_of_digits_after_the_radix_dot + 1);
-    int64_t abs_int_num = (int64_t)abs_double(number);
-    int64_t count = 0;
+    i64 abs_int_num = (i64)abs_double(number);
+    i64 count = 0;
     if (abs_int_num == 0)
         return (length + 1);
     while (abs_int_num != 0)
@@ -4351,15 +4362,15 @@ int64_t num_len(double number, int64_t number_of_digits_after_the_radix_dot)
     return length;
 }
 
-int64_t max_num_len(NumArray numbers, int64_t number_of_digits_after_the_radix_dot)
+i64 max_num_len(NumArray numbers, i64 number_of_digits_after_the_radix_dot)
 {
     if (numbers.len == 0)
         return 0;
-    int64_t max_len = num_len(numbers.nums[0], number_of_digits_after_the_radix_dot);
-    int64_t next_num_len = 0;
+    i64 max_len = num_len(numbers.nums[0], number_of_digits_after_the_radix_dot);
+    i64 next_num_len = 0;
     if (numbers.len == 1)
         return max_len;
-    for (int64_t i = 1; i < numbers.len; i++)
+    for (i64 i = 1; i < numbers.len; i++)
     {
         next_num_len = num_len(numbers.nums[i], number_of_digits_after_the_radix_dot);
         if (next_num_len > max_len)
@@ -4368,18 +4379,18 @@ int64_t max_num_len(NumArray numbers, int64_t number_of_digits_after_the_radix_d
     return max_len;
 }
 
-NumArray nth_column_data(Matrix matrix, int64_t nth_column) // First Row = 0
+NumArray nth_column_data(Matrix matrix, i64 nth_column) // First Row = 0
 {
     NumArray col_data = new_num_array(matrix.rows);
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
         col_data.nums[r] = matrix.data[r][nth_column];
     return col_data;
 }
 
-int64_t *max_num_len_array(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
+i64 *max_num_len_array(Matrix matrix, i64 number_of_digits_after_the_radix_dot)
 {
-    int64_t *max_number_length_array = (int64_t *)calloc(matrix.cols, sizeof(int64_t));
-    for (int64_t c = 0; c < matrix.cols; c++)
+    i64 *max_number_length_array = (i64 *)calloc(matrix.cols, sizeof(i64));
+    for (i64 c = 0; c < matrix.cols; c++)
     {
         NumArray matrix_column_data = nth_column_data(matrix, c);
         max_number_length_array[c] = max_num_len(matrix_column_data, number_of_digits_after_the_radix_dot);
@@ -4387,28 +4398,28 @@ int64_t *max_num_len_array(Matrix matrix, int64_t number_of_digits_after_the_rad
     return max_number_length_array;
 }
 
-char *pre_space(double number, int64_t max_number_length, int64_t number_of_digits_after_the_radix_dot)
+char *pre_space(f80 number, i64 max_number_length, i64 number_of_digits_after_the_radix_dot)
 {
-    int64_t extra_space_number = max_number_length - num_len(number, number_of_digits_after_the_radix_dot);
+    i64 extra_space_number = max_number_length - num_len(number, number_of_digits_after_the_radix_dot);
     char *spaces = (char *)calloc(extra_space_number, sizeof(char));
-    for (int64_t i = 0; i < extra_space_number; i++)
+    for (i64 i = 0; i < extra_space_number; i++)
         spaces[i] = ' ';
     spaces[extra_space_number] = '\0';
     return spaces;
 }
 
-void print_matrix(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
+void print_matrix(Matrix matrix, i64 number_of_digits_after_the_radix_dot)
 {
     char *format = (char *)calloc(128, sizeof(char));
     sprintf(format, " %%s%%0.%lldlf ", number_of_digits_after_the_radix_dot);
-    int64_t *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
+    i64 *max_number_length_array = max_num_len_array(matrix, number_of_digits_after_the_radix_dot);
 
     printf("[[");
-    for (int64_t r = 0; r < matrix.rows; r++)
+    for (i64 r = 0; r < matrix.rows; r++)
     {
         if (r > 0)
             printf(" [");
-        for (int64_t c = 0; c < matrix.cols; c++)
+        for (i64 c = 0; c < matrix.cols; c++)
             printf((const char *)format, pre_space(matrix.data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), matrix.data[r][c]);
         if (r < (matrix.rows - 1))
             printf("]\n");
@@ -4417,28 +4428,28 @@ void print_matrix(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
     }
 }
 
-void print_matrix_(Matrix matrix, int64_t number_of_digits_after_the_radix_dot)
+void print_matrix_(Matrix matrix, i64 number_of_digits_after_the_radix_dot)
 {
     print_matrix(matrix, number_of_digits_after_the_radix_dot);
     newline(1);
 }
 
-void print_tensor(Tensor tensor, int64_t number_of_digits_after_the_radix_dot)
+void print_tensor(Tensor tensor, i64 number_of_digits_after_the_radix_dot)
 {
     char *format = (char *)calloc(128, sizeof(char));
     sprintf(format, " %%s%%0.%lldlf ", number_of_digits_after_the_radix_dot);
     printf("[[[");
-    for (int64_t n = 0; n < tensor.n; n++)
+    for (i64 n = 0; n < tensor.n; n++)
     {
         if (n > 0)
             printf(" [[");
 
-        int64_t *max_number_length_array = max_num_len_array(tensor.mat[n], number_of_digits_after_the_radix_dot);
-        for (int64_t r = 0; r < tensor.mat[n].rows; r++)
+        i64 *max_number_length_array = max_num_len_array(tensor.mat[n], number_of_digits_after_the_radix_dot);
+        for (i64 r = 0; r < tensor.mat[n].rows; r++)
         {
             if (r > 0)
                 printf("  [");
-            for (int64_t c = 0; c < tensor.mat[n].cols; c++)
+            for (i64 c = 0; c < tensor.mat[n].cols; c++)
                 printf(format, pre_space(tensor.mat[n].data[r][c], max_number_length_array[c], number_of_digits_after_the_radix_dot), tensor.mat[n].data[r][c]);
             if (r < (tensor.mat[n].rows - 1))
                 printf("]\n");
@@ -4453,7 +4464,7 @@ void print_tensor(Tensor tensor, int64_t number_of_digits_after_the_radix_dot)
     }
 }
 
-void print_tensor_(Tensor tensor, int64_t number_of_digits_after_the_radix_dot)
+void print_tensor_(Tensor tensor, i64 number_of_digits_after_the_radix_dot)
 {
     print_tensor(tensor, number_of_digits_after_the_radix_dot);
     newline(1);
@@ -4462,14 +4473,14 @@ void print_tensor_(Tensor tensor, int64_t number_of_digits_after_the_radix_dot)
 void print_matrix_types(Matrix matrix, text_style text_style)
 {
     char **types = types_of_matrix(matrix, text_style);
-    int64_t count = 0;
+    i64 count = 0;
     while (types[count][0])
         count++;
     if (count == 0)
         return;
     printf("[");
     printf("'%s'", types[0]);
-    for (int64_t i = 1; i < count; i++)
+    for (i64 i = 1; i < count; i++)
         printf(", '%s'", types[i]);
     printf("]");
 }
@@ -4482,7 +4493,7 @@ void print_matrix_types_(Matrix matrix, text_style text_style)
 
 // NOTE : Calendar Stuffs
 
-char *month_fullname_for(int64_t month)
+char *month_fullname_for(i64 month)
 {
     char *month_fullname = (char *)calloc(10, sizeof(char));
     switch (month)
@@ -4529,7 +4540,7 @@ char *month_fullname_for(int64_t month)
     return month_fullname;
 }
 
-char *month_shortname_for(int64_t month)
+char *month_shortname_for(i64 month)
 {
     char *month_shortname = (char *)calloc(4, sizeof(char));
     switch (month)
@@ -4576,7 +4587,7 @@ char *month_shortname_for(int64_t month)
     return month_shortname;
 }
 
-char *weekly_day_fullname_for(int64_t weekly_day)
+char *weekly_day_fullname_for(i64 weekly_day)
 {
     char *weekly_day_fullname = (char *)calloc(10, sizeof(char));
     switch (weekly_day)
@@ -4608,7 +4619,7 @@ char *weekly_day_fullname_for(int64_t weekly_day)
     return weekly_day_fullname;
 }
 
-char *weekly_day_shortname_for(int64_t weekly_day)
+char *weekly_day_shortname_for(i64 weekly_day)
 {
     char *weekly_day_shortname = (char *)calloc(4, sizeof(char));
     switch (weekly_day)
@@ -4640,7 +4651,7 @@ char *weekly_day_shortname_for(int64_t weekly_day)
     return weekly_day_shortname;
 }
 
-int64_t delta_m_for(int64_t month)
+i64 delta_m_for(i64 month)
 {
     switch (month)
     {
@@ -4668,23 +4679,23 @@ int64_t delta_m_for(int64_t month)
     }
 }
 
-_Bool is_leapyear(int64_t year)
+_Bool is_leapyear(i64 year)
 {
     return (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0));
 }
 
-int64_t weekly_day_for(Date date)
+i64 weekly_day_for(Date date)
 {
     _Bool lambda = is_leapyear(date.year) && (date.month > 2);
     _Bool is_bc = (date.year < 0);
-    int64_t days = ceil_num(1.25 * date.year) + date.day + delta_m_for(date.month) + lambda - is_bc;
-    int64_t weekly_day = days % 7;
+    i64 days = ceil_num(1.25 * date.year) + date.day + delta_m_for(date.month) + lambda - is_bc;
+    i64 weekly_day = days % 7;
     if (weekly_day == 0)
         return 7;
     return weekly_day;
 }
 
-int64_t last_day_for(int64_t year, int64_t month)
+i64 last_day_for(i64 year, i64 month)
 {
     month = clip_int(month, 1, 12);
 
@@ -4705,20 +4716,20 @@ int64_t last_day_for(int64_t year, int64_t month)
     }
 }
 
-int64_t clip_day(Date date)
+i64 clip_day(Date date)
 {
-    int64_t last_day = last_day_for(date.year, date.month);
+    i64 last_day = last_day_for(date.year, date.month);
     return clip_int(date.day, 1, last_day);
 }
 
 char *refine_date_str(char *date_str)
 {
-    int64_t len = strlen(date_str);
+    i64 len = strlen(date_str);
     if (len < 3)
         return NULL;
 
     _Bool is_minus_checked = 0;
-    int64_t count = 3, i = 0, r = 0;
+    i64 count = 3, i = 0, r = 0;
     char *refined_date_str = (char *)calloc(len, sizeof(char));
 
     while (i < len && count > 0)
@@ -4753,7 +4764,7 @@ Date new_date_from(char *date_str) // Format for 'date_str': year/month/day | Ex
     return date;
 }
 
-Date new_date(int64_t year, int64_t month, int64_t day)
+Date new_date(i64 year, i64 month, i64 day)
 {
     Date date;
     date.year = year;
@@ -4798,7 +4809,7 @@ Date_Info new_date_info(Date date)
     date_info.weekly_day = weekly_day_for(date);
     date_info.weekly_day_fullname = weekly_day_fullname_for(date_info.weekly_day);
     date_info.weekly_day_shortname = weekly_day_shortname_for(date_info.weekly_day);
-    int64_t len = int_num_len(date_info.year) + int_num_len(date_info.month) + int_num_len(date_info.day) + 3;
+    i64 len = int_num_len(date_info.year) + int_num_len(date_info.month) + int_num_len(date_info.day) + 3;
     date_info.date_str = (char *)calloc(len, sizeof(char));
     sprintf(date_info.date_str, "%lld/%lld/%lld", date_info.year, date_info.month, date_info.day);
     return date_info;
@@ -4852,12 +4863,12 @@ void print_date_info_(Date date)
     printf("\n");
 }
 
-void print_calendar_month(int64_t year, int64_t month)
+void print_calendar_month(i64 year, i64 month)
 {
     month = clip_int(month, 1, 12);
     char *month_name = month_fullname_for(month);
 
-    int64_t title_padding = (22 - (int_num_len(year) + strlen(month_name))) >> 1;
+    i64 title_padding = (22 - (int_num_len(year) + strlen(month_name))) >> 1;
     if (title_padding < 1)
         title_padding = 0;
     printf("%s[ %s, %lld ]\n", str_from_char(' ', title_padding), month_name, year);
@@ -4865,12 +4876,12 @@ void print_calendar_month(int64_t year, int64_t month)
     printf("SAT SUN MON TUE WED THU FRI\n");
 
     Date date = new_date(year, month, 1);
-    int64_t weekly_day = weekly_day_for(date);
+    i64 weekly_day = weekly_day_for(date);
 
-    int64_t padding_for_first_day = (weekly_day << 2) - 3 + (weekly_day < 10);
+    i64 padding_for_first_day = (weekly_day << 2) - 3 + (weekly_day < 10);
     printf("%s1", str_from_char(' ', padding_for_first_day));
 
-    for (int64_t i = 2; i <= last_day_for(year, month); i++)
+    for (i64 i = 2; i <= last_day_for(year, month); i++)
     {
         weekly_day = mod_nonzero((weekly_day + 1), 7);
         if (weekly_day == 1)
@@ -4882,9 +4893,9 @@ void print_calendar_month(int64_t year, int64_t month)
     }
 }
 
-void print_calendar_year(int64_t year)
+void print_calendar_year(i64 year)
 {
-    for (int64_t month = 1; month < 12; month++)
+    for (i64 month = 1; month < 12; month++)
     {
         print_calendar_month(year, month);
         printf("\n\n");
